@@ -53,7 +53,7 @@ La Ingeniería de la Usabilidad es una metodología que proporciona la manera de
 Este enfoque iterativo permite ajustes continuos basados en el feedback del usuario, garantizando un producto final más efectivo y usable.
 
 #### Diagrama de la Ingeniería de la Usabilidad
-![Modelo de Proceso](https://www.researchgate.net/profile/Juan-Preciado/publication/290096334/figure/fig10/AS:651204057112603@1532270554542/Modelo-de-Proceso-de-la-Ingenieria-de-la-usabilidad-y-de-la-Accesibilidad-MPIu-a.png)
+![Modelo de Proceso](https://caucatravel.wordpress.com/wp-content/uploads/2014/04/mpiua.jpg?w=420)
 
 **Referencia**: [Ingeniería de la Usabilidad - UCAB](https://modulo7.ucab.edu.ve/courses/8142/files/849608/download?download_frd=1)
 
