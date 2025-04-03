@@ -41,9 +41,9 @@ Las herramientas que utilizamos para crear este proyecto incluyen:
 
 Este proyecto se desarrollará utilizando las siguientes metodologías:
 
-### Modelo de Proceso
+### Ingeniería de la Usabilidad
 
-El modelo de proceso es un enfoque centrado en el usuario que promueve la iteración y la mejora continua a lo largo del desarrollo de un proyecto. Se compone de fases cíclicas que incluyen:
+La Ingeniería de la Usabilidad es una metodología que proporciona la manera de proceder organizadamente para poder conseguir usabilidad en el diseño de interfaces de usuario durante el desarrollo de un producto interactivo. Entre sus aspectos más resaltantes tenemos:
 
 1. **Análisis de Requisitos**:   Identificación de necesidades y restricciones del sistema.
 2. **Diseño**: Generación de alternativas de diseño y desarrollo de interfaces. 
@@ -52,10 +52,10 @@ El modelo de proceso es un enfoque centrado en el usuario que promueve la iterac
 
 Este enfoque iterativo permite ajustes continuos basados en el feedback del usuario, garantizando un producto final más efectivo y usable.
 
-#### Diagrama del Modelo de Proceso
-![Modelo de Proceso](/home/iadev/Imágenes/modelo_procesos.png)
+#### Diagrama de la Ingeniería de la Usabilidad
+![Modelo de Proceso](https://www.researchgate.net/profile/Juan-Preciado/publication/290096334/figure/fig10/AS:651204057112603@1532270554542/Modelo-de-Proceso-de-la-Ingenieria-de-la-usabilidad-y-de-la-Accesibilidad-MPIu-a.png)
 
-**Referencia**: [Modelo de Proceso - UCAB](https://modulo7.ucab.edu.ve/courses/8142/files/849608/download?download_frd=1)
+**Referencia**: [Ingeniería de la Usabilidad - UCAB](https://modulo7.ucab.edu.ve/courses/8142/files/849608/download?download_frd=1)
 
 ### Metodología BEM (Block Element Modifier)
 
