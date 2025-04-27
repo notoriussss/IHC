@@ -1,6 +1,6 @@
 # Proyecto: Cultura del Agua
 
-Este proyecto aborda la cultura del agua, entendida como el conjunto de creencias, comportamientos y mecanismos utilizados para satisfacer las necesidades relacionadas con el agua y todo lo que depende de ella, según la UNESCO (2006). A través de una plataforma web interactiva, buscamos concientizar a las personas sobre la importancia del agua y fomentar prácticas sostenibles, utilizando tecnologías como HTML, CSS y JavaScript y cumpliendo con los 10 principios generales de Jakob Nielsen para el diseño de interacción.
+Este proyecto aborda la cultura del agua, entendida como el conjunto de creencias, comportamientos y mecanismos utilizados para satisfacer las necesidades relacionadas con el agua y todo lo que depende de ella, según la UNESCO (2006). A través de una plataforma web interactiva, buscamos concientizar a las personas sobre la importancia del agua y fomentar prácticas sostenibles, utilizando tecnologías como TypeScript, Tailwind CSS, React, CSS y HTML, y cumpliendo con los 10 principios generales de Jakob Nielsen para el diseño de interacción.
 
 ## Comenzando 🚀
 
@@ -12,30 +12,42 @@ Mira **Despliegue** para conocer cómo desplegar el proyecto.
 
 Para instalar el software, necesitarás lo siguiente:
 
-* Un navegador web moderno (Chrome, Firefox, etc.)
-* Un editor de texto (Visual Studio Code, Sublime Text, etc.)
-
+* Node.js y npm instalados en tu máquina.
+* Un navegador web moderno (Chrome, Firefox, etc.).
+* Un editor de texto (Visual Studio Code, Sublime Text, etc.).
 
 ### Instalación 🔧
 
 A continuación se describen los pasos para tener un entorno de desarrollo en funcionamiento:
 
-1. Clona el repositorio del proyecto
-2. Navega al directorio del proyecto
-3. Abre el archivo `index.html` con tu navegador
-4. Utiliza la consola para depurar o probar el código
+1. Clona el repositorio del proyecto.
+2. Navega al directorio del proyecto.
+3. Instala las dependencias ejecutando el comando:
+    ```bash
+    npm install
+    ```
+4. Inicia el entorno de desarrollo con el comando:
+    ```bash
+    npm run dev
+    ```
+5. Abre tu navegador y accede a la URL proporcionada por el servidor de desarrollo.
 
 ## Despliegue 📦
 
-Para desplegar el proyecto, puedes subir los archivos del directorio `proyecto` a un servidor web o utilizar plataformas como GitHub Pages.
+Para desplegar el proyecto, puedes compilar los archivos y subirlos a un servidor web o utilizar plataformas como Vercel o Netlify. Para compilar el proyecto, utiliza el comando:
+```bash
+npm run build
+```
 
 ## Construido con 🛠️
 
 Las herramientas que utilizamos para crear este proyecto incluyen:
 
-* [HTML](https://developer.mozilla.org/es/docs/Web/HTML) - Lenguaje de marcado estándar para la creación de páginas web.
+* [TypeScript](https://www.typescriptlang.org/) - Lenguaje de programación que extiende JavaScript con tipos.
+* [React](https://reactjs.org/) - Biblioteca para construir interfaces de usuario.
+* [Tailwind CSS](https://tailwindcss.com/) - Framework de CSS para diseño rápido y responsivo.
 * [CSS](https://developer.mozilla.org/es/docs/Web/CSS) - Lenguaje de estilo para la presentación de documentos HTML.
-* [JavaScript](https://developer.mozilla.org/es/docs/Web/JavaScript) - Lenguaje de programación para mejorar la interactividad de las páginas web.
+* [HTML](https://developer.mozilla.org/es/docs/Web/HTML) - Lenguaje de marcado estándar para la creación de páginas web.
 
 ## Metodologías 🧩
 
@@ -45,10 +57,10 @@ Este proyecto se desarrollará utilizando las siguientes metodologías:
 
 La Ingeniería de la Usabilidad es una metodología que proporciona la manera de proceder organizadamente para poder conseguir usabilidad en el diseño de interfaces de usuario durante el desarrollo de un producto interactivo. Entre sus aspectos más resaltantes tenemos:
 
-1. **Análisis de Requisitos**:   Identificación de necesidades y restricciones del sistema.
-2. **Diseño**: Generación de alternativas de diseño y desarrollo de interfaces. 
+1. **Análisis de Requisitos**: Identificación de necesidades y restricciones del sistema.
+2. **Diseño**: Generación de alternativas de diseño y desarrollo de interfaces.
 3. **Prototipado**: Creación de simulaciones del sistema final para evaluar interacciones.
-4. **Evaluación**:  Métodos de evaluación para asegurar la usabilidad y accesibilidad del producto. 
+4. **Evaluación**: Métodos de evaluación para asegurar la usabilidad y accesibilidad del producto.
 
 Este enfoque iterativo permite ajustes continuos basados en el feedback del usuario, garantizando un producto final más efectivo y usable.
 
@@ -109,4 +121,3 @@ Los principios de diseño de interacción de Jakob Nielsen son fundamentales par
 * **César Ostos** - [Cesar2926](https://github.com/Cesar2926).
 * **Fernando Pérez** - [Fer2703](https://github.com/Fer2703).
 * **Andrés Lara** - [Andreslara023](https://github.com/Andreslara023).
-
