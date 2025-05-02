@@ -12,12 +12,18 @@ export function Forum() {
 
     return (
         <motion.div
-            className="relative w-full h-screen bg-[#FFB700] flex items-center justify-center text-white"
+            className="relative w-full h-screen flex items-center justify-center text-white"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={leftToRightVariants}
             transition={{ duration: 0.5 }}
+            style={{
+                backgroundImage: "url('/src/assets/background/background-forum.png')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                userSelect: 'none',
+            }}
         >
             <div
                 className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center cursor-pointer"

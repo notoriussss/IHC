@@ -18,6 +18,12 @@ export function Culture() {
             exit="exit"
             variants={rightToLeftVariants}
             transition={{ duration: 0.5 }}
+            style={{
+                backgroundImage: "url('/src/assets/background/background-culture.png')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                userSelect: 'none',
+            }}
         >
             <div
                 className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center cursor-pointer"

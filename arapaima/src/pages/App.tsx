@@ -14,7 +14,7 @@ function Home() {
 
   return (
     <motion.div
-      className="relative w-full h-screen bg-[#2d2d2d] overflow-hidden"
+      className="relative w-full h-screen overflow-hidden"
       style={{
         backgroundImage: "url('/src/assets/background/background-desktop.png')",
         backgroundSize: 'cover',
