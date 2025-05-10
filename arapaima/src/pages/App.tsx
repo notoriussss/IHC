@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import { Border } from '@/components/ui'; // Por los momentos solo importo el Border
-import { Aquarium, Library, Culture, Forum } from '@/pages'
+import { Aquarium, Library, Culture, Forum, ArticleDetail } from '@/pages'
 import { motion } from 'framer-motion';
 
 // const topToBottomVariants = {
@@ -114,6 +114,8 @@ export default function App() {
         <Route path="/library" element={<Library />} />
         <Route path="/culture" element={<Culture />} />
         <Route path="/forum" element={<Forum />} />
+        {/* Ruta para el detalle del artículo */}
+        <Route path="/article/:id" element={<ArticleDetail />} />
       </Routes>
     </Router>
   );

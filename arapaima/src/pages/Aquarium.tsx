@@ -39,7 +39,7 @@ export function Aquarium() {
 
     return (
         <motion.div
-            className="relative w-full h-screen flex items-center justify-center text-white"
+            className="relative min-h-screen flex flex-col items-center justify-start text-white"
             initial="initial"
             animate="animate"
             exit="exit"
@@ -52,21 +52,23 @@ export function Aquarium() {
                 userSelect: 'none',
             }}
         >
-            {/* Logo para volver a la página principal */}
-            <div
-                className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center cursor-pointer"
-                onClick={() => navigate('/')}
-            >
-                <img
-                    src="/src/assets/logo/logo.svg"
-                    alt="Logo"
-                    className="w-80 h-auto"
-                    style={{ userSelect: 'none' }}
-                />
+            {/* Contenedor para centrar el logo */}
+            <div className="w-full flex justify-center items-center py-5">
+                <div
+                    className="cursor-pointer flex flex-col items-center"
+                    onClick={() => navigate('/')}
+                >
+                    <img
+                        src="/src/assets/logo/logo.svg"
+                        alt="Logo"
+                        className="w-80 h-auto"
+                        style={{ userSelect: 'none' }}
+                    />
+                </div>
             </div>
 
             {/* Contenedor centralizado */}
-            <div className="relative flex flex-col items-center justify-center text-center p-8 w-[60%]" style={{ top: '60px' }}>
+            <div className="relative flex flex-col items-center justify-center text-center p-8 py-0 w-[60%]">
                 <AnimatePresence mode="wait">
                     {/* Contenido del pez actual con animación */}
                     <motion.div
@@ -108,50 +110,49 @@ export function Aquarium() {
                 </AnimatePresence>
             </div>
 
-            {/* Flecha izquierda */}
+            {/* Flechas de navegación */}
             <motion.div
                 className="absolute left-10 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={handlePreviousFish}
-                whileHover={{ scale: 1.2 }} // Efecto de ampliación al hacer hover
+                whileHover={{ scale: 1.2 }}
                 transition={{ type: 'spring', stiffness: 300 }}
             >
                 <motion.img
                     src="/src/assets/icons/arrow-left.svg"
                     alt="Flecha izquierda"
                     className="w-12 h-12"
-                    whileHover={{ opacity: 0 }} // Oculta la flecha normal al hacer hover
+                    whileHover={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
                 />
                 <motion.img
                     src="/src/assets/icons/arrow-left-hover.svg"
                     alt="Flecha izquierda hover"
                     className="w-12 h-12 absolute top-0 left-0"
-                    initial={{ opacity: 0 }} // Comienza oculta
-                    whileHover={{ opacity: 1 }} // Muestra la flecha hover al hacer hover
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.2 }}
                 />
             </motion.div>
 
-            {/* Flecha derecha */}
             <motion.div
                 className="absolute right-10 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={handleNextFish}
-                whileHover={{ scale: 1.2 }} // Efecto de ampliación al hacer hover
+                whileHover={{ scale: 1.2 }}
                 transition={{ type: 'spring', stiffness: 300 }}
             >
                 <motion.img
                     src="/src/assets/icons/arrow-right.svg"
                     alt="Flecha derecha"
                     className="w-12 h-12"
-                    whileHover={{ opacity: 0 }} // Oculta la flecha normal al hacer hover
+                    whileHover={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
                 />
                 <motion.img
                     src="/src/assets/icons/arrow-right-hover.svg"
                     alt="Flecha derecha hover"
                     className="w-12 h-12 absolute top-0 left-0"
-                    initial={{ opacity: 0 }} // Comienza oculta
-                    whileHover={{ opacity: 1 }} // Muestra la flecha hover al hacer hover
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.2 }}
                 />
             </motion.div>
