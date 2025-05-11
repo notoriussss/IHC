@@ -12,7 +12,7 @@ export function ArticleDetail() {
 
     return (
         <div
-            className="min-h-screen bg-[#3BA100] text-white"
+            className="min-h-screen bg-[#3BA100] text-white flex flex-col"
             style={{
                 backgroundImage: "url('/src/assets/background/background-culture.png')",
                 backgroundSize: 'cover',
@@ -33,32 +33,32 @@ export function ArticleDetail() {
                 />
             </div>
 
-            <div className="p-8 max-w-4xl mx-auto text-white rounded-lg shadow-lg">
+            <div className="flex-1 p-8 max-w-7xl mx-auto text-white rounded-lg shadow-lg overflow-y-auto">
                 {/* Botón para volver */}
                 <button
                     onClick={() => navigate(-1)}
-                    className="mb-4 text-blue-500 hover:underline"
+                    className="mb-4 text-white font-bold hover:underline"
                 >
                     ← Volver
                 </button>
 
                 {/* Título */}
-                <h1 className="text-4xl font-bold mb-6 text-white">{article.title}</h1>
+                <h1 className="text-3xl font-bold mb-6 text-white">{article.title}</h1>
 
                 {/* Imágenes */}
-                <div className="flex flex-col gap-4 mb-6">
+                <div className="flex flex-col items-center justify-center gap-4 mb-6">
                     {article.images.map((image, index) => (
                         <img
                             key={index}
                             src={image}
                             alt={`Imagen ${index + 1}`}
-                            className="w-full h-auto rounded-lg shadow-md"
+                            className="w-full h-[400px] object-cover rounded-lg shadow-md"
                         />
                     ))}
                 </div>
 
                 {/* Contenido dividido en párrafos */}
-                <div className="text-lg leading-relaxed text-white space-y-4">
+                <div className="text-base leading-relaxed text-white space-y-4">
                     {article.content.split('\n').map((paragraph, index) => (
                         <p key={index}>{paragraph}</p>
                     ))}
@@ -69,7 +69,7 @@ export function ArticleDetail() {
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block mt-4 text-blue-500 hover:underline"
+                    className="block mt-4 text-white font-bold hover:underline"
                 >
                     Leer más en la fuente original
                 </a>
