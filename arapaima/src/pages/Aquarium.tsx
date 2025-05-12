@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'; // Importa AnimatePresence para manejar animaciones de entrada/salida
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import fishes from '@/data/fishes.json'; // Importa el JSON con los datos de los peces
 
 const bottomRightToTopLeftVariants = {
@@ -11,34 +11,65 @@ const bottomRightToTopLeftVariants = {
 
 // Variantes para la animación de cambio de pez
 const fishVariants = {
-    initial: { opacity: 0, x: 100 }, // Comienza transparente y desplazado a la derecha
-    animate: { opacity: 1, x: 0 }, // Aparece y se centra
-    exit: { opacity: 0, x: -100 }, // Desaparece desplazándose a la izquierda
+    initial: { opacity: 0, scale: 0.8, y: 100 }, // Comienza pequeño, transparente y desplazado hacia abajo
+    animate: { opacity: 1, scale: 1, y: 0 }, // Aparece en su tamaño normal y posición
+    exit: { opacity: 0, scale: 1.2, y: -100 }, // Desaparece creciendo ligeramente y desplazándose hacia arriba
 };
 
 export function Aquarium() {
     const navigate = useNavigate();
     const [currentFishIndex, setCurrentFishIndex] = useState(0); // Estado para el pez actual
+    const containerRef = useRef<HTMLDivElement | null>(null); // Referencia al contenedor para manejar el scroll
+    const scrollThreshold = 100; // Umbral de desplazamiento para cambiar de pez
+    const scrollDelta = useRef(0); // Acumulador del desplazamiento
+
+    // Función para cambiar al siguiente pez
+    const handleNextFish = (): void => {
+        setCurrentFishIndex((prevIndex) =>
+            prevIndex === fishes.length - 1 ? 0 : prevIndex + 1
+        );
+    };
 
     // Función para cambiar al pez anterior
-    const handlePreviousFish = () => {
+    const handlePreviousFish = (): void => {
         setCurrentFishIndex((prevIndex) =>
             prevIndex === 0 ? fishes.length - 1 : prevIndex - 1
         );
     };
 
-    // Función para cambiar al siguiente pez
-    const handleNextFish = () => {
-        setCurrentFishIndex((prevIndex) =>
-            prevIndex === fishes.length - 1 ? 0 : prevIndex + 1
-        );
+    // Manejar el evento de scroll
+    const handleScroll = (event: WheelEvent): void => {
+        const { deltaY } = event; // Detecta la dirección del scroll
+        scrollDelta.current += deltaY;
+
+        if (scrollDelta.current > scrollThreshold) {
+            handleNextFish(); // Scroll hacia abajo
+            scrollDelta.current = 0; // Reinicia el acumulador
+        } else if (scrollDelta.current < -scrollThreshold) {
+            handlePreviousFish(); // Scroll hacia arriba
+            scrollDelta.current = 0; // Reinicia el acumulador
+        }
     };
+
+    // Agregar el evento de scroll al contenedor
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            container.addEventListener('wheel', handleScroll);
+        }
+        return () => {
+            if (container) {
+                container.removeEventListener('wheel', handleScroll);
+            }
+        };
+    }, []);
 
     // Datos del pez actual
     const currentFish = fishes[currentFishIndex];
 
     return (
         <motion.div
+            ref={containerRef} // Referencia al contenedor
             className="relative min-h-screen flex flex-col items-center justify-start text-white"
             initial="initial"
             animate="animate"
@@ -77,7 +108,7 @@ export function Aquarium() {
                         initial="initial"
                         animate="animate"
                         exit="exit"
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.8 }} // Animación más lenta para el efecto de profundidad
                         className="flex flex-col items-center"
                     >
                         {/* Nombre del pez */}
@@ -109,53 +140,6 @@ export function Aquarium() {
                     </motion.div>
                 </AnimatePresence>
             </div>
-
-            {/* Flechas de navegación */}
-            <motion.div
-                className="absolute left-10 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={handlePreviousFish}
-                whileHover={{ scale: 1.2 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-            >
-                <motion.img
-                    src="/src/assets/icons/arrow-left.svg"
-                    alt="Flecha izquierda"
-                    className="w-12 h-12"
-                    whileHover={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                />
-                <motion.img
-                    src="/src/assets/icons/arrow-left-hover.svg"
-                    alt="Flecha izquierda hover"
-                    className="w-12 h-12 absolute top-0 left-0"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                />
-            </motion.div>
-
-            <motion.div
-                className="absolute right-10 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={handleNextFish}
-                whileHover={{ scale: 1.2 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-            >
-                <motion.img
-                    src="/src/assets/icons/arrow-right.svg"
-                    alt="Flecha derecha"
-                    className="w-12 h-12"
-                    whileHover={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                />
-                <motion.img
-                    src="/src/assets/icons/arrow-right-hover.svg"
-                    alt="Flecha derecha hover"
-                    className="w-12 h-12 absolute top-0 left-0"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                />
-            </motion.div>
         </motion.div>
     );
 }

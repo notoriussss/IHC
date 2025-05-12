@@ -2,7 +2,7 @@
     {
         "url": "http://www.elperroylarana.gob.ve/libros/kuay-nabaida/",
         "title": "Kuay Nabaida",
-        "content": "Basada en la mitología warao, la historia narra el origen del mundo desde la perspectiva de este pueblo. Inicialmente, el delta del Orinoco era un lugar de quietud y luz, con los warao viviendo en un mar sereno sobre él. Un evento inesperado, una flecha que abre un agujero, conecta este mundo celestial con uno nuevo. El relato sigue el viaje de los warao hacia este nuevo mundo, transformando su cielo y dando origen a nuevas historias para compartir con los niños.",
+        "content": "Cuenta la historia del mundo desde la mitología warao. Cómo un agujero en el cielo conectó su mundo con uno nuevo. Para niños.",
         "autor": "Gustavo Pereira",
         "images": [
             "http://www.elperroylarana.gob.ve/wp-content/uploads/2023/07/Portada-kuay-nabaida-01.jpg"
@@ -11,8 +11,8 @@
     },
     {
         "url": "https://www.amazon.com/-/es/warao-Venezuela-Spanish-Jenny-Gonz%C3%A1lez/dp/6202131020",
-        "title": "Los warao de Venezuela (Spanish Edition)",
-        "content": "Este libro presenta una investigación sobre el pueblo indígena warao del estado Delta Amacuro, Venezuela. Explora su vida cotidiana y cultura, que se desarrolla sobre el agua, influyendo en sus mitos y leyendas. El análisis se centra en la etnohistoria warao, examinando las transformaciones culturales causadas por procesos contemporáneos. Incluye mitos fundantes en warao y español, así como entrevistas con especialistas sobre las realidades de esta etnia en el siglo XXI, abordando la invisibilización histórica y las nuevas oportunidades de desarrollo cultural.",
+        "title": "Los warao de Venezuela",
+        "content": "Habla sobre la vida y cultura del pueblo warao en Venezuela, su relación con el agua y sus mitos.",
         "autor": "Jenny González Muñoz",
         "images": [
             "https://m.media-amazon.com/images/I/41lMgscZt4L._SY445_SX342_.jpg"
@@ -21,8 +21,8 @@
     },
     {
         "url": "http://www.rettalibros.com/shop/catalogs/show_material_details/47050",
-        "title": "Tradicion oral entre los Waraos",
-        "content": "Recopilación de mitos, leyendas y cuentos de la tradición oral y cultural de la comunidad Warao, con el objetivo de rescatar y preservar su patrimonio cultural para futuras generaciones. Edición bilingüe español-warao. Se enfoca en la identidad y patrimonio cultural de esta comunidad indígena venezolana.",
+        "title": "Tradición oral de los Waraos",
+        "content": "Recopilación de mitos y cuentos en español y warao para preservar su cultura.",
         "autor": "Antonio E. Vaquero Rojo",
         "images": [
             "http://www.rettalibros.com/assets/material/small/47050.jpg"
@@ -31,8 +31,8 @@
     },
     {
         "url": "http://www.rettalibros.com/shop/catalogs/show_material_details/47713",
-        "title": "Leyendas ancestrales de los Waraos",
-        "content": "Recopilación de narraciones orales y culturales de la comunidad Warao, preservando su patrimonio cultural para futuras generaciones. Edición bilingüe español-warao.",
+        "title": "Leyendas de los Waraos",
+        "content": "Historias y mitos orales del pueblo Warao en dos idiomas.",
         "autor": "Antonio E. Vaquero Rojo",
         "images": [
             "http://www.rettalibros.com/assets/material/big/47713.jpg"
@@ -41,8 +41,8 @@
     },
     {
         "url": "https://www.amazon.com/-/es/Music-Warao-Venezuela-People-Forest/dp/0813013909",
-        "title": "Music of the Warao of Venezuela: Song People of the Rain Forest",
-        "content": "Este libro explora la música del pueblo Warao, indígenas del delta del río Orinoco en Venezuela. El autor, Dale Olsen, examina cómo la música está intrínsecamente ligada a casi todos los aspectos de la vida Warao, proporcionando diversión, estabilidad, protección y poder. Se analizan diferentes géneros musicales, desde aquellos para el placer y la utilidad hasta los relacionados con la cosmología y las fuerzas sobrenaturales. El libro incluye transcripciones musicales y textuales de canciones, junto con información detallada sobre los instrumentos musicales Warao y su relación con la mitología. Olsen también comparte experiencias personales de su investigación, destacando su interacción con la comunidad Warao y su aprendizaje de sus tradiciones musicales.",
+        "title": "Música de los Warao de Venezuela",
+        "content": "Sobre la música del pueblo Warao, sus instrumentos y creencias.",
         "autor": "Dale A. Olsen",
         "images": [
             "https://m.media-amazon.com/images/I/51P4aowTOjL._SY445_SX342_.jpg"
@@ -51,8 +51,8 @@
     },
     {
         "url": "https://www.amazon.es/Folk-Literature-Warao-Indians/dp/B000B91R7A9",
-        "title": "Folk Literature of the Warao Indians",
-        "content": "Este libro presenta una colección de la literatura oral de los indígenas Warao. Incluye cuentos, mitos y leyendas transmitidas a través de generaciones. Ofrece una visión de la cultura, las creencias y la cosmovisión de este pueblo indígena.",
+        "title": "Literatura oral de los Warao",
+        "content": "Cuentos, mitos y leyendas transmitidos de generación en generación.",
         "autor": "Inconcluso",
         "images": [
             "https://m.media-amazon.com/images/I/51YHOQFpUJL._SY445_SX342_.jpg"
@@ -61,8 +61,8 @@
     },
     {
         "url": "https://www.amazon.com/-/es/M-H-LOUBATI%C3%89/dp/284166371X",
-        "title": "Waniku, indienne warao du Venezuela",
-        "content": "Este libro narra un día en la vida de Waniku, una joven indígena warao que vive en una casa de madera sobre pilotes a orillas del río Orinoco con su familia. El texto incluye información documental sobre Venezuela y los warao.",
+        "title": "Waniku, niña warao de Venezuela",
+        "content": "Un día en la vida de Waniku, una joven warao en el río Orinoco.",
         "autor": "M.H. LOUBATIÉ",
         "images": [
             "https://m.media-amazon.com/images/I/51LjI7sb0fL._SX342_SY445_.jpg"
@@ -71,8 +71,8 @@
     },
     {
         "url": "http://www.elperroylarana.gob.ve/libros/mitos-de-creacion-de-la-cuenca-del-orinoco/",
-        "title": "Mitos de creación de la cuenca del Orinoco",
-        "content": "Este libro presenta una recopilación de mitos de creación de seis pueblos indígenas originarios de la cuenca del Orinoco: Piaroa, Yek'wana, Yanomami, Ñengatú, Warao, y el mito del origen del río Orinoco a través del héroe cultural Amalivaca.  Los mitos exploran los orígenes del ser humano, los alimentos, el fuego, el sonido, y las creencias de estos pueblos ancestrales. La edición combina la recopilación e investigación de Ronny Velásquez con ilustraciones de jóvenes artistas venezolanos, fusionando el saber antiguo con la expresión plástica contemporánea.",
+        "title": "Mitos de creación del Orinoco",
+        "content": "Mitos sobre cómo se creó el río Orinoco y sus habitantes.",
         "autor": "Ronny Velásquez",
         "images": [
             "http://www.elperroylarana.gob.ve/wp-content/uploads/2017/11/mitos_de_creacion_de_la_cuenca_del_orinoco_2017.jpg"
@@ -81,28 +81,8 @@
     },
     {
         "url": "https://www.amazon.com/-/es/Orinoco-Parima-Comunidades-Indigenas-Venezuela-Coleccion/dp/9806454014",
-        "title": "Orinoco-Parima: Comunidades Indigenas del Sur de Venezuela: La Coleccion Cisneros",
-        "content": "Este libro explora las comunidades indígenas del sur de Venezuela, en la región del Orinoco y el Parima.  A través de 263 páginas, ofrece una visión de su cultura, historia y forma de vida, con el objetivo de comprender mejor la riqueza cultural y la diversidad de las poblaciones indígenas venezolanas.",
-        "autor": "Stephan Andreae, Luiz Boglár, Lelia Delgado, Gabriele Herzog-Schoder, Marie-Claude Mattéi-Muller, Ulrike Prinz",
-        "images": [
-            "https://m.media-amazon.com/images/I/41cReLsOK7L._SX342_SY445_.jpg"
-        ],
-        "label": "Antropología, Estudios Culturales"
-    },
-    {
-        "url": "https://www.amazon.com/-/es/Orinoco-Parima-Comunidades-Indigenas-Venezuela-Coleccion/dp/9806454014",
-        "title": "Orinoco-Parima: Comunidades Indigenas del Sur de Venezuela: La Coleccion Cisneros",
-        "content": "Este libro explora las comunidades indígenas del sur de Venezuela, en la región del Orinoco y el Parima.  A través de 263 páginas, ofrece una visión de su cultura, historia y forma de vida, con el objetivo de comprender mejor la riqueza cultural y la diversidad de las poblaciones indígenas venezolanas.",
-        "autor": "Stephan Andreae, Luiz Boglár, Lelia Delgado, Gabriele Herzog-Schoder, Marie-Claude Mattéi-Muller, Ulrike Prinz",
-        "images": [
-            "https://m.media-amazon.com/images/I/41cReLsOK7L._SX342_SY445_.jpg"
-        ],
-        "label": "Antropología, Estudios Culturales"
-    },
-    {
-        "url": "https://www.amazon.com/-/es/Orinoco-Parima-Comunidades-Indigenas-Venezuela-Coleccion/dp/9806454014",
-        "title": "Orinoco-Parima: Comunidades Indigenas del Sur de Venezuela: La Coleccion Cisneros",
-        "content": "Este libro explora las comunidades indígenas del sur de Venezuela, en la región del Orinoco y el Parima.  A través de 263 páginas, ofrece una visión de su cultura, historia y forma de vida, con el objetivo de comprender mejor la riqueza cultural y la diversidad de las poblaciones indígenas venezolanas.",
+        "title": "Orinoco-Parima",
+        "content": "Sobre las comunidades indígenas en el sur de Venezuela, su cultura y historia.",
         "autor": "Stephan Andreae, Luiz Boglár, Lelia Delgado, Gabriele Herzog-Schoder, Marie-Claude Mattéi-Muller, Ulrike Prinz",
         "images": [
             "https://m.media-amazon.com/images/I/41cReLsOK7L._SX342_SY445_.jpg"

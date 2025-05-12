@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import libraryData from '@/data/library.json'; // Importamos los datos de los libros
 
 const leftBottomToTopRightVariants = {
@@ -10,11 +11,12 @@ const leftBottomToTopRightVariants = {
 
 export function Library() {
     const navigate = useNavigate();
+    const [centerBook, setCenterBook] = useState(libraryData[0]); // Estado para el libro en el enmascarador superior
+    const bottomCenterBook = libraryData[0]; // Libro central inferior fijo
 
     // Dividimos los libros en tres secciones
-    const leftBooks = libraryData.slice(0, 5); // Libros para el contenedor izquierdo
-    const centerBook = libraryData[5]; // Libro para el contenedor central
-    const rightBooks = libraryData.slice(6, 11); // Libros para el contenedor derecho
+    const leftBooks = libraryData.slice(1, 5); // Libros para el contenedor izquierdo
+    const rightBooks = libraryData.slice(5, 9); // Libros para el contenedor derecho
 
     return (
         <motion.div
@@ -40,41 +42,71 @@ export function Library() {
                     <img
                         src="/src/assets/logo/logo.svg"
                         alt="Logo"
-                        className="w-60 h-auto" // Reducimos el tamaño del logo
+                        className="w-72 h-auto"
                         style={{ userSelect: 'none' }}
                     />
                 </div>
             </div>
 
-            {/* Enmascarador */}
-            <div className="relative w-[300px] h-[250px] my-4"> {/* Reducimos el tamaño */}
-                <svg className="w-full h-full" viewBox="0 0 721 734" preserveAspectRatio="xMidYMid meet">
-                    <defs>
-                        <mask id="mask-library">
-                            <image
-                                href="/src/assets/icons/mask-library.svg"
-                                width="100%"
-                                height="100%"
-                                preserveAspectRatio="xMidYMid meet"
-                            />
-                        </mask>
-                    </defs>
-                    <image
-                        href={centerBook.images[0]} // Imagen del libro central
-                        width="100%"
-                        height="100%"
-                        preserveAspectRatio="xMidYMid meet"
-                        mask="url(#mask-library)"
-                    />
-                </svg>
+            {/* Máscara superior central con sinopsis */}
+            <div className="flex items-center justify-center gap-4 my-4">
+                {/* Máscara superior central */}
+                <motion.div
+                    className="relative w-[250px] h-[350px]" // Reducimos el tamaño
+                    layout
+                    initial={{ x: 0, rotate: 0 }} // Empieza en el centro sin rotación
+                    animate={{ x: -100, rotate: -10 }} // Se mueve hacia la izquierda y rota
+                    transition={{ duration: 0.5 }} // Duración de la animación
+                    key={centerBook.title} // Reactivamos la animación al cambiar el libro
+                >
+                    <svg className="w-full h-full">
+                        <defs>
+                            <mask id="mask-library">
+                                <image
+                                    href="/src/assets/icons/mask-library.svg"
+                                    width="100%"
+                                    height="100%"
+                                    preserveAspectRatio="xMidYMid meet"
+                                />
+                            </mask>
+                        </defs>
+                        <image
+                            href={centerBook.images[0]} // Imagen del libro central superior
+                            width="100%"
+                            height="100%"
+                            preserveAspectRatio="xMidYMid slice"
+                            mask="url(#mask-library)"
+                        />
+                    </svg>
+                </motion.div>
+
+                {/* Contenedor de la sinopsis */}
+                <div className="w-[250px] text-left"> {/* Reducimos el ancho */}
+                    <h2 className="text-xl font-bold mb-2">{centerBook.title}</h2> {/* Reducimos el tamaño del texto */}
+                    <p className="text-base leading-relaxed mb-2">
+                        {centerBook.content || 'Sinopsis no disponible.'}
+                    </p>
+                    <a
+                        href={centerBook.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-bold underline text-sm" // Reducimos el tamaño del enlace
+                    >
+                        {centerBook.url}
+                    </a>
+                </div>
             </div>
 
             {/* Contenedor principal para la librería */}
-            <div className="flex items-center justify-center gap-4"> {/* Reducimos el espacio entre contenedores */}
+            <div className="flex items-center justify-center gap-12"> {/* Aumentamos el espacio entre los contenedores */}
                 {/* Contenedor izquierdo */}
-                <div className="grid grid-cols-3 gap-2"> {/* Reducimos el espacio entre columnas */}
+                <div className="grid grid-cols-2 gap-6"> {/* Aumentamos el espacio entre libros */}
                     {leftBooks.map((book, index) => (
-                        <div key={index} className="relative w-[150px] h-[175px]"> {/* Reducimos el tamaño */}
+                        <motion.div
+                            key={index}
+                            className="relative w-[150px] h-[180px] cursor-pointer hover:scale-105 transition-transform" // Hacemos los libros más anchos
+                            onClick={() => setCenterBook(book)} // Actualizar el libro central superior
+                        >
                             <svg className="w-full h-full">
                                 <defs>
                                     <mask id={`mask-left-${index}`}>
@@ -90,16 +122,19 @@ export function Library() {
                                     href={book.images[0]} // Imagen del libro
                                     width="100%"
                                     height="100%"
-                                    preserveAspectRatio="xMidYMid slice" // Aseguramos que la imagen se ajuste
+                                    preserveAspectRatio="xMidYMid slice"
                                     mask={`url(#mask-left-${index})`}
                                 />
                             </svg>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
 
-                {/* Elemento central */}
-                <div className="relative w-[200px] h-[250px]"> {/* Reducimos el tamaño */}
+                {/* Elemento central inferior */}
+                <div
+                    className="relative w-[250px] h-[400px] cursor-pointer hover:scale-105 transition-transform" // Hacemos el libro central inferior más ancho
+                    onClick={() => setCenterBook(bottomCenterBook)} // Actualizar el libro central superior al hacer clic
+                >
                     <svg className="w-full h-full">
                         <defs>
                             <mask id="mask-center">
@@ -112,19 +147,23 @@ export function Library() {
                             </mask>
                         </defs>
                         <image
-                            href={centerBook.images[0]} // Imagen del libro central
+                            href={bottomCenterBook.images[0]} // Imagen del libro central inferior
                             width="100%"
                             height="100%"
-                            preserveAspectRatio="xMidYMid slice" // Aseguramos que la imagen se ajuste
+                            preserveAspectRatio="xMidYMid slice"
                             mask="url(#mask-center)"
                         />
                     </svg>
                 </div>
 
                 {/* Contenedor derecho */}
-                <div className="grid grid-cols-3 gap-2"> {/* Reducimos el espacio entre columnas */}
+                <div className="grid grid-cols-2 gap-6"> {/* Aumentamos el espacio entre libros */}
                     {rightBooks.map((book, index) => (
-                        <div key={index} className="relative w-[150px] h-[175px]"> {/* Reducimos el tamaño */}
+                        <motion.div
+                            key={index}
+                            className="relative w-[150px] h-[180px] cursor-pointer hover:scale-105 transition-transform" // Hacemos los libros más anchos
+                            onClick={() => setCenterBook(book)} // Actualizar el libro central superior
+                        >
                             <svg className="w-full h-full">
                                 <defs>
                                     <mask id={`mask-right-${index}`}>
@@ -140,11 +179,11 @@ export function Library() {
                                     href={book.images[0]} // Imagen del libro
                                     width="100%"
                                     height="100%"
-                                    preserveAspectRatio="xMidYMid slice" // Aseguramos que la imagen se ajuste
+                                    preserveAspectRatio="xMidYMid slice"
                                     mask={`url(#mask-right-${index})`}
                                 />
                             </svg>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>
