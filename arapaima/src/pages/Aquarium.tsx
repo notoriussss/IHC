@@ -1,145 +1,293 @@
-import { motion, AnimatePresence } from 'framer-motion'; // Importa AnimatePresence para manejar animaciones de entrada/salida
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
-import fishes from '@/data/fishes.json'; // Importa el JSON con los datos de los peces
+import { useState, useEffect } from 'react';
+import fishes from '@/data/fishes.json';
 
-const bottomRightToTopLeftVariants = {
-    initial: { clipPath: 'polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%)' },
-    animate: { clipPath: 'polygon(100% 100%, 0% 100%, 0% 0%, 100% 0%)' },
-    exit: { clipPath: 'polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%)' },
+const pageTransition = {
+    initial: {
+        opacity: 0,
+        scale: 0.8,
+        x: '100%',
+        y: '100%'
+    },
+    animate: {
+        opacity: 1,
+        scale: 1,
+        x: 0,
+        y: 0,
+        transition: {
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
 };
 
-// Variantes para la animación de cambio de pez
+const overlayTransition = {
+    initial: {
+        background: 'radial-gradient(circle at bottom right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)',
+        opacity: 0
+    },
+    animate: {
+        background: 'radial-gradient(circle at bottom right, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 100%)',
+        opacity: 1,
+        transition: {
+            duration: 0.8,
+            background: {
+                delay: 0.2,
+                duration: 0.6
+            }
+        }
+    }
+};
+
+const contentAnimation = {
+    initial: { opacity: 0 },
+    animate: { 
+        opacity: 1,
+        transition: {
+            duration: 0.3,
+            delay: 0.3
+        }
+    }
+};
+
 const fishVariants = {
-    initial: { opacity: 0, scale: 0.8, y: 100 }, // Comienza pequeño, transparente y desplazado hacia abajo
-    animate: { opacity: 1, scale: 1, y: 0 }, // Aparece en su tamaño normal y posición
-    exit: { opacity: 0, scale: 1.2, y: -100 }, // Desaparece creciendo ligeramente y desplazándose hacia arriba
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.8 },
+};
+
+const pageIndicatorAnimation = {
+    initial: {
+        x: 100,
+        opacity: 0
+    },
+    animate: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            duration: 0.5,
+            delay: 0.3,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
+const iconAnimation = {
+    initial: {
+        scale: 0,
+        opacity: 0,
+        rotate: -180
+    },
+    animate: {
+        scale: 1,
+        opacity: 1,
+        rotate: 0,
+        transition: {
+            duration: 0.5,
+            delay: 0.2,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
 };
 
 export function Aquarium() {
     const navigate = useNavigate();
-    const [currentFishIndex, setCurrentFishIndex] = useState(0); // Estado para el pez actual
-    const containerRef = useRef<HTMLDivElement | null>(null); // Referencia al contenedor para manejar el scroll
-    const scrollThreshold = 100; // Umbral de desplazamiento para cambiar de pez
-    const scrollDelta = useRef(0); // Acumulador del desplazamiento
+    const [currentFishIndex, setCurrentFishIndex] = useState(0);
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    const currentFish = fishes[currentFishIndex];
 
-    // Función para cambiar al siguiente pez
-    const handleNextFish = (): void => {
-        setCurrentFishIndex((prevIndex) =>
-            prevIndex === fishes.length - 1 ? 0 : prevIndex + 1
-        );
-    };
+    useEffect(() => {
+        setIsFirstRender(false);
+    }, []);
 
-    // Función para cambiar al pez anterior
-    const handlePreviousFish = (): void => {
+    const handlePreviousFish = () => {
         setCurrentFishIndex((prevIndex) =>
             prevIndex === 0 ? fishes.length - 1 : prevIndex - 1
         );
     };
 
-    // Manejar el evento de scroll
-    const handleScroll = (event: WheelEvent): void => {
-        const { deltaY } = event; // Detecta la dirección del scroll
-        scrollDelta.current += deltaY;
-
-        if (scrollDelta.current > scrollThreshold) {
-            handleNextFish(); // Scroll hacia abajo
-            scrollDelta.current = 0; // Reinicia el acumulador
-        } else if (scrollDelta.current < -scrollThreshold) {
-            handlePreviousFish(); // Scroll hacia arriba
-            scrollDelta.current = 0; // Reinicia el acumulador
-        }
+    const handleNextFish = () => {
+        setCurrentFishIndex((prevIndex) =>
+            prevIndex === fishes.length - 1 ? 0 : prevIndex + 1
+        );
     };
 
-    // Agregar el evento de scroll al contenedor
     useEffect(() => {
-        const container = containerRef.current;
-        if (container) {
-            container.addEventListener('wheel', handleScroll);
-        }
-        return () => {
-            if (container) {
-                container.removeEventListener('wheel', handleScroll);
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowLeft') {
+                handlePreviousFish();
+            } else if (event.key === 'ArrowRight') {
+                handleNextFish();
             }
         };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
     }, []);
 
-    // Datos del pez actual
-    const currentFish = fishes[currentFishIndex];
-
     return (
-        <motion.div
-            ref={containerRef} // Referencia al contenedor
-            className="relative min-h-screen flex flex-col items-center justify-start text-white"
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={bottomRightToTopLeftVariants}
-            transition={{ duration: 0.5 }}
-            style={{
-                backgroundImage: "url('/src/assets/background/background-aquarium.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                userSelect: 'none',
-            }}
-        >
-            {/* Contenedor para centrar el logo */}
-            <div className="w-full flex justify-center items-center py-5">
-                <div
-                    className="cursor-pointer flex flex-col items-center"
-                    onClick={() => navigate('/')}
+        <AnimatePresence mode="wait">
+            <motion.div
+                className="fixed inset-0"
+                initial="initial"
+                animate="animate"
+                variants={pageTransition}
+                style={{
+                    perspective: '1000px',
+                    transformStyle: 'preserve-3d'
+                }}
+            >
+                <motion.div
+                    className="absolute inset-0"
+                    variants={overlayTransition}
+                />
+                
+                <motion.div
+                    className="relative w-full h-full flex flex-col items-center justify-start text-white"
+                    variants={contentAnimation}
+                    style={{
+                        backgroundImage: "url('/src/assets/background/background-aquarium.png')",
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        overflow: 'hidden'
+                    }}
                 >
-                    <img
-                        src="/src/assets/logo/logo.svg"
-                        alt="Logo"
-                        className="w-80 h-auto"
-                        style={{ userSelect: 'none' }}
-                    />
-                </div>
-            </div>
-
-            {/* Contenedor centralizado */}
-            <div className="relative flex flex-col items-center justify-center text-center p-8 py-0 w-[60%]">
-                <AnimatePresence mode="wait">
-                    {/* Contenido del pez actual con animación */}
-                    <motion.div
-                        key={currentFishIndex} // Cambia la clave para que AnimatePresence detecte el cambio
-                        variants={fishVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        transition={{ duration: 0.8 }} // Animación más lenta para el efecto de profundidad
-                        className="flex flex-col items-center"
-                    >
-                        {/* Nombre del pez */}
-                        <h1 className="text-4xl font-bold mb-8">{currentFish.name}</h1>
-
-                        {/* Datos del pez */}
-                        <p className="text-lg mb-8">
-                            <strong>Datos:</strong> {currentFish.data}
-                        </p>
-
-                        {/* Características del pez en formato horizontal */}
-                        <div className="flex flex-wrap justify-center gap-4 mb-8">
-                            {Object.entries(currentFish.characteristics).map(([key, value]) => (
-                                <div
-                                    key={key}
-                                    className="bg-gray-800 bg-opacity-75 p-2 rounded-md shadow-md text-sm"
-                                >
-                                    <strong>{key}:</strong> {value}
+                    {/* Barra superior con ícono, título y logo */}
+                    <div className="absolute top-5 w-full flex items-center justify-between px-8 z-20">
+                        {/* Contenedor del ícono y título */}
+                        <div className="flex items-center gap-3">
+                            <motion.div 
+                                className="w-20 h-20 flex items-center justify-center"
+                                variants={iconAnimation}
+                            >
+                                <div className="w-20 h-20 flex items-center justify-center">
+                                    <img 
+                                        src="/src/assets/icons/fish.png"
+                                        alt="Fish Icon"
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
-                            ))}
+                            </motion.div>
+                            <motion.div 
+                                className="flex items-center"
+                                variants={pageIndicatorAnimation}
+                            >
+                                <h2 className="text-3xl font-bold text-white">
+                                    Acuario
+                                </h2>
+                            </motion.div>
                         </div>
 
-                        {/* Imagen del pez */}
-                        <img
-                            src={currentFish.image}
-                            alt={currentFish.name}
-                            className="w-125 h-80 object-cover rounded-lg mt-8"
+                        {/* Logo centrado */}
+                        <motion.div
+                            className="cursor-pointer"
+                            onClick={() => navigate('/')}
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                        >
+                            <img
+                                src="/src/assets/logo/logo.svg"
+                                alt="Logo"
+                                className="w-60 h-auto"
+                                style={{ userSelect: 'none' }}
+                            />
+                        </motion.div>
+
+                        {/* Div vacío para mantener el logo centrado */}
+                        <div className="w-[200px]"></div>
+                    </div>
+
+                    {/* Contenedor centralizado */}
+                    <div className="absolute inset-0 flex items-center justify-center pt-32">
+                        <div className="w-[60%] flex flex-col items-center justify-center text-center">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentFishIndex}
+                                    variants={fishVariants}
+                                    initial={isFirstRender ? false : "initial"}
+                                    animate="animate"
+                                    exit="exit"
+                                    transition={{ duration: 0.5 }}
+                                    className="flex flex-col items-center"
+                                >
+                                    <h1 className="text-4xl font-bold mb-8">{currentFish.name}</h1>
+                                    <p className="text-lg mb-8">{currentFish.data}</p>
+                                    
+                                    <div className="flex flex-wrap justify-center gap-4 mb-8">
+                                        {Object.entries(currentFish.characteristics).map(([key, value]) => (
+                                            <motion.div
+                                                key={key}
+                                                className="bg-gray-800 bg-opacity-75 p-2 rounded-md shadow-md text-sm"
+                                                whileHover={{
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                    scale: 1.05
+                                                }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            >
+                                                <strong>{key}:</strong> {value}
+                                            </motion.div>
+                                        ))}
+                                    </div>
+
+                                    <img
+                                        src={currentFish.image}
+                                        alt={currentFish.name}
+                                        className="w-125 h-80 object-cover rounded-lg mt-8"
+                                    />
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+                    </div>
+
+                    {/* Flechas de navegación */}
+                    <motion.div
+                        className="absolute left-32 top-1/2 transform -translate-y-1/2 cursor-pointer z-20"
+                        onClick={handlePreviousFish}
+                        whileHover={{ scale: 1.2 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                        <motion.img
+                            src="/src/assets/icons/arrow-left.svg"
+                            alt="Flecha izquierda"
+                            className="w-12 h-12"
+                            whileHover={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                        />
+                        <motion.img
+                            src="/src/assets/icons/arrow-left-hover.svg"
+                            alt="Flecha izquierda hover"
+                            className="w-12 h-12 absolute top-0 left-0"
+                            initial={{ opacity: 0 }}
+                            whileHover={{ opacity: 1 }}
+                            transition={{ duration: 0.2 }}
                         />
                     </motion.div>
-                </AnimatePresence>
-            </div>
-        </motion.div>
+
+                    <motion.div
+                        className="absolute right-32 top-1/2 transform -translate-y-1/2 cursor-pointer z-20"
+                        onClick={handleNextFish}
+                        whileHover={{ scale: 1.2 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                        <motion.img
+                            src="/src/assets/icons/arrow-right.svg"
+                            alt="Flecha derecha"
+                            className="w-12 h-12"
+                            whileHover={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                        />
+                        <motion.img
+                            src="/src/assets/icons/arrow-right-hover.svg"
+                            alt="Flecha derecha hover"
+                            className="w-12 h-12 absolute top-0 left-0"
+                            initial={{ opacity: 0 }}
+                            whileHover={{ opacity: 1 }}
+                            transition={{ duration: 0.2 }}
+                        />
+                    </motion.div>
+                </motion.div>
+            </motion.div>
+        </AnimatePresence>
     );
 }

@@ -1,0 +1,77 @@
+{
+    "recentTopics": [
+        { "id": 1, "title": "¿Cuál es tu libro favorito?", "comments": 12 },
+        { "id": 2, "title": "Discusión sobre antropología", "comments": 8 },
+        { "id": 3, "title": "Recomendaciones de lectura", "comments": 15 },
+        { "id": 4, "title": "Eventos culturales en tu región", "comments": 5 }
+    ],
+    "posts": [
+        {
+            "id": 1,
+            "title": "Bienvenidos al foro",
+            "content": "Este es un espacio para compartir ideas, discutir temas y aprender juntos.",
+            "author": "Admin",
+            "createdAt": "2024-03-15T10:00:00Z",
+            "upvotes": 42,
+            "downvotes": 2,
+            "comments": [
+                {
+                    "id": 1,
+                    "author": "Usuario1",
+                    "content": "¡Gracias por crear este espacio!",
+                    "createdAt": "2024-03-15T10:30:00Z",
+                    "upvotes": 15,
+                    "downvotes": 0,
+                    "replies": []
+                },
+                {
+                    "id": 2,
+                    "author": "Usuario2",
+                    "content": "Estoy emocionado por participar.",
+                    "createdAt": "2024-03-15T11:00:00Z",
+                    "upvotes": 8,
+                    "downvotes": 1,
+                    "replies": [
+                        {
+                            "id": 3,
+                            "author": "Admin",
+                            "content": "¡Nos alegra tenerte aquí!",
+                            "createdAt": "2024-03-15T11:05:00Z",
+                            "upvotes": 5,
+                            "downvotes": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "Recomendaciones de libros",
+            "content": "¿Qué libros recomendarían para aprender sobre antropología?",
+            "author": "Usuario123",
+            "createdAt": "2024-03-16T09:00:00Z",
+            "upvotes": 28,
+            "downvotes": 1,
+            "comments": [
+                {
+                    "id": 1,
+                    "author": "Usuario3",
+                    "content": "Te recomiendo 'Sapiens' de Yuval Noah Harari.",
+                    "createdAt": "2024-03-16T09:15:00Z",
+                    "upvotes": 12,
+                    "downvotes": 0,
+                    "replies": []
+                },
+                {
+                    "id": 2,
+                    "author": "Usuario4",
+                    "content": "También puedes leer 'Guns, Germs, and Steel' de Jared Diamond.",
+                    "createdAt": "2024-03-16T09:30:00Z",
+                    "upvotes": 10,
+                    "downvotes": 0,
+                    "replies": []
+                }
+            ]
+        }
+    ]
+} 
