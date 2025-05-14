@@ -4,6 +4,7 @@ import { Aquarium, Library, Culture, Forum, ArticleDetail, PostDetail } from '@/
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import '/src/css/App.css';
+import { Aqua } from './Aqua';
 
 const homeVariants = {
     initial: {
@@ -199,7 +200,7 @@ export default function App() {
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/aquarium" element={<Aquarium />} />
+          <Route path="/aquarium" element={<Aqua />} />
           <Route path="/library" element={<Library />} />
           <Route path="/culture" element={<Culture />} />
           <Route path="/forum" element={<Forum />} />
