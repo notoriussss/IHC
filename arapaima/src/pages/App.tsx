@@ -44,6 +44,7 @@ const KUAIMARE_TEXT_VARIATIONS = [
 
 function Home() {
   const navigate = useNavigate();
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   // Estado para la posición relativa del mouse respecto al centro de la pantalla
   const [kuaiPos, setKuaiPos] = useState({ x: 0, y: 0 });
@@ -54,6 +55,20 @@ function Home() {
   const [textIndex, setTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
   const [currentImage, setCurrentImage] = useState(1);
+
+  // Iniciar la música cuando el componente se monte
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.2; // Volumen al 30%
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          // Auto-play fue prevenido
+          console.log("Reproducción automática prevenida:", error);
+        });
+      }
+    }
+  }, []);
 
   // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
@@ -127,6 +142,14 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
+        <audio
+          ref={audioRef}
+          src="/music/musica-ambiental.ogg"
+          loop
+          autoPlay
+          preload="auto"
+        />
+        
         {/* Logo en la parte superior */}
         <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
             <img
