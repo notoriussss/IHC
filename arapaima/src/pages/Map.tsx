@@ -102,7 +102,14 @@ const DataPanel = ({ data }: { data: RegionData }) => {
     const [activeTab, setActiveTab] = useState<'info' | 'historia' | 'ubicaciones' | 'indigenas'>('info');
 
     return (
-        <div className="bg-black/80 backdrop-blur-sm rounded-lg border border-[#b38f25]/30 p-6 w-full">
+        <motion.div
+            className="bg-black/80 backdrop-blur-sm rounded-lg border border-[#b38f25]/30 p-6 w-full"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{ duration: 0.3 }}
+            key={data.nombre}
+        >
             <h3 className="text-2xl font-bold text-white mb-4">{data.nombre}</h3>
             
             {/* Tabs de navegación */}
@@ -181,7 +188,7 @@ const DataPanel = ({ data }: { data: RegionData }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -196,7 +203,13 @@ export function Map() {
             if (mapContainerRef.current && 
                 !mapContainerRef.current.contains(event.target as Node) &&
                 selectedRegion !== null) {
-                setSelectedRegion(null);
+                // Verificar si el clic fue dentro del panel de información
+                const clickedElement = event.target as HTMLElement;
+                const isClickInsideInfoPanel = clickedElement.closest('.region-info-panel');
+                
+                if (!isClickInsideInfoPanel) {
+                    setSelectedRegion(null);
+                }
             }
         };
 
@@ -396,7 +409,7 @@ export function Map() {
                             {selectedRegion ? (
                                 <motion.div
                                     key="region-info"
-                                    className="absolute right-8 top-1/2 transform -translate-y-1/2 w-[500px]"
+                                    className="absolute right-8 top-1/2 transform -translate-y-1/2 w-[500px] region-info-panel"
                                     initial={{ opacity: 0, x: 50 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: 50 }}
