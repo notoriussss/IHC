@@ -45,12 +45,7 @@ const KUAIMARE_TEXT_VARIATIONS = [
 
 function Home() {
   const navigate = useNavigate();
-  const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(() => {
-    // Verificar si ya se inició la experiencia antes
-    return localStorage.getItem('experienceStarted') === 'true';
-  });
 
   // Estado para la posición relativa del mouse respecto al centro de la pantalla
   const [kuaiPos, setKuaiPos] = useState({ x: 0, y: 0 });
@@ -61,44 +56,8 @@ function Home() {
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
   const [currentImage, setCurrentImage] = useState(1);
 
-  // Efecto para iniciar el audio si ya pasó por la experiencia
-  useEffect(() => {
-    if (isPlaying) {
-      const audioElement = audioRef.current;
-      if (audioElement) {
-        audioElement.volume = 0.2;
-        audioElement.play().catch(error => {
-          console.log("Error al reproducir el audio:", error);
-          setIsPlaying(false);
-          localStorage.removeItem('experienceStarted');
-        });
-      }
-    }
-  }, []);
-
-  // Función para iniciar el audio y la experiencia
-  const startExperience = async () => {
-    const audioElement = audioRef.current;
-    if (!audioElement) return;
-    
-    audioElement.volume = 0.2;
-    try {
-      await audioElement.play();
-      setIsPlaying(true);
-      // Guardamos que ya inició la experiencia
-      localStorage.setItem('experienceStarted', 'true');
-      // Iniciamos el texto después de que comience la experiencia
-      setDisplayedText('');
-      setTextIndex(0);
-    } catch (error) {
-      console.log("Error al reproducir el audio:", error);
-    }
-  };
-
   // Efecto para mostrar el texto caracter por caracter y alternar la imagen
   useEffect(() => {
-    if (!isPlaying) return; // No ejecutar si la experiencia no ha comenzado
-
     if (textIndex < currentText.length) {
       const timeout = setTimeout(() => {
         setDisplayedText((prev) => prev + currentText[textIndex]);
@@ -114,11 +73,10 @@ function Home() {
       }, 22);
       return () => clearTimeout(timeout);
     }
-  }, [textIndex, currentText, isPlaying]);
+  }, [textIndex, currentText]);
 
   // Permitir que al hacer click se muestre todo el texto de una vez
   const handleTextClick = () => {
-    if (!isPlaying) return; // No ejecutar si la experiencia no ha comenzado
     if (displayedText.length < currentText.length) {
       setDisplayedText(currentText);
       setTextIndex(currentText.length);
@@ -128,7 +86,6 @@ function Home() {
 
   // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
-    if (!isPlaying) return; // No ejecutar si la experiencia no ha comenzado
     const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
     if (newText !== currentText) {
       setDisplayedText('');
@@ -171,41 +128,6 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
-        {!isPlaying && (
-          <div className="absolute inset-0 z-50 bg-black/80 flex items-center justify-center">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="text-center"
-            >
-              <img
-                src="/src/assets/logo/logo.svg"
-                alt="Logo"
-                className="w-96 h-auto mb-8 mx-auto"
-              />
-              <button
-                onClick={startExperience}
-                className="bg-cyan-500 hover:bg-cyan-400 text-white text-2xl px-12 py-4 rounded-full transition-colors duration-300 flex items-center gap-4 mx-auto"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                Iniciar Experiencia
-              </button>
-            </motion.div>
-          </div>
-        )}
-
-        <audio
-          ref={audioRef}
-          src="/music/musica-ambiental.ogg"
-          loop
-          preload="auto"
-          muted={false}
-          playsInline
-        />
-        
         {/* Logo en la parte superior */}
         <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
             <img
