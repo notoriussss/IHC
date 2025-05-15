@@ -31,7 +31,16 @@ const homeVariants = {
 };
 
 // Texto que aparecerá caracter por caracter
-const KUAIMARE_TEXT = "Kuai-Mare está aquí para guiarte en tu viaje por este océano de información. Con su sabiduría infinita y su comprensión profunda, te ayudará a navegar en las aguas turbulentas de la búsqueda del conocimiento, brindándote claridad y apoyo en cada paso del camino.";
+const KUAIMARE_TEXT =
+    "Kuai-Mare está aquí para guiarte en tu viaje por este océano de información. Con su sabiduría infinita y su comprensión profunda, te ayudará a navegar en las aguas turbulentas de la búsqueda del conocimiento, brindándote claridad y apoyo en cada paso del camino.";
+
+// Variaciones
+const KUAIMARE_TEXT_VARIATIONS = [
+    "Kuai-Mare escucha las voces que surgen del río del diálogo. En este espacio de encuentro, él te invita a compartir tus pensamientos, aprender de otros viajeros y construir juntos un cauce de sabiduría colectiva.",
+    "En los reflejos del agua, Kuai-Mare guarda los relatos antiguos y las costumbres vivas. Aquí te guía a través de los mitos, los cantos, y los saberes que dan alma a la región Guayana, despertando en ti la memoria del espíritu warao.",
+    "Como guardián del conocimiento ancestral, Kuai-Mare te abre las puertas de esta vasta corriente de libros, textos y saberes. Sumérgete con él en la profundidad del conocimiento, donde cada página es una gota del río eterno del aprendizaje.",
+    "En las aguas del Acuario, Kuai-Mare revela los secretos de las criaturas que habitan los ríos y lagunas. Déjate guiar por su mirada ancestral para descubrir la belleza y la sabiduría del mundo acuático que respira bajo la superficie.",
+];
 
 function Home() {
   const navigate = useNavigate();
@@ -43,19 +52,27 @@ function Home() {
   // Estado para el texto tipo máquina de escribir
   const [displayedText, setDisplayedText] = useState('');
   const [textIndex, setTextIndex] = useState(0);
+  const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
+
+  // Función para manejar el hover en las esquinas
+  const handleCornerHover = (index: number) => {
+    const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
+    if (newText !== currentText) {
+      setDisplayedText('');
+      setTextIndex(0);
+      setCurrentText(newText);
+    }
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      // Coordenadas del mouse relativas al centro del contenedor
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const offsetX = e.clientX - centerX;
       const offsetY = e.clientY - centerY;
-      // Limitar el movimiento máximo (en px)
       const maxMove = 40;
-      // Normalizar y limitar
       const limitedX = Math.max(-maxMove, Math.min(maxMove, offsetX / 10));
       const limitedY = Math.max(-maxMove, Math.min(maxMove, offsetY / 10));
       setKuaiPos({ x: limitedX, y: limitedY });
@@ -67,20 +84,20 @@ function Home() {
 
   // Efecto para mostrar el texto caracter por caracter
   useEffect(() => {
-    if (textIndex < KUAIMARE_TEXT.length) {
+    if (textIndex < currentText.length) {
       const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + KUAIMARE_TEXT[textIndex]);
+        setDisplayedText((prev) => prev + currentText[textIndex]);
         setTextIndex((prev) => prev + 1);
-      }, 22); // velocidad tipo N64, puedes ajustar el delay
+      }, 22);
       return () => clearTimeout(timeout);
     }
-  }, [textIndex]);
+  }, [textIndex, currentText]);
 
   // Permitir que al hacer click se muestre todo el texto de una vez
   const handleTextClick = () => {
-    if (displayedText.length < KUAIMARE_TEXT.length) {
-      setDisplayedText(KUAIMARE_TEXT);
-      setTextIndex(KUAIMARE_TEXT.length);
+    if (displayedText.length < currentText.length) {
+      setDisplayedText(currentText);
+      setTextIndex(currentText.length);
     }
   };
 
@@ -134,7 +151,7 @@ function Home() {
             >
                 <p>
                   {displayedText}
-                  <span className="animate-pulse">{displayedText.length < KUAIMARE_TEXT.length ? '▋' : ''}</span>
+                  <span className="animate-pulse">{displayedText.length < currentText.length ? '▋' : ''}</span>
                 </p>
             </div>
         </div>
@@ -177,16 +194,32 @@ function Home() {
         </div>
 
         {/* Esquinas decorativas con navegación */}
-        <div className="absolute top-0 left-0 z-30" onClick={() => navigate('/forum')}>
+        <div 
+          className="absolute top-0 left-0 z-30" 
+          onClick={() => navigate('/forum')}
+          onMouseEnter={() => handleCornerHover(0)}
+        >
           <Border src="/src/assets/icons/border_top_left.svg" alt="Top Left Border" />
         </div>
-        <div className="absolute top-0 right-0 z-30" onClick={() => navigate('/culture')}>
+        <div 
+          className="absolute top-0 right-0 z-30" 
+          onClick={() => navigate('/culture')}
+          onMouseEnter={() => handleCornerHover(1)}
+        >
           <Border src="/src/assets/icons/border_top_right.svg" alt="Top Right Border" />
         </div>
-        <div className="absolute bottom-0 left-0 z-30" onClick={() => navigate('/library')}>
+        <div 
+          className="absolute bottom-0 left-0 z-30" 
+          onClick={() => navigate('/library')}
+          onMouseEnter={() => handleCornerHover(2)}
+        >
           <Border src="/src/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
         </div>
-        <div className="absolute bottom-0 right-0 z-30" onClick={() => navigate('/aquarium')}>
+        <div 
+          className="absolute bottom-0 right-0 z-30" 
+          onClick={() => navigate('/aquarium')}
+          onMouseEnter={() => handleCornerHover(3)}
+        >
           <Border src="/src/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
         </div>
       </motion.div>
