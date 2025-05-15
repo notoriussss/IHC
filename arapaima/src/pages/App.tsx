@@ -45,10 +45,14 @@ const KUAIMARE_TEXT_VARIATIONS = [
 function Home() {
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(() => {
+    // Verificar si ya se inició la experiencia antes
+    return localStorage.getItem('experienceStarted') === 'true';
+  });
 
   // Estado para la posición relativa del mouse respecto al centro de la pantalla
   const [kuaiPos, setKuaiPos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // Estado para el texto tipo máquina de escribir
   const [displayedText, setDisplayedText] = useState('');
@@ -56,22 +60,74 @@ function Home() {
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
   const [currentImage, setCurrentImage] = useState(1);
 
-  // Iniciar la música cuando el componente se monte
+  // Efecto para iniciar el audio si ya pasó por la experiencia
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.2; // Volumen al 30%
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          // Auto-play fue prevenido
-          console.log("Reproducción automática prevenida:", error);
+    if (isPlaying) {
+      const audioElement = audioRef.current;
+      if (audioElement) {
+        audioElement.volume = 0.2;
+        audioElement.play().catch(error => {
+          console.log("Error al reproducir el audio:", error);
+          setIsPlaying(false);
+          localStorage.removeItem('experienceStarted');
         });
       }
     }
   }, []);
 
+  // Función para iniciar el audio y la experiencia
+  const startExperience = async () => {
+    const audioElement = audioRef.current;
+    if (!audioElement) return;
+    
+    audioElement.volume = 0.2;
+    try {
+      await audioElement.play();
+      setIsPlaying(true);
+      // Guardamos que ya inició la experiencia
+      localStorage.setItem('experienceStarted', 'true');
+      // Iniciamos el texto después de que comience la experiencia
+      setDisplayedText('');
+      setTextIndex(0);
+    } catch (error) {
+      console.log("Error al reproducir el audio:", error);
+    }
+  };
+
+  // Efecto para mostrar el texto caracter por caracter y alternar la imagen
+  useEffect(() => {
+    if (!isPlaying) return; // No ejecutar si la experiencia no ha comenzado
+
+    if (textIndex < currentText.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText((prev) => prev + currentText[textIndex]);
+        setTextIndex((prev) => prev + 1);
+        // Cambia la imagen cada 5 caracteres, pero asegura que termine en 1
+        if (textIndex % 4 === 0) {
+          if (textIndex < currentText.length - 4) {
+            setCurrentImage((prev) => prev === 1 ? 2 : 1);
+          } else {
+            setCurrentImage(1);
+          }
+        }
+      }, 22);
+      return () => clearTimeout(timeout);
+    }
+  }, [textIndex, currentText, isPlaying]);
+
+  // Permitir que al hacer click se muestre todo el texto de una vez
+  const handleTextClick = () => {
+    if (!isPlaying) return; // No ejecutar si la experiencia no ha comenzado
+    if (displayedText.length < currentText.length) {
+      setDisplayedText(currentText);
+      setTextIndex(currentText.length);
+      setCurrentImage(1);
+    }
+  };
+
   // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
+    if (!isPlaying) return; // No ejecutar si la experiencia no ha comenzado
     const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
     if (newText !== currentText) {
       setDisplayedText('');
@@ -98,34 +154,6 @@ function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Efecto para mostrar el texto caracter por caracter y alternar la imagen
-  useEffect(() => {
-    if (textIndex < currentText.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + currentText[textIndex]);
-        setTextIndex((prev) => prev + 1);
-        // Cambia la imagen cada 5 caracteres, pero asegura que termine en 1
-        if (textIndex % 4 === 0) {
-          if (textIndex < currentText.length - 4) {
-            setCurrentImage((prev) => prev === 1 ? 2 : 1);
-          } else {
-            setCurrentImage(1);
-          }
-        }
-      }, 22);
-      return () => clearTimeout(timeout);
-    }
-  }, [textIndex, currentText]);
-
-  // Permitir que al hacer click se muestre todo el texto de una vez
-  const handleTextClick = () => {
-    if (displayedText.length < currentText.length) {
-      setDisplayedText(currentText);
-      setTextIndex(currentText.length);
-      setCurrentImage(1); // Asegura que termine en kuai-mare-1
-    }
-  };
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -142,12 +170,39 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
+        {!isPlaying && (
+          <div className="absolute inset-0 z-50 bg-black/80 flex items-center justify-center">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="text-center"
+            >
+              <img
+                src="/src/assets/logo/logo.svg"
+                alt="Logo"
+                className="w-96 h-auto mb-8 mx-auto"
+              />
+              <button
+                onClick={startExperience}
+                className="bg-cyan-500 hover:bg-cyan-400 text-white text-2xl px-12 py-4 rounded-full transition-colors duration-300 flex items-center gap-4 mx-auto"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Iniciar Experiencia
+              </button>
+            </motion.div>
+          </div>
+        )}
+
         <audio
           ref={audioRef}
-          src="/music/musica-ambiental.mp3"
+          src="/music/musica-ambiental.ogg"
           loop
-          autoPlay
           preload="auto"
+          muted={false}
+          playsInline
         />
         
         {/* Logo en la parte superior */}
@@ -214,16 +269,16 @@ function Home() {
         <div className="absolute bottom-0 left-0 z-0">
           <img
             src="/src/assets/background/fire.svg"
-            alt="Top Right Background Image"
+            alt="Bottom Left Image"
             className="w-300 h-300"
           />
         </div>
-        <div className="absolute bottom-0 right-0 z-0">
-          <img
-            src="/src/assets/background/water.svg"
-            alt="Top Right Background Image"
-            className="w-225 h-125"
-          />
+        <div className="absolute bottom-0 right-0 z-0 mix-blend-color">
+            <img
+              src="/src/assets/background/water.gif"
+              alt="Bottom Right Image"
+              className="w-225 h-125 rotate-[-35deg] translate-y-20 translate-x-50"
+            />
         </div>
 
         {/* Esquinas decorativas con navegación */}
