@@ -110,7 +110,7 @@ function Home() {
         </div>
 
         {/* Contenido centrado */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
             <motion.img
                 src="/src/assets/chatbot/kuai-mare.svg"
                 alt="Kuai Mare"
@@ -122,14 +122,13 @@ function Home() {
                 }}
                 transition={{
                   type: "spring",
-                  stiffness: 60,
-                  damping: 10,
-                  mass: 0.5,
+                  stiffness: 40,
+                  damping: 15,
+                  mass: 0.8,
                 }}
             />
             <div
-                className="w-[1030px] h-60 text-center justify-start text-white text-3xl font-normal"
-                style={{ userSelect: 'none', cursor: displayedText.length < KUAIMARE_TEXT.length ? 'pointer' : 'default' }}
+                className="w-[1030px] h-60 text-center justify-start text-white text-3xl font-normal pointer-events-auto cursor-pointer relative z-20"
                 onClick={handleTextClick}
             >
                 <p>
@@ -177,16 +176,16 @@ function Home() {
         </div>
 
         {/* Esquinas decorativas con navegación */}
-        <div className="absolute top-0 left-0 z-10" onClick={() => navigate('/forum')}>
+        <div className="absolute top-0 left-0 z-30" onClick={() => navigate('/forum')}>
           <Border src="/src/assets/icons/border_top_left.svg" alt="Top Left Border" />
         </div>
-        <div className="absolute top-0 right-0 z-10" onClick={() => navigate('/culture')}>
+        <div className="absolute top-0 right-0 z-30" onClick={() => navigate('/culture')}>
           <Border src="/src/assets/icons/border_top_right.svg" alt="Top Right Border" />
         </div>
-        <div className="absolute bottom-0 left-0 z-10" onClick={() => navigate('/library')}>
+        <div className="absolute bottom-0 left-0 z-30" onClick={() => navigate('/library')}>
           <Border src="/src/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
         </div>
-        <div className="absolute bottom-0 right-0 z-10" onClick={() => navigate('/aquarium')}>
+        <div className="absolute bottom-0 right-0 z-30" onClick={() => navigate('/aquarium')}>
           <Border src="/src/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
         </div>
       </motion.div>
