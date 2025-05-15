@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import '/src/css/App.css';
 import { Aqua } from './Aqua';
+import { Aquario } from './Aquario';
 
 const homeVariants = {
     initial: {
@@ -200,6 +201,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/aquarium" element={<Aqua />} />
+          <Route path="/aquario" element={<Aquario />} />
           <Route path="/library" element={<Library />} />
           <Route path="/culture" element={<Culture />} />
           <Route path="/forum" element={<Forum />} />
