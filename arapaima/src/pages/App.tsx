@@ -39,7 +39,7 @@ const KUAIMARE_TEXT_VARIATIONS = [
     "Kuai-Mare escucha las voces que surgen del río del diálogo. En este espacio de encuentro, él te invita a compartir tus pensamientos, aprender de otros viajeros y construir juntos un cauce de sabiduría colectiva.",
     "En los reflejos del agua, Kuai-Mare guarda los relatos antiguos y las costumbres vivas. Aquí te guía a través de los mitos, los cantos, y los saberes que dan alma a la región Guayana, despertando en ti la memoria del espíritu warao.",
     "Como guardián del conocimiento ancestral, Kuai-Mare te abre las puertas de esta vasta corriente de libros, textos y saberes. Sumérgete con él en la profundidad del conocimiento, donde cada página es una gota del río eterno del aprendizaje.",
-    "En las aguas del Acuario, Kuai-Mare revela los secretos de las criaturas que habitan los ríos y lagunas. Déjate guiar por su mirada ancestral para descubrir la belleza y la sabiduría del mundo acuático que respira bajo la superficie.",
+    "Kuai-Mare fluye donde el agua canta. Conoce los secretos de los ríos, las lagunas y los caños que dan vida a la Guayana. A través de su mirada ancestral, entenderás la conexión sagrada entre el mundo líquido y los seres que lo habitan.",
 ];
 
 function Home() {
@@ -53,6 +53,7 @@ function Home() {
   const [displayedText, setDisplayedText] = useState('');
   const [textIndex, setTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
+  const [currentImage, setCurrentImage] = useState(1);
 
   // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
@@ -82,12 +83,20 @@ function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Efecto para mostrar el texto caracter por caracter
+  // Efecto para mostrar el texto caracter por caracter y alternar la imagen
   useEffect(() => {
     if (textIndex < currentText.length) {
       const timeout = setTimeout(() => {
         setDisplayedText((prev) => prev + currentText[textIndex]);
         setTextIndex((prev) => prev + 1);
+        // Cambia la imagen cada 5 caracteres, pero asegura que termine en 1
+        if (textIndex % 4 === 0) {
+          if (textIndex < currentText.length - 4) {
+            setCurrentImage((prev) => prev === 1 ? 2 : 1);
+          } else {
+            setCurrentImage(1);
+          }
+        }
       }, 22);
       return () => clearTimeout(timeout);
     }
@@ -98,6 +107,7 @@ function Home() {
     if (displayedText.length < currentText.length) {
       setDisplayedText(currentText);
       setTextIndex(currentText.length);
+      setCurrentImage(1); // Asegura que termine en kuai-mare-1
     }
   };
 
@@ -130,7 +140,7 @@ function Home() {
         {/* Contenido centrado */}
         <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
             <motion.img
-                src="/src/assets/chatbot/kuai-mare.svg"
+                src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
                 alt="Kuai Mare"
                 className="w-125 h-auto mb-8"
                 style={{ userSelect: 'none' }}
