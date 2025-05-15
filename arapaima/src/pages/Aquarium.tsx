@@ -154,34 +154,28 @@ export function Aquarium() {
                     }}
                 >
                     {/* Barra superior con ícono, título y logo */}
-                    <div className="absolute top-5 w-full flex items-center justify-between px-8 z-20">
-                        {/* Contenedor del ícono y título */}
-                        <div className="flex items-center gap-3">
+                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
+                        <div className="flex items-center gap-3 flex-1">
                             <motion.div 
                                 className="w-20 h-20 flex items-center justify-center"
                                 variants={iconAnimation}
                             >
-                                <div className="w-20 h-20 flex items-center justify-center">
-                                    <img 
-                                        src="/src/assets/icons/fish.png"
-                                        alt="Fish Icon"
-                                        className="w-full h-full object-contain"
-                                    />
-                                </div>
+                                <img 
+                                    src="/src/assets/icons/fish.png"
+                                    alt="Fish Icon"
+                                    className="w-full h-full object-contain"
+                                />
                             </motion.div>
-                            <motion.div 
-                                className="flex items-center"
+                            <motion.h2 
+                                className="text-3xl font-bold text-white"
                                 variants={pageIndicatorAnimation}
                             >
-                                <h2 className="text-3xl font-bold text-white">
-                                    Acuario
-                                </h2>
-                            </motion.div>
+                                Acuario
+                            </motion.h2>
                         </div>
 
-                        {/* Logo centrado */}
                         <motion.div
-                            className="cursor-pointer"
+                            className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
                             onClick={() => navigate('/')}
                             whileHover={{ scale: 1.05 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -190,12 +184,25 @@ export function Aquarium() {
                                 src="/src/assets/logo/logo.svg"
                                 alt="Logo"
                                 className="w-60 h-auto"
-                                style={{ userSelect: 'none' }}
                             />
                         </motion.div>
 
-                        {/* Div vacío para mantener el logo centrado */}
-                        <div className="w-[200px]"></div>
+                        {/* Botón de volver */}
+                        <div className="flex-1 flex justify-end">
+                            <motion.div
+                                className="flex items-center gap-6 cursor-pointer"
+                                onClick={() => navigate('/aqua')}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                            >
+                                <img
+                                    src="/src/assets/icons/back.png"
+                                    alt="Volver"
+                                    className="w-12 h-12"
+                                />
+                                <span className="text-white text-xl">Volver</span>
+                            </motion.div>
+                        </div>
                     </div>
 
                     {/* Contenedor centralizado */}

@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import '/src/css/App.css';
 import { Aqua } from './Aqua';
-import { Aquario } from './Aquario';
+import { Map } from './Map';
+import { River } from './River';
 
 const homeVariants = {
     initial: {
@@ -186,7 +187,7 @@ function Home() {
         <div className="absolute bottom-0 left-0 z-30" onClick={() => navigate('/library')}>
           <Border src="/src/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
         </div>
-        <div className="absolute bottom-0 right-0 z-30" onClick={() => navigate('/aquarium')}>
+        <div className="absolute bottom-0 right-0 z-30" onClick={() => navigate('/aqua')}>
           <Border src="/src/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
         </div>
       </motion.div>
@@ -200,13 +201,15 @@ export default function App() {
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/aquarium" element={<Aqua />} />
-          <Route path="/aquario" element={<Aquario />} />
+          <Route path="/aqua" element={<Aqua />} />
+          <Route path="/aquarium" element={<Aquarium />} />
+          <Route path="/map" element={<Map />} />
           <Route path="/library" element={<Library />} />
           <Route path="/culture" element={<Culture />} />
           <Route path="/forum" element={<Forum />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/post/:id" element={<PostDetail />} />
+          <Route path="/river" element={<River />} />
         </Routes>
       </AnimatePresence>
     </Router>

@@ -178,13 +178,31 @@ export function Culture() {
                     }}
                 >
                     {/* Barra superior con ícono, título y logo */}
-                    <div className="absolute top-5 w-full flex items-center justify-between px-8 z-20">
-                        {/* Div vacío para mantener el logo centrado */}
-                        <div className="w-[200px]"></div>
+                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
+                        {/* Contenedor del ícono y título en la esquina superior izquierda */}
+                        <div className="flex items-center gap-3">
+                            <motion.div 
+                                className="w-20 h-20 flex items-center justify-center"
+                                variants={iconAnimation}
+                            >
+                                <img 
+                                    src="/src/assets/icons/culture.png"
+                                    alt="Culture Icon"
+                                    className="w-full h-full object-contain"
+                                />
+                            </motion.div>
+                            <motion.div 
+                                className="flex items-center"
+                                variants={pageIndicatorAnimation}
+                            >
+                                <h2 className="text-3xl font-bold text-white">
+                                    Cultura
+                                </h2>
+                            </motion.div>
+                        </div>
 
-                        {/* Logo centrado */}
                         <motion.div
-                            className="cursor-pointer"
+                            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
                             onClick={() => navigate('/')}
                             whileHover={{ scale: 1.05 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -193,36 +211,25 @@ export function Culture() {
                                 src="/src/assets/logo/logo.svg"
                                 alt="Logo"
                                 className="w-60 h-auto"
-                                style={{ userSelect: 'none' }}
                             />
                         </motion.div>
 
-                        {/* Div vacío para mantener el logo centrado */}
-                        <div className="w-[200px]"></div>
-                    </div>
-
-                    {/* Contenedor del ícono y título en la esquina inferior izquierda */}
-                    <div className="absolute bottom-8 left-8 flex items-center gap-3">
-                        <motion.div 
-                            className="w-20 h-20 flex items-center justify-center"
-                            variants={iconAnimation}
-                        >
-                            <div className="w-20 h-20 flex items-center justify-center">
-                                <img 
-                                    src="/src/assets/icons/culture.png"
-                                    alt="Culture Icon"
-                                    className="w-full h-full object-contain"
+                        {/* Botón de volver */}
+                        <div className="flex-1 flex justify-end">
+                            <motion.div
+                                className="flex items-center gap-6 cursor-pointer"
+                                onClick={() => navigate('/')}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                            >
+                                <img
+                                    src="/src/assets/icons/back.png"
+                                    alt="Volver"
+                                    className="w-12 h-12"
                                 />
-                            </div>
-                        </motion.div>
-                        <motion.div 
-                            className="flex items-center"
-                            variants={pageIndicatorAnimation}
-                        >
-                            <h2 className="text-3xl font-bold text-white">
-                                Cultura
-                            </h2>
-                        </motion.div>
+                                <span className="text-white text-xl">Volver</span>
+                            </motion.div>
+                        </div>
                     </div>
 
                     {/* Contenedor centralizado */}
@@ -239,7 +246,7 @@ export function Culture() {
                                     className="flex flex-col items-center"
                                 >
                                     <div
-                                        className="relative w-[750px] h-[500px] mask-container cursor-pointer"
+                                        className="relative w-[750px] h-[500px] mask-container cursor-pointer group"
                                         onClick={() => navigate(`/article/${currentArticleIndex}`)}
                                     >
                                         <svg className="w-full h-full">
@@ -259,12 +266,20 @@ export function Culture() {
                                                 height="100%"
                                                 preserveAspectRatio="xMidYMid slice"
                                                 mask="url(#mask)"
+                                                className="transition-all duration-300 group-hover:brightness-[0.6]"
                                             />
                                         </svg>
+                                        
+                                        {/* Texto de "Click para leer más" */}
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                            <p className="text-white text-2xl font-bold">
+                                                Click para leer más
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    <h1 className="text-3xl font-bold mt-6">{currentArticle.title}</h1>
-                                    <p className="text-lg mt-2">{currentArticle.label}</p>
+                                    <h1 className="text-4xl font-bold mt-8 mb-4">{currentArticle.title}</h1>
+                                    <p className="text-lg mb-8">{currentArticle.content.slice(0, 200)}...</p>
 
                                     {/* Indicadores del carrusel */}
                                     <div className="flex justify-center gap-2 mt-6">

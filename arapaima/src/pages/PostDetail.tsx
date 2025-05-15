@@ -32,6 +32,40 @@ const defaultTransition = {
     exit: { clipPath: 'polygon(100% 0%, 100% 0%, 100% 0%, 100% 0%)' },
 };
 
+const pageIndicatorAnimation = {
+    initial: {
+        x: 100,
+        opacity: 0
+    },
+    animate: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            duration: 0.5,
+            delay: 0.3,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
+const iconAnimation = {
+    initial: {
+        scale: 0,
+        opacity: 0,
+        rotate: -180
+    },
+    animate: {
+        scale: 1,
+        opacity: 1,
+        rotate: 0,
+        transition: {
+            duration: 0.5,
+            delay: 0.2,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
 export function PostDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -216,104 +250,128 @@ export function PostDetail() {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col text-white"
+            className="fixed inset-0"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={pageTransition}
-            transition={{ duration: 0.5 }}
-            style={{
-                backgroundImage: "url('/src/assets/background/background-forum.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                userSelect: 'none',
-            }}
         >
-            {/* Logo para volver a la página principal */}
-            <div className="absolute top-5 w-full flex items-center justify-between px-8 z-20">
-                {/* Div vacío para mantener el logo centrado */}
-                <div className="w-[200px]"></div>
-
-                {/* Logo centrado */}
-                <motion.div
-                    className="cursor-pointer"
-                    onClick={() => navigate('/')}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                >
-                    <img
-                        src="/src/assets/logo/logo.svg"
-                        alt="Logo"
-                        className="w-60 h-auto"
-                        style={{ userSelect: 'none' }}
-                    />
-                </motion.div>
-
-                {/* Div vacío para mantener el logo centrado */}
-                <div className="w-[200px]"></div>
-            </div>
-
-            {/* Contenedor principal */}
-            <div className="flex-1 max-w-4xl mx-auto px-6 py-8 pt-32">
-                {/* Botón para regresar */}
-                <button
-                    onClick={() => navigate('/forum')}
-                    className="mb-8 text-lg text-white hover:text-gray-300 transition-colors flex items-center gap-2"
-                >
-                    <span>←</span> Volver al foro
-                </button>
-
-                {/* Contenido del post */}
-                <div className="bg-black/20 rounded-lg backdrop-blur-sm">
-                    <div className="p-6 flex">
-                        <VoteButtons upvotes={post.upvotes} downvotes={post.downvotes} />
-                        <div className="flex-1">
-                            <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
-                            <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                                <span>Publicado por</span>
-                                <span className="font-bold">{post.author}</span>
-                                <span>•</span>
-                                <span>{formatDate(post.createdAt)}</span>
-                            </div>
-                            <div className="text-lg text-gray-200">{post.content}</div>
-                        </div>
+            <motion.div
+                className="relative w-full h-full flex flex-col text-white"
+                style={{
+                    backgroundImage: "url('/src/assets/background/background-forum.png')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    overflow: 'auto'
+                }}
+            >
+                {/* Barra superior con logo */}
+                <div className="absolute top-5 w-full flex items-center px-8 z-20">
+                    {/* Contenedor del ícono y título */}
+                    <div className="flex items-center gap-3 flex-1">
+                        <motion.div 
+                            className="w-20 h-20 flex items-center justify-center"
+                            variants={iconAnimation}
+                        >
+                            <img 
+                                src="/src/assets/icons/forum.png"
+                                alt="Forum Icon"
+                                className="w-full h-full object-contain"
+                            />
+                        </motion.div>
+                        <motion.h2 
+                            className="text-3xl font-bold text-white"
+                            variants={pageIndicatorAnimation}
+                        >
+                            Foro
+                        </motion.h2>
                     </div>
 
-                    {/* Formulario para añadir comentario */}
-                    <div className="border-t border-gray-700 p-6">
-                        <h3 className="text-lg font-bold mb-4">Añadir un comentario</h3>
-                        <textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            className="w-full h-32 min-h-[8rem] max-h-32 p-3 bg-black/30 rounded text-white mb-4 resize-none"
-                            placeholder="¿Qué piensas sobre esto?"
+                    <motion.div
+                        className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+                        onClick={() => navigate('/')}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                    >
+                        <img
+                            src="/src/assets/logo/logo.svg"
+                            alt="Logo"
+                            className="w-60 h-auto"
                         />
-                        <div className="flex justify-end">
-                            <button
-                                onClick={handleAddComment}
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                                disabled={!newComment.trim()}
-                            >
-                                Comentar
-                            </button>
-                        </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Sección de comentarios */}
-                    <div className="border-t border-gray-700">
-                        <div className="p-6">
-                            <h2 className="text-lg font-bold mb-6">
-                                {post.comments.length} Comentarios
-                            </h2>
-                            <div className="space-y-6">
-                                {post.comments.map((comment) => (
-                                    <CommentComponent key={comment.id} comment={comment} />
-                                ))}
+                    {/* Botón de volver */}
+                    <div className="flex-1 flex justify-end">
+                        <motion.div
+                            className="flex items-center gap-4 cursor-pointer"
+                            onClick={() => navigate('/forum')}
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                        >
+                            <img
+                                src="/src/assets/icons/back.png"
+                                alt="Volver"
+                                className="w-12 h-12"
+                            />
+                            <span className="text-white text-xl">Volver</span>
+                        </motion.div>
+                    </div>
+                </div>
+
+                {/* Contenedor principal */}
+                <div className="flex-1 max-w-4xl mx-auto px-6 py-8 pt-32">
+                    {/* Contenido del post */}
+                    <div className="bg-black/20 rounded-lg backdrop-blur-sm">
+                        <div className="p-6 flex">
+                            <VoteButtons upvotes={post.upvotes} downvotes={post.downvotes} />
+                            <div className="flex-1">
+                                <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
+                                <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                                    <span>Publicado por</span>
+                                    <span className="font-bold">{post.author}</span>
+                                    <span>•</span>
+                                    <span>{formatDate(post.createdAt)}</span>
+                                </div>
+                                <div className="text-lg text-gray-200">{post.content}</div>
+                            </div>
+                        </div>
+
+                        {/* Formulario para añadir comentario */}
+                        <div className="border-t border-gray-700 p-6">
+                            <h3 className="text-lg font-bold mb-4">Añadir un comentario</h3>
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                className="w-full h-32 min-h-[8rem] max-h-32 p-3 bg-black/30 rounded text-white mb-4 resize-none"
+                                placeholder="¿Qué piensas sobre esto?"
+                            />
+                            <div className="flex justify-end">
+                                <button
+                                    onClick={handleAddComment}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                                    disabled={!newComment.trim()}
+                                >
+                                    Comentar
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Sección de comentarios */}
+                        <div className="border-t border-gray-700">
+                            <div className="p-6">
+                                <h2 className="text-lg font-bold mb-6">
+                                    {post.comments.length} Comentarios
+                                </h2>
+                                <div className="space-y-6">
+                                    {post.comments.map((comment) => (
+                                        <CommentComponent key={comment.id} comment={comment} />
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </motion.div>
     );
 }

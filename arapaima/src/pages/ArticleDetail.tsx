@@ -37,6 +37,40 @@ const overlayTransition = {
     }
 };
 
+const pageIndicatorAnimation = {
+    initial: {
+        x: 100,
+        opacity: 0
+    },
+    animate: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            duration: 0.5,
+            delay: 0.3,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
+const iconAnimation = {
+    initial: {
+        scale: 0,
+        opacity: 0,
+        rotate: -180
+    },
+    animate: {
+        scale: 1,
+        opacity: 1,
+        rotate: 0,
+        transition: {
+            duration: 0.5,
+            delay: 0.2,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
 export function ArticleDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -75,20 +109,29 @@ export function ArticleDetail() {
                     }}
                 >
                     {/* Barra superior con logo */}
-                    <div className="absolute top-5 w-full flex items-center justify-between px-8 z-20">
+                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
                         {/* Contenedor del ícono y título */}
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={handleBack}
-                                className="text-white font-bold hover:scale-105 transition-transform"
+                        <div className="flex items-center gap-3 flex-1">
+                            <motion.div 
+                                className="w-20 h-20 flex items-center justify-center"
+                                variants={iconAnimation}
                             >
-                                ← Volver
-                            </button>
+                                <img 
+                                    src="/src/assets/icons/culture.png"
+                                    alt="Culture Icon"
+                                    className="w-full h-full object-contain"
+                                />
+                            </motion.div>
+                            <motion.h2 
+                                className="text-3xl font-bold text-white"
+                                variants={pageIndicatorAnimation}
+                            >
+                                Cultura
+                            </motion.h2>
                         </div>
 
-                        {/* Logo centrado */}
                         <motion.div
-                            className="cursor-pointer"
+                            className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
                             onClick={() => navigate('/')}
                             whileHover={{ scale: 1.05 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -101,8 +144,22 @@ export function ArticleDetail() {
                             />
                         </motion.div>
 
-                        {/* Div vacío para mantener el logo centrado */}
-                        <div className="w-[200px]"></div>
+                        {/* Botón de volver */}
+                        <div className="flex-1 flex justify-end">
+                            <motion.div
+                                className="flex items-center gap-4 cursor-pointer"
+                                onClick={handleBack}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                            >
+                                <img
+                                    src="/src/assets/icons/back.png"
+                                    alt="Volver"
+                                    className="w-12 h-12"
+                                />
+                                <span className="text-white text-xl">Volver</span>
+                            </motion.div>
+                        </div>
                     </div>
 
                     {/* Contenedor principal */}

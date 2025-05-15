@@ -122,13 +122,29 @@ export function Library() {
                     }}
                 >
                     {/* Barra superior con logo */}
-                    <div className="absolute top-5 w-full flex items-center justify-between px-8 z-20">
-                        {/* Div vacío para mantener el logo centrado */}
-                        <div className="w-[200px]"></div>
+                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
+                        {/* Contenedor del ícono y título en la esquina superior izquierda */}
+                        <div className="flex items-center gap-3 flex-1">
+                            <motion.div 
+                                className="w-20 h-20 flex items-center justify-center"
+                                variants={iconAnimation}
+                            >
+                                <img 
+                                    src="/src/assets/icons/library.png"
+                                    alt="Library Icon"
+                                    className="w-full h-full object-contain"
+                                />
+                            </motion.div>
+                            <motion.h2 
+                                className="text-3xl font-bold text-white"
+                                variants={pageIndicatorAnimation}
+                            >
+                                Biblioteca
+                            </motion.h2>
+                        </div>
 
-                        {/* Logo centrado */}
                         <motion.div
-                            className="cursor-pointer"
+                            className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
                             onClick={() => navigate('/')}
                             whileHover={{ scale: 1.05 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -137,36 +153,25 @@ export function Library() {
                                 src="/src/assets/logo/logo.svg"
                                 alt="Logo"
                                 className="w-60 h-auto"
-                                style={{ userSelect: 'none' }}
                             />
                         </motion.div>
 
-                        {/* Div vacío para mantener el logo centrado */}
-                        <div className="w-[200px]"></div>
-                    </div>
-
-                    {/* Contenedor del ícono y título en la esquina superior derecha */}
-                    <div className="absolute top-8 right-8 flex items-center gap-3">
-                        <motion.div 
-                            className="flex items-center"
-                            variants={pageIndicatorAnimation}
-                        >
-                            <h2 className="text-3xl font-bold text-white">
-                                Biblioteca
-                            </h2>
-                        </motion.div>
-                        <motion.div 
-                            className="w-20 h-20 flex items-center justify-center"
-                            variants={iconAnimation}
-                        >
-                            <div className="w-20 h-20 flex items-center justify-center">
-                                <img 
-                                    src="/src/assets/icons/library.png"
-                                    alt="Library Icon"
-                                    className="w-full h-full object-contain"
+                        {/* Botón de volver */}
+                        <div className="flex-1 flex justify-end">
+                            <motion.div
+                                className="flex items-center gap-6 cursor-pointer"
+                                onClick={() => navigate('/')}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                            >
+                                <img
+                                    src="/src/assets/icons/back.png"
+                                    alt="Volver"
+                                    className="w-12 h-12"
                                 />
-                            </div>
-                        </motion.div>
+                                <span className="text-white text-xl">Volver</span>
+                            </motion.div>
+                        </div>
                     </div>
 
                     {/* Contenido de la biblioteca */}
