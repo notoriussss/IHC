@@ -144,7 +144,7 @@ function Home() {
       >
         <audio
           ref={audioRef}
-          src="/music/musica-ambiental.ogg"
+          src="/music/musica-ambiental.mp3"
           loop
           autoPlay
           preload="auto"
