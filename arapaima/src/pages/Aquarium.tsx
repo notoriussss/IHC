@@ -140,7 +140,7 @@ export function Aquarium() {
     return (
         <AnimatePresence mode="wait">
             <motion.div
-                className="fixed inset-0"
+                className="flex flex-col inset-0"
                 initial="initial"
                 animate="animate"
                 exit="exit"
@@ -165,7 +165,7 @@ export function Aquarium() {
                     }}
                 >
                     {/* Barra superior con ícono, título y logo */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-5">
+                    <div className="stiky top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-5">
                         <div className="flex items-center px-8">
                             <div className="flex items-center gap-3 flex-1">
                                 <motion.div 
@@ -219,7 +219,7 @@ export function Aquarium() {
                     </div>
 
                     {/* Contenedor centralizado */}
-                    <div className="flex-1 flex items-center justify-center px-8 py-6 mt-24 mb-12 overflow-y-auto custom-scrollbar-blue">
+                    <div className="flex flex-1 items-center justify-center px-8 py-6 mt-5 mb-12  custom-scrollbar-blue">
                         <div className="w-[60%] mx-auto flex flex-col items-center justify-center text-center">
                             <AnimatePresence mode="wait">
                                 <motion.div
@@ -229,7 +229,7 @@ export function Aquarium() {
                                     animate="animate"
                                     exit="exit"
                                     transition={{ duration: 0.5 }}
-                                    className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-4 rounded-xl"
+                                    className="flex flex-col p-20 items-center bg-black/20 backdrop-blur-sm rounded-xl"
                                 >
                                     <h1 className="text-4xl font-bold mb-8">{currentFish.name}</h1>
                                     <p className="text-lg mb-8">{currentFish.data}</p>
