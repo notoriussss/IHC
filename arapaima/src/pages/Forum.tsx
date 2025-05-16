@@ -190,12 +190,12 @@ export function Forum() {
                     {/* Contenido del foro */}
                     <div className="flex flex-1 pt-32">
                         {/* Sección principal */}
-                        <div className="flex-1 p-6 overflow-y-auto">
+                        <div className="w-3/4 p-6 overflow-y-auto flex flex-col items-center">
                             {forumData.posts.map((post) => (
                                 <motion.div
                                     key={post.id}
                                     onClick={() => navigate(`/post/${post.id}`, { state: { from: 'forum' } })}
-                                    className="p-4 rounded-lg mb-4 shadow-md hover:shadow-lg transition-shadow bg-transparent cursor-pointer hover:bg-black/20"
+                                    className="p-4 ml-60 mr-25 w-5/8 rounded-lg mb-4 shadow-md hover:shadow-lg transition-shadow bg-black/10 cursor-pointer hover:bg-black/30"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.2 }}
                                 >
@@ -209,14 +209,14 @@ export function Forum() {
                         </div>
 
                         {/* Panel lateral derecho */}
-                        <div className="w-80 p-4 bg-transparent border-l border-white">
+                        <div className="w-80 p-4 mr-70 bg-transparent border-l border-white">
                             <h2 className="text-xl font-bold mb-4 border-b border-white pb-2">Temas recientes</h2>
                             <ul>
                                 {forumData.recentTopics.map((topic) => (
                                     <motion.li
                                         key={topic.id}
                                         onClick={() => navigate(`/post/${topic.id}`, { state: { from: 'forum' } })}
-                                        className="mb-3 p-2 rounded-lg transition-colors cursor-pointer border-t border-white hover:bg-black"
+                                        className="mb-3 p-2 rounded-lg shadow-md transition-colors cursor-pointer border-t border-white hover:bg-black"
                                         whileHover={{ scale: 1.05, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
                                         transition={{ duration: 0.2 }}
                                     >

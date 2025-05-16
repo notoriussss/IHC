@@ -3,6 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import libraryData from '@/data/library.json'; // Importamos los datos de los libros
 
+// Componente de pincelada SVG para la máscara
+const BrushStrokeMask = () => (
+    <motion.path
+        d="M30,50 Q45,30 50,50 T70,50"
+        stroke="white"
+        strokeWidth="80"
+        fill="none"
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ 
+            pathLength: 1,
+            transition: {
+                duration: 1,
+                ease: "easeInOut",
+                delay: 0.2
+            }
+        }}
+    />
+);
+
 const pageTransition = {
     initial: {
         opacity: 0,
@@ -85,6 +105,7 @@ const iconAnimation = {
     }
 };
 
+
 export function Library() {
     const navigate = useNavigate();
     const [centerBook, setCenterBook] = useState(libraryData[0]); // Estado para el libro en el enmascarador superior
@@ -107,7 +128,7 @@ export function Library() {
                 }}
             >
                 <motion.div
-                    className="absolute inset-0"
+                    className="absolute inset-0 "
                     variants={overlayTransition}
                 />
                 
@@ -122,7 +143,7 @@ export function Library() {
                     }}
                 >
                     {/* Barra superior con logo */}
-                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
+                    <div className="stiky top-5 pt-5 w-full flex items-center px-8 z-20">
                         {/* Contenedor del ícono y título en la esquina superior izquierda */}
                         <div className="flex items-center gap-3 flex-1">
                             <motion.div 
@@ -175,17 +196,18 @@ export function Library() {
                     </div>
 
                     {/* Contenido de la biblioteca */}
-                    <div className="flex-1 w-full flex flex-col items-center justify-center pt-32">
+                    <div className="flex-1 w-full overflow-y-auto flex flex-col items-center justify-center ">
                         {/* Máscara superior central con sinopsis */}
                         <div className="flex items-center justify-center gap-4 my-4">
                             {/* Máscara superior central */}
+                            
                             <motion.div
-                                className="relative w-[250px] h-[350px]" // Reducimos el tamaño
+                                className="relative w-[250px] h-[350px] pt-10"
                                 layout
-                                initial={{ x: 0, rotate: 0 }} // Empieza en el centro sin rotación
-                                animate={{ x: -100, rotate: -10 }} // Se mueve hacia la izquierda y rota
-                                transition={{ duration: 0.5 }} // Duración de la animación
-                                key={centerBook.title} // Reactivamos la animación al cambiar el libro
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                                key={centerBook.title}
                             >
                                 <svg className="w-full h-full">
                                     <defs>
@@ -196,20 +218,34 @@ export function Library() {
                                                 height="100%"
                                                 preserveAspectRatio="xMidYMid meet"
                                             />
+                                            {/* Agregamos la pincelada a la máscara */}
+                                            <motion.svg width="100%" height="100%" viewBox="0 0 100 100">
+                                                <BrushStrokeMask />
+                                            </motion.svg>
                                         </mask>
                                     </defs>
-                                    <image
-                                        href={centerBook.images[0]} // Imagen del libro central superior
+                                    <motion.image
+                                        href={centerBook.images[0]}
                                         width="100%"
                                         height="100%"
                                         preserveAspectRatio="xMidYMid slice"
                                         mask="url(#mask-library)"
+                                        initial={{ scale: 1.1, opacity: 0 }}
+                                        animate={{ 
+                                            scale: 1,
+                                            opacity: 1,
+                                            transition: {
+                                                duration: 0.5,
+                                                ease: "easeOut",
+                                                delay: 0.3 // Delay mayor que la pincelada
+                                            }
+                                        }}
                                     />
                                 </svg>
                             </motion.div>
-
+                                        
                             {/* Contenedor de la sinopsis */}
-                            <div className="w-[250px] text-left"> {/* Reducimos el ancho */}
+                            <div className="w-[250px] pt-10 text-left"> {/* Reducimos el ancho */}
                                 <h2 className="text-xl font-bold mb-2">{centerBook.title}</h2> {/* Reducimos el tamaño del texto */}
                                 <p className="text-base leading-relaxed mb-2">
                                     {centerBook.content || 'Sinopsis no disponible.'}
@@ -226,7 +262,7 @@ export function Library() {
                         </div>
 
                         {/* Contenedor principal para la librería */}
-                        <div className="flex items-center justify-center gap-12"> {/* Aumentamos el espacio entre los contenedores */}
+                        <div className="flex items-center justify-center gap-2"> {/* Aumentamos el espacio entre los contenedores */}
                             {/* Contenedor izquierdo */}
                             <div className="grid grid-cols-2 gap-6"> {/* Aumentamos el espacio entre libros */}
                                 {leftBooks.map((book, index) => (
