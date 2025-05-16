@@ -1,28 +1,125 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
-const pageTransition = {
-    initial: {
-        opacity: 0,
-        scale: 0.8,
-        x: '100%',
-        y: '100%'
-    },
-    animate: {
-        opacity: 1,
-        scale: 1,
-        x: 0,
-        y: 0,
-        transition: {
-            duration: 0.6,
-            ease: [0.22, 1, 0.36, 1]
-        }
+const getPageTransition = (from: string | undefined) => {
+    switch (from) {
+        case 'aquarium':
+            return {
+                initial: {
+                    opacity: 0,
+                    scale: 0.8,
+                    x: '100%'
+                },
+                animate: {
+                    opacity: 1,
+                    scale: 1,
+                    x: 0,
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                },
+                exit: {
+                    opacity: 0,
+                    scale: 0.8,
+                    x: '-100%',
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                }
+            };
+        case 'map':
+            return {
+                initial: {
+                    opacity: 0,
+                    scale: 0.8,
+                    y: '-100%'
+                },
+                animate: {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                },
+                exit: {
+                    opacity: 0,
+                    scale: 0.8,
+                    y: '100%',
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                }
+            };
+        case 'river':
+            return {
+                initial: {
+                    opacity: 0,
+                    scale: 0.8,
+                    x: '-100%'
+                },
+                animate: {
+                    opacity: 1,
+                    scale: 1,
+                    x: 0,
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                },
+                exit: {
+                    opacity: 0,
+                    scale: 0.8,
+                    x: '100%',
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                }
+            };
+        default:
+            // Transición por defecto (cuando entramos desde App.tsx - diagonal)
+            return {
+                initial: {
+                    opacity: 0,
+                    scale: 0.8,
+                    x: '100%',
+                    y: '100%'
+                },
+                animate: {
+                    opacity: 1,
+                    scale: 1,
+                    x: 0,
+                    y: 0,
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                },
+                exit: {
+                    opacity: 0,
+                    scale: 0.8,
+                    x: '-100%',
+                    y: '-100%',
+                    transition: {
+                        duration: 0.6,
+                        ease: [0.22, 1, 0.36, 1]
+                    }
+                }
+            };
     }
 };
 
 export function Aqua() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from;
+    const pageTransition = getPageTransition(from);
     const [hoverStates, setHoverStates] = useState({
         acuario: false,
         rios: false,
@@ -30,12 +127,17 @@ export function Aqua() {
         logo: false
     });
 
+    const handleNavigate = (path: string) => {
+        navigate(path, { state: { from: 'aqua' } });
+    };
+
     return (
         <AnimatePresence mode="wait">
             <motion.div 
                 className="fixed inset-0 bg-black"
                 initial="initial"
                 animate="animate"
+                exit="exit"
                 variants={pageTransition}
             >
                 <div className="w-full h-full relative">
@@ -64,7 +166,7 @@ export function Aqua() {
                         className="absolute top-0 left-0 w-1/2 h-full group cursor-pointer"
                         onHoverStart={() => setHoverStates(prev => ({ ...prev, acuario: true }))}
                         onHoverEnd={() => setHoverStates(prev => ({ ...prev, acuario: false }))}
-                        onClick={() => navigate('/aquarium')}
+                        onClick={() => handleNavigate('/aquarium')}
                         style={{
                             backgroundImage: 'url("/src/assets/background/background-aquarium.png")',
                             backgroundSize: 'cover',
@@ -95,7 +197,7 @@ export function Aqua() {
                         className="absolute top-0 right-0 w-1/2 h-full group cursor-pointer"
                         onHoverStart={() => setHoverStates(prev => ({ ...prev, rios: true }))}
                         onHoverEnd={() => setHoverStates(prev => ({ ...prev, rios: false }))}
-                        onClick={() => navigate('/river')}
+                        onClick={() => handleNavigate('/river')}
                         style={{
                             backgroundImage: 'url("/src/assets/background/background_river.svg")',
                             backgroundSize: 'cover',
@@ -126,7 +228,7 @@ export function Aqua() {
                         className="absolute bottom-0 left-0 w-full h-1/2 group cursor-pointer"
                         onHoverStart={() => setHoverStates(prev => ({ ...prev, mapa: true }))}
                         onHoverEnd={() => setHoverStates(prev => ({ ...prev, mapa: false }))}
-                        onClick={() => navigate('/map')}
+                        onClick={() => handleNavigate('/map')}
                         style={{
                             backgroundImage: 'url("/src/assets/background/background-map.svg")',
                             backgroundSize: 'cover',

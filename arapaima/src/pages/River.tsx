@@ -75,12 +75,21 @@ const pageTransition = {
     initial: {
         opacity: 0,
         scale: 0.8,
-        y: 100
+        x: '100%'
     },
     animate: {
         opacity: 1,
         scale: 1,
-        y: 0,
+        x: 0,
+        transition: {
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.8,
+        x: '100%',
         transition: {
             duration: 0.6,
             ease: [0.22, 1, 0.36, 1]
@@ -238,24 +247,47 @@ const LegendSection = () => {
             transition={{ delay: 0.5 }}
             className="col-span-2 bg-black/60 backdrop-blur-sm rounded-3xl border border-[#b38f25]/30 p-8"
         >
-            <h3 className="text-2xl font-bold text-white mb-6">La Leyenda del Amor entre el Orinoco y el Caroní</h3>
-            <div className="prose prose-invert max-w-none">
-                <p className="text-white/90">
-                    Cuenta la leyenda que el poderoso Orinoco, gigante de aguas pardas, se enamoró perdidamente de Caroní, 
-                    una hermosa ninfa de aguas negras y cristalinas. Caroní, hija de la Gran Sabana y guardiana de los tepuyes, 
-                    bailaba entre las rocas mientras descendía desde las alturas, cautivando al gran río con su gracia y pureza.
-                </p>
-                <p className="text-white/90 mt-4">
-                    El Orinoco, determinado a unirse con su amada, viajó miles de kilómetros, atravesando selvas y llanuras. 
-                    Caroní, igualmente enamorada, descendió desde las antiguas mesetas de Guayana, llevando consigo los secretos 
-                    y la fuerza de las montañas sagradas.
-                </p>
-                <p className="text-white/90 mt-4">
-                    Finalmente, en lo que hoy es Ciudad Guayana, los amantes se encontraron en un abrazo eterno. Sus aguas, 
-                    aunque diferentes en color y temperamento, se mezclaron en una danza perpetua. Desde entonces, el punto 
-                    donde se unen es considerado sagrado por los pueblos indígenas, que ven en la confluencia de estos ríos 
-                    el símbolo perfecto del amor eterno y la armonía entre las fuerzas de la naturaleza.
-                </p>
+            <div className="flex gap-8">
+                <div className="flex-1 space-y-6">
+                    <h3 className="text-3xl font-bold text-white tracking-tight">La Leyenda del Amor entre el Orinoco y el Caroní</h3>
+                    <div className="space-y-6 text-lg">
+                        <p className="text-white/90 leading-relaxed">
+                            Cuenta la leyenda que el poderoso Orinoco, gigante de aguas pardas, se enamoró perdidamente de Caroní, 
+                            una hermosa ninfa de aguas negras y cristalinas. Caroní, hija de la Gran Sabana y guardiana de los tepuyes, 
+                            bailaba entre las rocas mientras descendía desde las alturas, cautivando al gran río con su gracia y pureza.
+                        </p>
+                        <p className="text-white/90 leading-relaxed">
+                            El Orinoco, determinado a unirse con su amada, viajó miles de kilómetros, atravesando selvas y llanuras. 
+                            Caroní, igualmente enamorada, descendió desde las antiguas mesetas de Guayana, llevando consigo los secretos 
+                            y la fuerza de las montañas sagradas.
+                        </p>
+                        <p className="text-white/90 leading-relaxed">
+                            Finalmente, en lo que hoy es Ciudad Guayana, los amantes se encontraron en un abrazo eterno. Sus aguas, 
+                            aunque diferentes en color y temperamento, se mezclaron en una danza perpetua. Desde entonces, el punto 
+                            donde se unen es considerado sagrado por los pueblos indígenas, que ven en la confluencia de estos ríos 
+                            el símbolo perfecto del amor eterno y la armonía entre las fuerzas de la naturaleza.
+                        </p>
+                    </div>
+                </div>
+                <motion.div 
+                    className="w-[500px] relative"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7 }}
+                >
+                    <div className="sticky top-8">
+                        <div className="h-[600px]">
+                            <img 
+                                src="/src/assets/icons/orinoco-caroni.avif" 
+                                alt="Confluencia del Orinoco y el Caroní" 
+                                className="w-full h-full object-cover object-center rounded-2xl shadow-2xl"
+                            />
+                        </div>
+                        <p className="text-white/60 text-sm mt-4 text-center italic">
+                            Confluencia del río Orinoco y el río Caroní
+                        </p>
+                    </div>
+                </motion.div>
             </div>
         </motion.div>
     );
@@ -266,12 +298,17 @@ export function River() {
     const [expandedRiver, setExpandedRiver] = useState<string | null>(null);
     const [selectedMetric, setSelectedMetric] = useState<MetricKey>('longitud');
 
+    const handleNavigateBack = () => {
+        navigate('/aqua', { state: { from: 'river' } });
+    };
+
     return (
         <AnimatePresence mode="wait">
             <motion.div
                 className="fixed inset-0"
                 initial="initial"
                 animate="animate"
+                exit="exit"
                 variants={pageTransition}
             >
                 <motion.div
@@ -285,104 +322,108 @@ export function River() {
                     {/* Overlay oscuro */}
                     <div className="absolute inset-0 bg-black/50" />
 
-                    {/* Barra superior con ícono y título */}
-                    <div className="relative flex items-center justify-between px-8 py-5 z-10">
-                        <div className="flex items-center gap-6">
-                            <motion.div 
-                                className="w-20 h-20"
-                                initial={{ scale: 0, rotate: -180 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                <img 
-                                    src="/src/assets/icons/river.png"
-                                    alt="River Icon"
-                                    className="w-full h-full object-contain"
-                                />
-                            </motion.div>
-                            <motion.h2 
-                                className="text-3xl font-bold text-white"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                Ríos de Guayana
-                            </motion.h2>
-                        </div>
+                    {/* Barra superior con ícono y título - Ahora fixed */}
+                    <div className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-md z-50 py-5">
+                        <div className="flex items-center px-8">
+                            <div className="flex items-center gap-6">
+                                <motion.div 
+                                    className="w-20 h-20"
+                                    initial={{ scale: 0, rotate: -180 }}
+                                    animate={{ scale: 1, rotate: 0 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <img 
+                                        src="/src/assets/icons/river.png"
+                                        alt="River Icon"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </motion.div>
+                                <motion.h2 
+                                    className="text-3xl font-bold text-white"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                >
+                                    Ríos de Guayana
+                                </motion.h2>
+                            </div>
 
-                        <motion.div
-                            className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
-                            onClick={() => navigate('/')}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                        >
-                            <img
-                                src="/src/assets/logo/logo.svg"
-                                alt="Logo"
-                                className="w-60 h-auto"
-                            />
-                        </motion.div>
-
-                        {/* Botón de volver */}
-                        <div className="flex items-center gap-6 cursor-pointer z-20">
                             <motion.div
-                                className="flex items-center gap-6"
-                                onClick={() => navigate('/aqua')}
+                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+                                onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             >
                                 <img
-                                    src="/src/assets/icons/back.png"
-                                    alt="Volver"
-                                    className="w-12 h-12"
+                                    src="/src/assets/logo/logo.svg"
+                                    alt="Logo"
+                                    className="w-60 h-auto"
                                 />
-                                <span className="text-white text-xl">Volver</span>
                             </motion.div>
+
+                            {/* Botón de volver */}
+                            <div className="flex-1 flex justify-end">
+                                <motion.div
+                                    className="flex items-center gap-6"
+                                    onClick={handleNavigateBack}
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                                >
+                                    <img
+                                        src="/src/assets/icons/back.png"
+                                        alt="Volver"
+                                        className="w-12 h-12"
+                                    />
+                                    <span className="text-white text-xl">Volver</span>
+                                </motion.div>
+                            </div>
                         </div>
                     </div>
 
                     {/* Contenido principal */}
-                    <div className="relative flex-1 overflow-y-auto px-8 py-6">
-                        <div className="grid grid-cols-2 gap-6 mb-6">
-                            <RiverCard
-                                data={riverData.orinoco}
-                                isExpanded={expandedRiver === 'orinoco'}
-                                onClick={() => setExpandedRiver(expandedRiver === 'orinoco' ? null : 'orinoco')}
-                            />
-                            <RiverCard
-                                data={riverData.caroni}
-                                isExpanded={expandedRiver === 'caroni'}
-                                onClick={() => setExpandedRiver(expandedRiver === 'caroni' ? null : 'caroni')}
-                            />
-                        </div>
-
-                        {/* Sección de comparación */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="col-span-2 bg-black/60 backdrop-blur-sm rounded-3xl border border-[#b38f25]/30 p-8 mb-6"
-                        >
-                            <h3 className="text-2xl font-bold text-white mb-6">Comparación de Ríos</h3>
-                            <div className="flex gap-4 mb-6">
-                                {(Object.keys(riverMetrics) as MetricKey[]).map((metric) => (
-                                    <button
-                                        key={metric}
-                                        onClick={() => setSelectedMetric(metric)}
-                                        className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                                            selectedMetric === metric
-                                                ? 'bg-[#b38f25] text-white'
-                                                : 'bg-white/10 text-white/70 hover:bg-white/20'
-                                        }`}
-                                    >
-                                        {riverMetrics[metric].label}
-                                    </button>
-                                ))}
+                    <div className="relative flex-1 overflow-y-auto px-8 pt-36 pb-8 custom-scrollbar-blue">
+                        <div className="max-w-7xl mx-auto space-y-8">
+                            <div className="grid grid-cols-2 gap-6">
+                                <RiverCard
+                                    data={riverData.orinoco}
+                                    isExpanded={expandedRiver === 'orinoco'}
+                                    onClick={() => setExpandedRiver(expandedRiver === 'orinoco' ? null : 'orinoco')}
+                                />
+                                <RiverCard
+                                    data={riverData.caroni}
+                                    isExpanded={expandedRiver === 'caroni'}
+                                    onClick={() => setExpandedRiver(expandedRiver === 'caroni' ? null : 'caroni')}
+                                />
                             </div>
-                            <ComparisonChart metricKey={selectedMetric} />
-                        </motion.div>
-                        
-                        <LegendSection />
+
+                            {/* Sección de comparación */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 50 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="bg-black/60 backdrop-blur-sm rounded-3xl border border-[#b38f25]/30 p-8"
+                            >
+                                <h3 className="text-2xl font-bold text-white mb-8">Comparación de Ríos</h3>
+                                <div className="flex gap-4 mb-8">
+                                    {(Object.keys(riverMetrics) as MetricKey[]).map((metric) => (
+                                        <button
+                                            key={metric}
+                                            onClick={() => setSelectedMetric(metric)}
+                                            className={`px-6 py-3 rounded-lg transition-all duration-300 ${
+                                                selectedMetric === metric
+                                                    ? 'bg-[#b38f25] text-white'
+                                                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                                            }`}
+                                        >
+                                            {riverMetrics[metric].label}
+                                        </button>
+                                    ))}
+                                </div>
+                                <ComparisonChart metricKey={selectedMetric} />
+                            </motion.div>
+                            
+                            <LegendSection />
+                        </div>
                     </div>
                 </motion.div>
             </motion.div>

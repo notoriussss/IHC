@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import articles from '@/data/data.json';
+import { useState } from 'react';
 
 const pageTransition = {
     initial: {
@@ -21,18 +22,6 @@ const pageTransition = {
         transition: {
             duration: 0.6,
             ease: [0.22, 1, 0.36, 1]
-        }
-    }
-};
-
-const overlayTransition = {
-    initial: {
-        opacity: 0
-    },
-    animate: {
-        opacity: 1,
-        transition: {
-            duration: 0.3
         }
     }
 };
@@ -75,9 +64,27 @@ export function ArticleDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const article = articles[parseInt(id || '0')];
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [pendingUrl, setPendingUrl] = useState('');
 
     const handleBack = () => {
         navigate('/culture', { state: { from: 'article-detail' } });
+    };
+
+    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        setPendingUrl(e.currentTarget.href);
+        setIsModalOpen(true);
+    };
+
+    const handleConfirm = () => {
+        window.open(pendingUrl, '_blank');
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+        setPendingUrl('');
     };
 
     if (!article) {
@@ -95,121 +102,165 @@ export function ArticleDetail() {
                 variants={pageTransition}
             >
                 <motion.div
-                    className="absolute inset-0"
-                    variants={overlayTransition}
-                />
-                
-                <motion.div
                     className="relative w-full h-full flex flex-col text-white"
                     style={{
                         backgroundImage: "url('/src/assets/background/background-culture.png')",
                         backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        overflow: 'auto'
+                        backgroundPosition: 'center'
                     }}
                 >
-                    {/* Barra superior con logo */}
-                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
-                        {/* Contenedor del ícono y título */}
-                        <div className="flex items-center gap-3 flex-1">
-                            <motion.div 
-                                className="w-20 h-20 flex items-center justify-center"
-                                variants={iconAnimation}
-                            >
-                                <img 
-                                    src="/src/assets/icons/culture.png"
-                                    alt="Culture Icon"
-                                    className="w-full h-full object-contain"
-                                />
-                            </motion.div>
-                            <motion.h2 
-                                className="text-3xl font-bold text-white"
-                                variants={pageIndicatorAnimation}
-                            >
-                                Cultura
-                            </motion.h2>
-                        </div>
+                    {/* Barra superior con logo - Ahora fixed */}
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md z-50 py-5">
+                        <div className="flex items-center px-8">
+                            {/* Contenedor del ícono y título */}
+                            <div className="flex items-center gap-3 flex-1">
+                                <motion.div 
+                                    className="w-20 h-20 flex items-center justify-center"
+                                    variants={iconAnimation}
+                                >
+                                    <img 
+                                        src="/src/assets/icons/culture.png"
+                                        alt="Culture Icon"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </motion.div>
+                                <motion.h2 
+                                    className="text-3xl font-bold text-white"
+                                    variants={pageIndicatorAnimation}
+                                >
+                                    Cultura
+                                </motion.h2>
+                            </div>
 
-                        <motion.div
-                            className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
-                            onClick={() => navigate('/')}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                        >
-                            <img
-                                src="/src/assets/logo/logo.svg"
-                                alt="Logo"
-                                className="w-60 h-auto"
-                                style={{ userSelect: 'none' }}
-                            />
-                        </motion.div>
-
-                        {/* Botón de volver */}
-                        <div className="flex-1 flex justify-end">
                             <motion.div
-                                className="flex items-center gap-4 cursor-pointer"
-                                onClick={handleBack}
+                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+                                onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             >
                                 <img
-                                    src="/src/assets/icons/back.png"
-                                    alt="Volver"
-                                    className="w-12 h-12"
+                                    src="/src/assets/logo/logo.svg"
+                                    alt="Logo"
+                                    className="w-60 h-auto"
+                                    style={{ userSelect: 'none' }}
                                 />
-                                <span className="text-white text-xl">Volver</span>
                             </motion.div>
-                        </div>
-                    </div>
 
-                    {/* Contenedor principal */}
-                    <div className="absolute inset-0 flex items-center justify-center pt-32">
-                        <div className="w-[90%] max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                            {/* Columna izquierda */}
-                            <div className="flex flex-col gap-6">
-                                {/* Título */}
-                                <h1 className="text-4xl font-bold leading-tight">{article.title}</h1>
-
-                                {/* Imágenes */}
-                                <div className="flex flex-col gap-4">
-                                    {article.images.map((image, index) => (
-                                        <motion.img
-                                            key={index}
-                                            src={image}
-                                            alt={`Imagen ${index + 1}`}
-                                            className="w-full h-[400px] object-cover rounded-lg shadow-md"
-                                            whileHover={{ scale: 1.02 }}
-                                            transition={{ duration: 0.3 }}
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* Fuente */}
-                                <motion.a
-                                    href={article.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block mt-4 font-bold"
+                            {/* Botón de volver */}
+                            <div className="flex-1 flex justify-end">
+                                <motion.div
+                                    className="flex items-center gap-4 cursor-pointer"
+                                    onClick={handleBack}
                                     whileHover={{ scale: 1.05 }}
-                                    transition={{ duration: 0.2 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                                 >
-                                    Leer más en la fuente original
-                                </motion.a>
-                            </div>
-
-                            {/* Columna derecha */}
-                            <div className="flex flex-col gap-4 text-xl leading-loose">
-                                {article.content.split('\n').map((paragraph, index) => (
-                                    <p
-                                        key={index}
-                                        className={index === 0 ? 'first-letter:text-6xl first-letter:font-bold first-letter:mr-2 first-letter:float-left' : ''}
-                                    >
-                                        {paragraph}
-                                    </p>
-                                ))}
+                                    <img
+                                        src="/src/assets/icons/back.png"
+                                        alt="Volver"
+                                        className="w-12 h-12"
+                                    />
+                                    <span className="text-white text-xl">Volver</span>
+                                </motion.div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Contenido principal con scroll */}
+                    <div className="relative flex-1 overflow-y-auto px-8 py-6 pt-36 custom-scrollbar-blue">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-black/20 backdrop-blur-sm p-8 rounded-xl">
+                                <div className="flex flex-col gap-8">
+                                    {/* Título */}
+                                    <h1 className="text-5xl font-bold leading-tight">{article.title}</h1>
+
+                                    {/* Imágenes */}
+                                    <div className="flex flex-col gap-8">
+                                        {article.images.map((image, index) => (
+                                            <motion.div
+                                                key={index}
+                                                className="relative aspect-video"
+                                                whileHover={{ scale: 1.02 }}
+                                                transition={{ duration: 0.3 }}
+                                            >
+                                                <img
+                                                    src={image}
+                                                    alt={`Imagen ${index + 1}`}
+                                                    className="w-full h-full object-cover rounded-lg shadow-lg"
+                                                />
+                                            </motion.div>
+                                        ))}
+                                    </div>
+
+                                    {/* Contenido */}
+                                    <div className="prose prose-2xl prose-invert max-w-none">
+                                        {article.content.split('\n').map((paragraph, index) => (
+                                            <p key={index} className="text-2xl leading-relaxed mb-8 last:mb-0">
+                                                {paragraph}
+                                            </p>
+                                        ))}
+                                    </div>
+
+                                    {/* Fuente */}
+                                    <motion.a
+                                        href={article.url}
+                                        onClick={handleLinkClick}
+                                        className="inline-block bg-white/10 px-8 py-4 rounded-lg text-white text-xl font-bold hover:bg-white/20 transition-colors"
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        Leer más en la fuente original
+                                    </motion.a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Modal de confirmación */}
+                    <AnimatePresence>
+                        {isModalOpen && (
+                            <>
+                                {/* Overlay */}
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                                    onClick={handleCancel}
+                                />
+                                
+                                {/* Modal */}
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-md p-8 rounded-xl z-50 w-[400px]"
+                                >
+                                    <h3 className="text-2xl font-bold text-white mb-4">¿Deseas salir de la página?</h3>
+                                    <p className="text-white/80 mb-6">
+                                        Estás a punto de navegar a un sitio externo. ¿Deseas continuar?
+                                    </p>
+                                    <div className="flex gap-4 justify-end">
+                                        <motion.button
+                                            onClick={handleCancel}
+                                            className="px-6 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            Cancelar
+                                        </motion.button>
+                                        <motion.button
+                                            onClick={handleConfirm}
+                                            className="px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            Continuar
+                                        </motion.button>
+                                    </div>
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
                 </motion.div>
             </motion.div>
         </AnimatePresence>
