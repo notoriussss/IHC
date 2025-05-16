@@ -134,6 +134,16 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
+        
+        {/* Capa de hojas animadas */}
+        <div className="absolute inset-0 z-10 pointer-events-none mix-blend-soft-light opacity-30">
+          <img
+            src="/src/assets/background/leaves.gif"
+            alt="Animated Leaves"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
         {/* Logo en la parte superior */}
         <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
             <img
