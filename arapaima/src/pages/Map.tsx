@@ -494,7 +494,7 @@ export function Map() {
                                             <motion.img 
                                                 src={selectedRegion === region ? "/src/assets/icons/location-fijated.png" : "/src/assets/icons/location.svg"}
                                                 alt={`Región ${region}`}
-                                                className="w-8 h-8 transition-all duration-300"
+                                                className={`w-8 h-8 transition-all duration-300 ${selectedRegion === region ? 'drop-shadow-[0_0_15px_rgba(179,143,37,1)] drop-shadow-[0_0_30px_rgba(179,143,37,0.8)]' : ''}`}
                                                 initial={{ opacity: 1 }}
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}

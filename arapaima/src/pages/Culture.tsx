@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import articles from '@/data/data.json'; // Importamos el JSON con los datos
+import articles from '@/data/data.json';
 
 const overlayTransition = {
     initial: {
@@ -100,12 +100,27 @@ const pageTransitionDefault = {
     }
 };
 
+const LABELS = ['Todos', 'Comunidad', 'Deportes', 'Turismo', 'Rios'];
+
 export function Culture() {
     const navigate = useNavigate();
     const location = useLocation();
     const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
     const [direction, setDirection] = useState(0);
-    const currentArticle = articles[currentArticleIndex];
+    const [selectedLabel, setSelectedLabel] = useState('Todos');
+
+    // Filtrado de artículos por categoría
+    const filteredArticles = useMemo(() => {
+        if (selectedLabel === 'Todos') return articles;
+        return articles.filter((a) => a.label === selectedLabel);
+    }, [selectedLabel]);
+
+    // Ajusta el índice si el filtro cambia
+    useEffect(() => {
+        setCurrentArticleIndex(0);
+    }, [selectedLabel]);
+
+    const currentArticle = filteredArticles[currentArticleIndex] || {};
 
     const isFromArticle = location.state?.from === 'article-detail';
     const pageTransition = isFromArticle ? pageTransitionFromArticle : pageTransitionDefault;
@@ -113,14 +128,14 @@ export function Culture() {
     const handlePreviousArticle = () => {
         setDirection(-1);
         setCurrentArticleIndex((prevIndex) =>
-            prevIndex === 0 ? articles.length - 1 : prevIndex - 1
+            prevIndex === 0 ? filteredArticles.length - 1 : prevIndex - 1
         );
     };
 
     const handleNextArticle = () => {
         setDirection(1);
         setCurrentArticleIndex((prevIndex) =>
-            prevIndex === articles.length - 1 ? 0 : prevIndex + 1
+            prevIndex === filteredArticles.length - 1 ? 0 : prevIndex + 1
         );
     };
 
@@ -231,12 +246,34 @@ export function Culture() {
                         </div>
                     </div>
 
+                    {/* FILTRADOR POR SECCIÓN */}
+                    <motion.div
+                        className="absolute left-1/2 top-32 z-40 -translate-x-1/2 flex items-center gap-3 bg-black/30 backdrop-blur-md rounded-full px-8 py-4 shadow-lg"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.5 }}
+                    >
+                    {LABELS.map((label) => (
+                        <button
+                            key={label}
+                            onClick={() => setSelectedLabel(label)}
+                            className={`px-5 py-2 rounded-full font-semibold transition-all duration-200 border-2 cursor-pointer ${
+                                selectedLabel === label
+                                    ? 'bg-white text-black border-white shadow-lg'
+                                    : 'bg-transparent text-white border-white/30 hover:bg-white/10'
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                    </motion.div>
+
                     {/* Contenedor centralizado */}
                     <div className="absolute inset-0 flex items-center justify-center pt-36 overflow-y-auto custom-scrollbar-blue">
                         <div className="w-[60%] flex flex-col items-center justify-center text-center pb-8">
                             <AnimatePresence mode="wait" custom={direction}>
                                 <motion.div
-                                    key={currentArticleIndex}
+                                    key={currentArticleIndex + selectedLabel}
                                     custom={direction}
                                     variants={slideVariants}
                                     initial="initial"
@@ -244,107 +281,119 @@ export function Culture() {
                                     exit="exit"
                                     className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-8 rounded-xl"
                                 >
-                                    <div
-                                        className="relative w-[750px] h-[500px] mask-container cursor-pointer group mb-8"
-                                        onClick={() => navigate(`/article/${currentArticleIndex}`)}
-                                    >
-                                        <svg className="w-full h-full">
-                                            <defs>
-                                                <mask id="mask">
+                                    {filteredArticles.length === 0 ? (
+                                        <div className="text-white text-2xl font-bold py-32">
+                                            No se encontraron artículos.
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div
+                                                className="relative w-[750px] h-[500px] mask-container cursor-pointer group mb-8"
+                                                onClick={() => navigate(`/article/${articles.indexOf(currentArticle)}`)}
+                                            >
+                                                <svg className="w-full h-full">
+                                                    <defs>
+                                                        <mask id="mask">
+                                                            <image
+                                                                href="/src/assets/icons/mask.svg"
+                                                                width="100%"
+                                                                height="100%"
+                                                                preserveAspectRatio="xMidYMid slice"
+                                                            />
+                                                        </mask>
+                                                    </defs>
                                                     <image
-                                                        href="/src/assets/icons/mask.svg"
+                                                        href={currentArticle.images?.[0]}
                                                         width="100%"
                                                         height="100%"
                                                         preserveAspectRatio="xMidYMid slice"
+                                                        mask="url(#mask)"
+                                                        className="transition-all duration-300 group-hover:brightness-[0.6] rounded-lg"
                                                     />
-                                                </mask>
-                                            </defs>
-                                            <image
-                                                href={currentArticle.images[0]}
-                                                width="100%"
-                                                height="100%"
-                                                preserveAspectRatio="xMidYMid slice"
-                                                mask="url(#mask)"
-                                                className="transition-all duration-300 group-hover:brightness-[0.6] rounded-lg"
-                                            />
-                                        </svg>
-                                        
-                                        {/* Texto de "Click para leer más" */}
-                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                                            <p className="text-white text-2xl font-bold bg-black/40 px-6 py-3 rounded-lg backdrop-blur-sm">
-                                                Click para leer más
-                                            </p>
-                                        </div>
-                                    </div>
+                                                </svg>
+                                                
+                                                {/* Texto de "Click para leer más" */}
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                                    <p className="text-white text-2xl font-bold bg-black/40 px-6 py-3 rounded-lg backdrop-blur-sm">
+                                                        Click para leer más
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                                    <h1 className="text-4xl font-bold mb-6">{currentArticle.title}</h1>
-                                    <p className="text-lg mb-8">{currentArticle.content.slice(0, 200)}...</p>
+                                            <h1 className="text-4xl font-bold mb-6">{currentArticle.title}</h1>
+                                            <p className="text-lg mb-8">{currentArticle.content?.slice(0, 200)}...</p>
 
-                                    {/* Indicadores del carrusel */}
-                                    <div className="flex justify-center gap-2">
-                                        {articles.map((_, index) => (
-                                            <motion.button
-                                                key={index}
-                                                onClick={() => handleDotClick(index)}
-                                                className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                                                    index === currentArticleIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/60'
-                                                }`}
-                                                whileHover={{ scale: 1.2 }}
-                                                whileTap={{ scale: 0.9 }}
-                                            />
-                                        ))}
-                                    </div>
+                                            {/* Indicadores del carrusel */}
+                                            <div className="flex justify-center gap-2">
+                                                {filteredArticles.map((_, index) => (
+                                                    <motion.button
+                                                        key={index}
+                                                        onClick={() => handleDotClick(index)}
+                                                        className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                                                            index === currentArticleIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/60'
+                                                        }`}
+                                                        whileHover={{ scale: 1.2 }}
+                                                        whileTap={{ scale: 0.9 }}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
                                 </motion.div>
                             </AnimatePresence>
                         </div>
                     </div>
 
                     {/* Flechas de navegación */}
-                    <motion.div
-                        className="absolute left-32 top-1/2 transform -translate-y-1/2 cursor-pointer z-20 bg-black/30 p-4 rounded-full backdrop-blur-sm hover:bg-black/50 transition-all"
-                        onClick={handlePreviousArticle}
-                        whileHover={{ scale: 1.2 }}
-                        transition={{ type: 'spring', stiffness: 300 }}
-                    >
-                        <motion.img
-                            src="/src/assets/icons/arrow-left.svg"
-                            alt="Flecha izquierda"
-                            className="w-12 h-12"
-                            whileHover={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        />
-                        <motion.img
-                            src="/src/assets/icons/arrow-left-hover.svg"
-                            alt="Flecha izquierda hover"
-                            className="w-12 h-12 absolute top-4 left-4"
-                            initial={{ opacity: 0 }}
-                            whileHover={{ opacity: 1 }}
-                            transition={{ duration: 0.2 }}
-                        />
-                    </motion.div>
+                    {filteredArticles.length > 1 && (
+                        <>
+                            <motion.div
+                                className="absolute left-32 top-1/2 transform -translate-y-1/2 cursor-pointer z-20 bg-black/30 p-4 rounded-full backdrop-blur-sm hover:bg-black/50 transition-all"
+                                onClick={handlePreviousArticle}
+                                whileHover={{ scale: 1.2 }}
+                                transition={{ type: 'spring', stiffness: 300 }}
+                            >
+                                <motion.img
+                                    src="/src/assets/icons/arrow-left.svg"
+                                    alt="Flecha izquierda"
+                                    className="w-12 h-12"
+                                    whileHover={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                />
+                                <motion.img
+                                    src="/src/assets/icons/arrow-left-hover.svg"
+                                    alt="Flecha izquierda hover"
+                                    className="w-12 h-12 absolute top-4 left-4"
+                                    initial={{ opacity: 0 }}
+                                    whileHover={{ opacity: 1 }}
+                                    transition={{ duration: 0.2 }}
+                                />
+                            </motion.div>
 
-                    <motion.div
-                        className="absolute right-32 top-1/2 transform -translate-y-1/2 cursor-pointer z-20 bg-black/30 p-4 rounded-full backdrop-blur-sm hover:bg-black/50 transition-all"
-                        onClick={handleNextArticle}
-                        whileHover={{ scale: 1.2 }}
-                        transition={{ type: 'spring', stiffness: 300 }}
-                    >
-                        <motion.img
-                            src="/src/assets/icons/arrow-right.svg"
-                            alt="Flecha derecha"
-                            className="w-12 h-12"
-                            whileHover={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        />
-                        <motion.img
-                            src="/src/assets/icons/arrow-right-hover.svg"
-                            alt="Flecha derecha hover"
-                            className="w-12 h-12 absolute top-4 left-4"
-                            initial={{ opacity: 0 }}
-                            whileHover={{ opacity: 1 }}
-                            transition={{ duration: 0.2 }}
-                        />
-                    </motion.div>
+                            <motion.div
+                                className="absolute right-32 top-1/2 transform -translate-y-1/2 cursor-pointer z-20 bg-black/30 p-4 rounded-full backdrop-blur-sm hover:bg-black/50 transition-all"
+                                onClick={handleNextArticle}
+                                whileHover={{ scale: 1.2 }}
+                                transition={{ type: 'spring', stiffness: 300 }}
+                            >
+                                <motion.img
+                                    src="/src/assets/icons/arrow-right.svg"
+                                    alt="Flecha derecha"
+                                    className="w-12 h-12"
+                                    whileHover={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                />
+                                <motion.img
+                                    src="/src/assets/icons/arrow-right-hover.svg"
+                                    alt="Flecha derecha hover"
+                                    className="w-12 h-12 absolute top-4 left-4"
+                                    initial={{ opacity: 0 }}
+                                    whileHover={{ opacity: 1 }}
+                                    transition={{ duration: 0.2 }}
+                                />
+                            </motion.div>
+                        </>
+                    )}
                 </motion.div>
             </motion.div>
         </AnimatePresence>
