@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import fishes from '@/data/fishes.json';
+import './Aquarium.css';
 
 const pageTransition = {
     initial: {
@@ -219,8 +220,8 @@ export function Aquarium() {
                     </div>
 
                     {/* Contenedor centralizado */}
-                    <div className="flex-1 flex items-center justify-center px-8 py-6 mt-24 mb-12 overflow-y-auto custom-scrollbar-blue">
-                        <div className="w-[60%] mx-auto flex flex-col items-center justify-center text-center">
+                    <div className="flex-1 flex items-center justify-center px-8 mt-24 mb-8">
+                        <div className="w-[60%] mx-auto flex flex-col items-center justify-start text-center h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentFishIndex}
@@ -229,7 +230,7 @@ export function Aquarium() {
                                     animate="animate"
                                     exit="exit"
                                     transition={{ duration: 0.5 }}
-                                    className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-4 rounded-xl"
+                                    className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-8 rounded-xl w-full my-4"
                                 >
                                     <h1 className="text-4xl font-bold mb-8">{currentFish.name}</h1>
                                     <p className="text-lg mb-8">{currentFish.data}</p>
