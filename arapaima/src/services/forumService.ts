@@ -75,6 +75,7 @@ export function getForumData(): ForumData {
 export function updateForumData(newData: ForumData): void {
     currentData = newData;
     localStorage.setItem('forumData', JSON.stringify(newData));
+    notifySubscribers();
 }
 
 // Función para obtener los votos del usuario

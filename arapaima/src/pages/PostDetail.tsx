@@ -146,13 +146,12 @@ export function PostDetail() {
     const handleAddComment = () => {
         if (!newComment.trim() || !post) return;
 
+        const currentData = getForumData();
         const newCommentObj = {
             id: Math.max(0, ...post.comments.map(c => c.id)) + 1,
             author: "Usuario Actual",
             content: newComment,
             createdAt: new Date().toISOString(),
-            upvotes: 0,
-            downvotes: 0,
             replies: []
         };
 
@@ -161,7 +160,6 @@ export function PostDetail() {
             comments: [...post.comments, newCommentObj]
         };
 
-        const currentData = getForumData();
         const updatedData = {
             ...currentData,
             posts: currentData.posts.map(p => p.id === post.id ? updatedPost : p)
@@ -178,9 +176,7 @@ export function PostDetail() {
             id: Math.max(0, ...post.comments.flatMap(c => [c.id, ...(c.replies?.map(r => r.id) || [])])) + 1,
             author: "Usuario Actual",
             content: content,
-            createdAt: new Date().toISOString(),
-            upvotes: 0,
-            downvotes: 0
+            createdAt: new Date().toISOString()
         };
 
         const updatedComments = post.comments.map(comment => {
@@ -206,6 +202,7 @@ export function PostDetail() {
 
         updateForumData(updatedData);
         setReplyingTo(null);
+        setReplyContents(prev => ({ ...prev, [commentId]: '' }));
     };
 
     const handleVote = (commentId: number | null, isUpvote: boolean, isMainPost: boolean = false) => {
