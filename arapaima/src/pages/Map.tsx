@@ -480,25 +480,68 @@ export function Map() {
                                         <motion.div
                                             key={region}
                                             className={`absolute cursor-pointer ${
-                                                region === 'norte' ? 'top-[15%] left-[67%]' :
+                                                region === 'norte' ? 'top-[15%] left-[65%]' :
                                                 region === 'central' ? 'top-[40%] left-[50%]' :
                                                 'top-[70%] left-[32%]'
                                             }`}
                                             whileHover={{ scale: 1.2 }}
                                             animate={{ 
-                                                scale: selectedRegion === region ? 1.3 : 1,
+                                                scale: selectedRegion === region ? 1.5 : 1,
                                                 transition: { duration: 0.3 }
                                             }}
                                             onClick={() => setSelectedRegion(region)}
                                         >
+                                            {/* Anillo de pulso para la ubicación seleccionada */}
+                                            {selectedRegion === region && (
+                                                <motion.div
+                                                    className="absolute inset-0 rounded-full bg-[#b38f25]/30"
+                                                    initial={{ scale: 1, opacity: 0.8 }}
+                                                    animate={{
+                                                        scale: [1, 2, 1],
+                                                        opacity: [0.8, 0, 0.8],
+                                                    }}
+                                                    transition={{
+                                                        duration: 2,
+                                                        repeat: Infinity,
+                                                        ease: "easeInOut"
+                                                    }}
+                                                />
+                                            )}
                                             <motion.img 
                                                 src={selectedRegion === region ? "/src/assets/icons/location-fijated.png" : "/src/assets/icons/location.svg"}
                                                 alt={`Región ${region}`}
-                                                className="w-8 h-8 transition-all duration-300"
+                                                className={`w-8 h-8 transition-all duration-300 ${
+                                                    selectedRegion === region 
+                                                        ? 'drop-shadow-[0_0_15px_rgba(179,143,37,1)] drop-shadow-[0_0_30px_rgba(179,143,37,0.8)] filter brightness-150' 
+                                                        : 'hover:drop-shadow-[0_0_10px_rgba(179,143,37,0.5)]'
+                                                }`}
                                                 initial={{ opacity: 1 }}
-                                                animate={{ opacity: 1 }}
+                                                animate={selectedRegion === region ? {
+                                                    opacity: [0.8, 1],
+                                                    transition: {
+                                                        duration: 0.8,
+                                                        repeat: Infinity,
+                                                        repeatType: "reverse"
+                                                    }
+                                                } : { opacity: 1 }}
                                                 exit={{ opacity: 0 }}
                                             />
+                                            {/* Etiqueta de región */}
+                                            <motion.div
+                                                className={`absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-black/80 px-3 py-1 rounded-full text-white text-sm ${
+                                                    region === 'norte' ? '-top-8' :
+                                                    region === 'central' ? '-top-8' :
+                                                    '-top-8'
+                                                }`}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={selectedRegion === region ? {
+                                                    opacity: 1,
+                                                    y: 0,
+                                                    transition: { duration: 0.3 }
+                                                } : { opacity: 0, y: 10 }}
+                                            >
+                                                {regionData[region].nombre}
+                                            </motion.div>
                                         </motion.div>
                                     ))}
                                 </div>

@@ -131,17 +131,17 @@ const RiverCard = ({ data, isExpanded, onClick }: {
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="bg-white/10 rounded-xl p-4 transition-all duration-300 hover:bg-white/20">
-                            <span className="text-white/60 text-sm">Longitud</span>
-                            <p className="text-white font-bold">{data.longitud}</p>
+                            <span className="text-white/60 text-lg">Longitud</span>
+                            <p className="text-white font-bold text-xl">{data.longitud}</p>
                         </div>
                         <div className="bg-white/10 rounded-xl p-4 transition-all duration-300 hover:bg-white/20">
-                            <span className="text-white/60 text-sm">Caudal</span>
-                            <p className="text-white font-bold">{data.caudal}</p>
+                            <span className="text-white/60 text-lg">Caudal</span>
+                            <p className="text-white font-bold text-xl">{data.caudal}</p>
                         </div>
                     </div>
                     <div className="bg-white/10 rounded-xl p-4 transition-all duration-300 hover:bg-white/20">
-                        <span className="text-white/60 text-sm">Cuenca</span>
-                        <p className="text-white font-bold">{data.cuenca}</p>
+                        <span className="text-white/60 text-lg">Cuenca</span>
+                        <p className="text-white font-bold text-xl">{data.cuenca}</p>
                     </div>
                     
                     <AnimatePresence>
@@ -153,12 +153,12 @@ const RiverCard = ({ data, isExpanded, onClick }: {
                                 className="space-y-4"
                             >
                                 <div className="bg-white/10 rounded-xl p-4 transition-all duration-300 hover:bg-white/20">
-                                    <span className="text-white/60 text-sm">Importancia</span>
-                                    <p className="text-white">{data.importancia}</p>
+                                    <span className="text-white/60 text-lg">Importancia</span>
+                                    <p className="text-white text-lg leading-relaxed">{data.importancia}</p>
                                 </div>
                                 <div className="bg-white/10 rounded-xl p-4 transition-all duration-300 hover:bg-white/20">
-                                    <span className="text-white/60 text-sm">Historia</span>
-                                    <p className="text-white">{data.historia}</p>
+                                    <span className="text-white/60 text-lg">Historia</span>
+                                    <p className="text-white text-lg leading-relaxed">{data.historia}</p>
                                 </div>
                             </motion.div>
                         )}
@@ -180,7 +180,7 @@ const ComparisonChart = ({ metricKey }: { metricKey: MetricKey }) => {
                 labels: {
                     color: 'white',
                     font: {
-                        size: 14
+                        size: 20
                     }
                 }
             },
@@ -189,7 +189,7 @@ const ComparisonChart = ({ metricKey }: { metricKey: MetricKey }) => {
                 text: `Comparación - ${metric.label}`,
                 color: 'white',
                 font: {
-                    size: 20
+                    size: 28
                 }
             }
         },
@@ -198,7 +198,7 @@ const ComparisonChart = ({ metricKey }: { metricKey: MetricKey }) => {
                 ticks: {
                     color: 'white',
                     font: {
-                        size: 12
+                        size: 18
                     }
                 },
                 grid: {
@@ -209,7 +209,7 @@ const ComparisonChart = ({ metricKey }: { metricKey: MetricKey }) => {
                 ticks: {
                     color: 'white',
                     font: {
-                        size: 12
+                        size: 18
                     }
                 },
                 grid: {
