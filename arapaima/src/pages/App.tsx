@@ -56,11 +56,24 @@ function Home() {
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
   const [currentImage, setCurrentImage] = useState(1);
 
+  // Función para manejar el hover en las esquinas
+  const handleCornerHover = (index: number) => {
+    const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
+    if (newText !== currentText) {
+      setCurrentText(newText);
+      setDisplayedText('');
+      setTextIndex(0);
+      setCurrentImage(1);
+    }
+  };
+
   // Efecto para mostrar el texto caracter por caracter y alternar la imagen
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     if (textIndex < currentText.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + currentText[textIndex]);
+      timeoutId = setTimeout(() => {
+        setDisplayedText(currentText.substring(0, textIndex + 1));
         setTextIndex((prev) => prev + 1);
         // Cambia la imagen cada 5 caracteres, pero asegura que termine en 1
         if (textIndex % 4 === 0) {
@@ -71,26 +84,19 @@ function Home() {
           }
         }
       }, 22);
-      return () => clearTimeout(timeout);
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [textIndex, currentText]);
 
   // Permitir que al hacer click se muestre todo el texto de una vez
   const handleTextClick = () => {
-    if (displayedText.length < currentText.length) {
+    if (textIndex < currentText.length) {
       setDisplayedText(currentText);
       setTextIndex(currentText.length);
       setCurrentImage(1);
-    }
-  };
-
-  // Función para manejar el hover en las esquinas
-  const handleCornerHover = (index: number) => {
-    const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
-    if (newText !== currentText) {
-      setDisplayedText('');
-      setTextIndex(0);
-      setCurrentText(newText);
     }
   };
 
@@ -168,32 +174,32 @@ function Home() {
         </div>
 
         {/* Imágenes debajo de las esquinas */}
-        <div className="absolute top-0 left-0 z-0">
+        <div className="absolute top-0 left-0 z-0 mix-blend-screen">
           <img
-            src="/src/assets/background/sun.svg"
+            src="/src/assets/background/sun.gif"
             alt="Top Left Image"
-            className="w-250 h-250"
+            className="w-120 h-120 opacity-50"
           />
         </div>
         <div className="absolute top-0 right-0 z-0">
           <img
             src="/src/assets/background/leaf.svg"
             alt="Top Right Image"
-            className="w-100 h-100"
+            className="w-110 h-110"
           />
         </div>
         <div className="absolute top-0 right-0 z-0 mix-blend-saturation">
           <img
-            src="/src/assets/background/leaf-background.svg"
+            src="/src/assets/background/leaf.gif"
             alt="Top Right Background Image"
-            className="w-150 h-150"
+            className="w-150 h-150 rotate-135 translate-x-[-5rem]"
           />
         </div>
-        <div className="absolute bottom-0 left-0 z-0">
+        <div className="absolute bottom-0 left-0 z-0 mix-blend-lighten">
           <img
-            src="/src/assets/background/fire.svg"
+            src="/src/assets/background/fire.gif"
             alt="Bottom Left Image"
-            className="w-300 h-300"
+            className="w-100 h-100"
           />
         </div>
         <div className="absolute bottom-0 right-0 z-0 mix-blend-color">
