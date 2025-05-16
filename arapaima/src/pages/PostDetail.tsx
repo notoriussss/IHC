@@ -6,7 +6,7 @@ import { getForumData, updateForumData, subscribeToForumChanges, type Post, type
 const pageTransitionFromForum = {
     initial: {
         opacity: 0,
-        y: '-100%'
+        y: '100%'
     },
     animate: {
         opacity: 1,
@@ -18,7 +18,7 @@ const pageTransitionFromForum = {
     },
     exit: {
         opacity: 0,
-        y: '100%',
+        y: '-100%',
         transition: {
             duration: 0.6,
             ease: [0.22, 1, 0.36, 1]
@@ -227,6 +227,10 @@ export function PostDetail() {
         </div>
     );
 
+    const handleNavigateBack = () => {
+        navigate('/forum', { state: { from: 'post' } });
+    };
+
     if (!post) {
         return (
             <motion.div
@@ -265,61 +269,62 @@ export function PostDetail() {
                     overflow: 'auto'
                 }}
             >
-                {/* Barra superior con logo */}
-                <div className="absolute top-5 w-full flex items-center px-8 z-20">
-                    {/* Contenedor del ícono y título */}
-                    <div className="flex items-center gap-3 flex-1">
-                        <motion.div 
-                            className="w-20 h-20 flex items-center justify-center"
-                            variants={iconAnimation}
-                        >
-                            <img 
-                                src="/src/assets/icons/forum.png"
-                                alt="Forum Icon"
-                                className="w-full h-full object-contain"
-                            />
-                        </motion.div>
-                        <motion.h2 
-                            className="text-3xl font-bold text-white"
-                            variants={pageIndicatorAnimation}
-                        >
-                            Foro
-                        </motion.h2>
-                    </div>
+                {/* Barra superior con ícono y título */}
+                <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-5">
+                    <div className="flex items-center px-8">
+                        <div className="flex items-center gap-3 flex-1">
+                            <motion.div 
+                                className="w-20 h-20 flex items-center justify-center"
+                                variants={iconAnimation}
+                            >
+                                <img 
+                                    src="/src/assets/icons/forum.png"
+                                    alt="Forum Icon"
+                                    className="w-full h-full object-contain"
+                                />
+                            </motion.div>
+                            <motion.h2 
+                                className="text-3xl font-bold text-white"
+                                variants={pageIndicatorAnimation}
+                            >
+                                Foro
+                            </motion.h2>
+                        </div>
 
-                    <motion.div
-                        className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
-                        onClick={() => navigate('/')}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                    >
-                        <img
-                            src="/src/assets/logo/logo.svg"
-                            alt="Logo"
-                            className="w-60 h-auto"
-                        />
-                    </motion.div>
-
-                    {/* Botón de volver */}
-                    <div className="flex-1 flex justify-end">
                         <motion.div
-                            className="flex items-center gap-4 cursor-pointer"
-                            onClick={() => navigate('/forum')}
+                            className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+                            onClick={() => navigate('/')}
                             whileHover={{ scale: 1.05 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                         >
                             <img
-                                src="/src/assets/icons/back.png"
-                                alt="Volver"
-                                className="w-12 h-12"
+                                src="/src/assets/logo/logo.svg"
+                                alt="Logo"
+                                className="w-60 h-auto"
                             />
-                            <span className="text-white text-xl">Volver</span>
                         </motion.div>
+
+                        {/* Botón de volver */}
+                        <div className="flex-1 flex justify-end">
+                            <motion.div
+                                className="flex items-center gap-6 cursor-pointer"
+                                onClick={handleNavigateBack}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                            >
+                                <img
+                                    src="/src/assets/icons/back.png"
+                                    alt="Volver"
+                                    className="w-12 h-12"
+                                />
+                                <span className="text-white text-xl">Volver</span>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
 
                 {/* Contenedor principal */}
-                <div className="flex-1 max-w-4xl mx-auto px-6 py-8 pt-32">
+                <div className="flex-1 max-w-4xl mx-auto px-6 py-8 pt-36">
                     {/* Contenido del post */}
                     <div className="bg-black/20 rounded-lg backdrop-blur-sm">
                         <div className="p-6 flex">

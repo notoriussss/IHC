@@ -1,33 +1,63 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getForumData, subscribeToForumChanges, type ForumData } from '@/services/forumService';
 
-const pageTransition = {
-    initial: {
-        opacity: 0,
-        scale: 0.8,
-        x: '-100%',
-        y: '-100%'
-    },
-    animate: {
-        opacity: 1,
-        scale: 1,
-        x: 0,
-        y: 0,
-        transition: {
-            duration: 0.6,
-            ease: [0.22, 1, 0.36, 1]
-        }
-    },
-    exit: {
-        opacity: 0,
-        y: '100%',
-        transition: {
-            duration: 0.6,
-            ease: [0.22, 1, 0.36, 1]
-        }
+const getPageTransition = (from: string | undefined) => {
+    if (from === 'post') {
+        return {
+            initial: {
+                opacity: 0,
+                scale: 0.8,
+                y: '100%'
+            },
+            animate: {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                transition: {
+                    duration: 0.6,
+                    ease: [0.22, 1, 0.36, 1]
+                }
+            },
+            exit: {
+                opacity: 0,
+                y: '-100%',
+                transition: {
+                    duration: 0.6,
+                    ease: [0.22, 1, 0.36, 1]
+                }
+            }
+        };
     }
+
+    // Transición por defecto (cuando entramos desde App.tsx - diagonal)
+    return {
+        initial: {
+            opacity: 0,
+            scale: 0.8,
+            x: '-100%',
+            y: '-100%'
+        },
+        animate: {
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                ease: [0.22, 1, 0.36, 1]
+            }
+        },
+        exit: {
+            opacity: 0,
+            y: '-100%',
+            transition: {
+                duration: 0.6,
+                ease: [0.22, 1, 0.36, 1]
+            }
+        }
+    };
 };
 
 const overlayTransition = {
@@ -95,6 +125,9 @@ const iconAnimation = {
 
 export function Forum() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from;
+    const pageTransition = getPageTransition(from);
     const [forumData, setForumData] = useState<ForumData>(() => getForumData());
 
     useEffect(() => {
@@ -111,6 +144,7 @@ export function Forum() {
                 className="fixed inset-0"
                 initial="initial"
                 animate="animate"
+                exit="exit"
                 variants={pageTransition}
                 style={{
                     perspective: '1000px',
@@ -132,63 +166,65 @@ export function Forum() {
                         overflow: 'auto'
                     }}
                 >
-                    {/* Barra superior con logo */}
-                    <div className="absolute top-5 w-full flex items-center px-8 z-20">
-                        {/* Contenedor del ícono y título en la esquina superior izquierda */}
-                        <div className="flex items-center gap-3">
-                            <motion.div 
-                                className="w-20 h-20 flex items-center justify-center"
-                                variants={iconAnimation}
-                            >
-                                <img 
-                                    src="/src/assets/icons/forum.png"
-                                    alt="Forum Icon"
-                                    className="w-full h-full object-contain"
-                                />
-                            </motion.div>
-                            <motion.div 
-                                className="flex items-center"
-                                variants={pageIndicatorAnimation}
-                            >
-                                <h2 className="text-3xl font-bold text-white">
-                                    Foro
-                                </h2>
-                            </motion.div>
-                        </div>
+                    {/* Barra superior con logo - Ahora fixed */}
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md z-50 py-5">
+                        <div className="flex items-center px-8">
+                            {/* Contenedor del ícono y título en la esquina superior izquierda */}
+                            <div className="flex items-center gap-3">
+                                <motion.div 
+                                    className="w-20 h-20 flex items-center justify-center"
+                                    variants={iconAnimation}
+                                >
+                                    <img 
+                                        src="/src/assets/icons/forum.png"
+                                        alt="Forum Icon"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </motion.div>
+                                <motion.div 
+                                    className="flex items-center"
+                                    variants={pageIndicatorAnimation}
+                                >
+                                    <h2 className="text-3xl font-bold text-white">
+                                        Foro
+                                    </h2>
+                                </motion.div>
+                            </div>
 
-                        <motion.div
-                            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                            onClick={() => navigate('/')}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                        >
-                            <img
-                                src="/src/assets/logo/logo.svg"
-                                alt="Logo"
-                                className="w-60 h-auto"
-                            />
-                        </motion.div>
-
-                        {/* Botón de volver */}
-                        <div className="flex-1 flex justify-end">
                             <motion.div
-                                className="flex items-center gap-6 cursor-pointer"
+                                className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
                                 onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             >
                                 <img
-                                    src="/src/assets/icons/back.png"
-                                    alt="Volver"
-                                    className="w-12 h-12"
+                                    src="/src/assets/logo/logo.svg"
+                                    alt="Logo"
+                                    className="w-60 h-auto"
                                 />
-                                <span className="text-white text-xl">Volver</span>
                             </motion.div>
+
+                            {/* Botón de volver */}
+                            <div className="flex-1 flex justify-end">
+                                <motion.div
+                                    className="flex items-center gap-6 cursor-pointer"
+                                    onClick={() => navigate('/')}
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                                >
+                                    <img
+                                        src="/src/assets/icons/back.png"
+                                        alt="Volver"
+                                        className="w-12 h-12"
+                                    />
+                                    <span className="text-white text-xl">Volver</span>
+                                </motion.div>
+                            </div>
                         </div>
                     </div>
 
                     {/* Contenido del foro */}
-                    <div className="flex flex-1 pt-32">
+                    <div className="flex flex-1 pt-36">
                         {/* Sección principal */}
                         <div className="flex-1 p-6 overflow-y-auto">
                             {forumData.posts.map((post) => (
