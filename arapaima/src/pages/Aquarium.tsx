@@ -141,7 +141,7 @@ export function Aquarium() {
     return (
         <AnimatePresence mode="wait">
             <motion.div
-                className="flex flex-col inset-0"
+                className="fixed inset-0"
                 initial="initial"
                 animate="animate"
                 exit="exit"
@@ -166,7 +166,7 @@ export function Aquarium() {
                     }}
                 >
                     {/* Barra superior con ícono, título y logo */}
-                    <div className="stiky top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-5">
+                    <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-5">
                         <div className="flex items-center px-8">
                             <div className="flex items-center gap-3 flex-1">
                                 <motion.div 
@@ -220,7 +220,6 @@ export function Aquarium() {
                     </div>
 
                     {/* Contenedor centralizado */}
-
                     <div className="flex-1 flex items-center justify-center px-8 mt-24 mb-8">
                         <div className="w-[60%] mx-auto flex flex-col items-center justify-start text-center h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
                             <AnimatePresence mode="wait">

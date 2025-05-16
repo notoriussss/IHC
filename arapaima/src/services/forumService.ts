@@ -6,8 +6,6 @@ export interface Comment {
     author: string;
     content: string;
     createdAt: string;
-    upvotes: number;
-    downvotes: number;
     replies?: Comment[];
 }
 
@@ -20,14 +18,10 @@ export interface Post {
     upvotes: number;
     downvotes: number;
     comments: Comment[];
+    label: string;
 }
 
 export interface ForumData {
-    recentTopics: {
-        id: number;
-        title: string;
-        comments: number;
-    }[];
     posts: Post[];
 }
 
@@ -40,26 +34,24 @@ interface ForumChangeEvent extends CustomEvent<ForumData> {
     detail: ForumData;
 }
 
-// Función para actualizar los contadores de comentarios
-function updateCommentCounts(data: ForumData): ForumData {
-    const updatedRecentTopics = data.recentTopics.map(topic => {
-        const relatedPost = data.posts.find(post => post.id === topic.id);
-        if (relatedPost) {
-            const totalComments = relatedPost.comments.reduce((total, comment) => 
-                total + 1 + (comment.replies?.length || 0), 0);
-            return { ...topic, comments: totalComments };
-        }
-        return topic;
-    });
-
-    return {
-        ...data,
-        recentTopics: updatedRecentTopics
-    };
+// Almacenamiento de votos del usuario
+interface UserVotes {
+    [postId: number]: 'up' | 'down' | null;
 }
 
 // Datos en memoria
 let currentData: ForumData;
+let userVotes: UserVotes = {};
+
+// Cargar votos del usuario del localStorage
+try {
+    const savedVotes = localStorage.getItem('userVotes');
+    if (savedVotes) {
+        userVotes = JSON.parse(savedVotes);
+    }
+} catch (error) {
+    console.error('Error al cargar votos guardados:', error);
+}
 
 // Inicializar con datos del localStorage si existen, sino usar el JSON
 const savedData = localStorage.getItem('forumData');
@@ -74,39 +66,85 @@ if (savedData) {
     currentData = { ...forumData };
 }
 
-// Asegurarse de que los contadores estén actualizados
-currentData = updateCommentCounts(currentData);
-
 // Función para obtener los datos actuales
 export function getForumData(): ForumData {
     return currentData;
 }
 
-// Función para actualizar los datos
-export function updateForumData(newData: ForumData): boolean {
-    // Actualizar los contadores de comentarios antes de guardar
-    const updatedData = updateCommentCounts(newData);
-    currentData = updatedData;
-    
-    // Disparar evento de cambio
-    const event = new CustomEvent<ForumData>(FORUM_CHANGE_EVENT, { detail: currentData });
-    forumEventEmitter.dispatchEvent(event);
-    
-    // Guardar en localStorage como respaldo
-    localStorage.setItem('forumData', JSON.stringify(currentData));
-    
-    return true;
+// Función para actualizar los datos del foro
+export function updateForumData(newData: ForumData): void {
+    currentData = newData;
+    localStorage.setItem('forumData', JSON.stringify(newData));
 }
 
-// Función para suscribirse a cambios
-export function subscribeToForumChanges(callback: (data: ForumData) => void) {
-    const handler = (event: Event) => {
-        if (event instanceof CustomEvent) {
-            const forumEvent = event as ForumChangeEvent;
-            callback(forumEvent.detail);
+// Función para obtener los votos del usuario
+export function getUserVotes(): UserVotes {
+    return { ...userVotes };
+}
+
+// Función para votar en un post
+export function votePost(postId: number, voteType: 'up' | 'down' | null): boolean {
+    try {
+        const currentVote = userVotes[postId];
+        const data = getForumData();
+        const post = data.posts.find(p => p.id === postId);
+        
+        if (!post) return false;
+
+        // Si el voto es el mismo que el actual, lo quitamos
+        if (currentVote === voteType) {
+            // Revertir el voto anterior
+            if (currentVote === 'up') {
+                post.upvotes = Math.max(0, post.upvotes - 1);
+            } else if (currentVote === 'down') {
+                post.downvotes = Math.max(0, post.downvotes - 1);
+            }
+            userVotes[postId] = null;
+        } else {
+            // Si hay un voto previo diferente, primero lo quitamos
+            if (currentVote === 'up') {
+                post.upvotes = Math.max(0, post.upvotes - 1);
+            } else if (currentVote === 'down') {
+                post.downvotes = Math.max(0, post.downvotes - 1);
+            }
+
+            // Aplicar el nuevo voto
+            if (voteType === 'up') {
+                post.upvotes++;
+                userVotes[postId] = 'up';
+            } else if (voteType === 'down') {
+                post.downvotes++;
+                userVotes[postId] = 'down';
+            } else {
+                userVotes[postId] = null;
+            }
         }
+
+        // Guardar los cambios
+        updateForumData(data);
+        localStorage.setItem('userVotes', JSON.stringify(userVotes));
+
+        // Notificar a los suscriptores
+        notifySubscribers();
+        
+        return true;
+    } catch (error) {
+        console.error('Error al votar:', error);
+        return false;
+    }
+}
+
+// Suscripción a cambios
+let subscribers: ((data: ForumData) => void)[] = [];
+
+export function subscribeToForumChanges(callback: (data: ForumData) => void) {
+    subscribers.push(callback);
+    return () => {
+        subscribers = subscribers.filter(cb => cb !== callback);
     };
-    
-    forumEventEmitter.addEventListener(FORUM_CHANGE_EVENT, handler);
-    return () => forumEventEmitter.removeEventListener(FORUM_CHANGE_EVENT, handler);
+}
+
+// Notificar a los suscriptores
+function notifySubscribers() {
+    subscribers.forEach(callback => callback(currentData));
 } 

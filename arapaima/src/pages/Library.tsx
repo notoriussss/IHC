@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import libraryData from '@/data/library.json'; // Importamos los datos de los libros
+import { useState, useEffect } from 'react';
+import { getLibraryData, subscribeToLibraryChanges, type LibraryData } from '@/services/libraryService';
 
 // Componente de pincelada SVG para la máscara
 const BrushStrokeMask = () => (
@@ -108,14 +108,24 @@ const iconAnimation = {
 
 export function Library() {
     const navigate = useNavigate();
-    const [centerBook, setCenterBook] = useState(libraryData[0]); // Estado para el libro en el enmascarador superior
-    const bottomCenterBook = libraryData[0]; // Libro central inferior fijo
+    const [libraryData, setLibraryData] = useState<LibraryData>(() => getLibraryData());
+    const [centerBook, setCenterBook] = useState(libraryData.books[0]);
+    const bottomCenterBook = libraryData.books[0];
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [pendingUrl, setPendingUrl] = useState('');
 
+    // Suscribirse a cambios en los datos de la biblioteca
+    useEffect(() => {
+        const unsubscribe = subscribeToLibraryChanges((newData) => {
+            setLibraryData(newData);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     // Dividimos los libros en tres secciones
-    const leftBooks = libraryData.slice(1, 5); // Libros para el contenedor izquierdo
-    const rightBooks = libraryData.slice(5, 9); // Libros para el contenedor derecho
+    const leftBooks = libraryData.books.slice(1, 5);
+    const rightBooks = libraryData.books.slice(5, 9);
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
         e.preventDefault();
@@ -146,7 +156,7 @@ export function Library() {
                 }}
             >
                 <motion.div
-                    className="absolute inset-0 "
+                    className="absolute inset-0"
                     variants={overlayTransition}
                 />
                 
@@ -215,7 +225,6 @@ export function Library() {
                     </div>
 
                     {/* Contenido de la biblioteca */}
-
                     <div className="flex-1 w-full overflow-y-auto custom-scrollbar-blue">
                         <div className="flex flex-col items-center justify-center min-h-full pt-36 pb-8 px-8">
                             {/* Máscara superior central con sinopsis */}
