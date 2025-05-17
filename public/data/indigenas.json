@@ -1,0 +1,32 @@
+[
+    {
+        "etnia": "Pemón",
+        "relacion": "Los Pemón, habitantes ancestrales del macizo guayanés, tienen una conexión sagrada con el agua, considerando lugares como el Salto Ángel (Kerepakupai Vená) y los imponentes tepuyes como moradas de sus dioses y ancestros. Para ellos, el agua es una fuerza vital que conecta el mundo espiritual y terrenal, representada en sus cantos, rituales y narrativas orales que relatan el origen del mundo y las fuerzas de la naturaleza. Los Pemón también dependen de los ríos para la pesca, el transporte y la agricultura, utilizando prácticas sostenibles que respetan los ciclos naturales.",
+        "imagen": "https://comunidadpemon.com/front/img/vestimenta.jpg"
+    },
+    {
+        "etnia": "Ye'kwana",
+        "relacion": "Los Ye'kwana son expertos navegantes que habitan las riberas de los ríos Caura, Erebato y Ventuarí. Para ellos, el agua es no solo un medio de transporte, sino también una fuente de identidad cultural. Sus canoas, talladas a mano, son consideradas seres vivientes que deben ser respetados y cuidados. Además, creen que los ríos son moradas de poderosos espíritus y que cualquier falta de respeto puede traer consecuencias graves para su comunidad.",
+        "imagen": "https://img.socioambiental.org/d/239479-1/yekuana_10.jpg"
+    },
+    {
+        "etnia": "Warao",
+        "relacion": "Los Warao, conocidos como Gente de la Canoa, habitan en el Delta del Orinoco, donde el agua es el eje central de su vida. Sus viviendas están construidas sobre pilotes en los ríos, y dependen completamente del agua para la pesca, transporte y agricultura. Para ellos, los ríos son seres vivos que deben ser honrados y respetados.",
+        "imagen": "https://i.pinimg.com/originals/e2/46/1b/e2461be7cacdda4de56a8b4c4c102bbf.jpg"
+    },
+    {
+        "etnia": "Yanomami",
+        "relacion": "Los Yanomami, que habitan en las densas selvas del Amazonas y la región de Guayana, consideran al agua como parte de un sistema energético interconectado. Sus chamanes realizan rituales para comunicarse con los espíritus del agua y restaurar el equilibrio natural, vital para la salud de su comunidad.",
+        "imagen":"https://assets.survivalinternational.org/pictures/25246/width460-46803bd14dcf61bc0ef6f3e27d16285e.jpg"
+    },
+    {
+        "etnia": "Sanemá",
+        "relacion": "Los Sanemá, cercanos a los Yanomami, consideran los ríos como las venas de la tierra. Creen que cada río tiene un espíritu protector y que el respeto por estas aguas es esencial para la salud y la prosperidad de su comunidad. Sus técnicas de pesca y purificación del agua reflejan esta visión profundamente espiritual.",
+        "imagen": "https://www.cuentasclarasdigital.org/wp-content/uploads/2020/05/Yanomami-Yekuana-Venezuela-indígenas-grupos-armados-minería-ilegal-oro-arco-minero-648x320.jpg"
+    },
+    {
+        "etnia": "Piaroa",
+        "relacion": "Los Piaroa mantienen una conexión espiritual con el agua, viéndola como sagrada y esencial para la vida. Sus ríos son considerados caminos que conectan al hombre con los espíritus del bosque. Utilizan técnicas tradicionales para la pesca y recolección, siempre evitando la contaminación de sus fuentes de agua.",
+        "imagen": "https://pueblosindigenas.es/wp-content/uploads/2019/10/niño-Piaroa.jpg"
+    }
+]

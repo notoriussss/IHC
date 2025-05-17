@@ -1,0 +1,76 @@
+{
+    "flores": [
+        {
+            "id": 1,
+            "nombre": "Flor de Loto",
+            "nombreCientifico": "Nymphaea lotus",
+            "imagen": "https://www.consumer.es/app/uploads/2004/05/flor-de-loto-e1653918982491.jpg",
+            "ubicacion": "Bolívar",
+            "tipoAgua": "Dulce",
+            "descripcion": "La Flor de Loto es una planta acuática perenne que se caracteriza por sus grandes hojas flotantes y sus hermosas flores blancas o rosadas. Es considerada sagrada en muchas culturas y simboliza la pureza y la iluminación espiritual. Sus hojas son capaces de repeler el agua gracias a su estructura microscópica única."
+        },
+        {
+            "id": 2,
+            "nombre": "Nenúfar Amazónico",
+            "nombreCientifico": "Nymphaea ampla",
+            "imagen": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEit9Uwcc5le8UNlloxS56gMOQMTqppC2YD0uHl4ug5oZeL9n6S3DlL-msYsPLH2EZYKkI1XldV0_wiZDhoj2K4lNxyEd8J7cCaLZNd9t48CEe2D91PN3ChHC0kKemnnfFKKBJ_XUpG3R0AU/s640/IMG_0049.JPG",
+            "ubicacion": "Amazonas",
+            "tipoAgua": "Dulce",
+            "descripcion": "El Nenúfar Amazónico es una especie nativa de la región amazónica que destaca por sus flores de color blanco puro y su delicado aroma. Sus hojas flotantes pueden alcanzar hasta 30 centímetros de diámetro y sus flores se abren durante el día, cerrando sus pétalos al atardecer."
+        },
+        {
+            "id": 3,
+            "nombre": "Victoria Regia",
+            "nombreCientifico": "Victoria Amazonica",
+            "imagen": "https://www.floresyplantas.net/wp-content/uploads/victoria-regia.jpg",
+            "ubicacion": "Delta Amacuro",
+            "tipoAgua": "Dulce",
+            "descripcion": "La Victoria Regia es la planta acuática más grande del mundo, con hojas que pueden alcanzar hasta 3 metros de diámetro. Sus impresionantes flores cambian de color durante su ciclo de vida, pasando de blanco a rosa. Sus hojas pueden soportar el peso de un niño pequeño gracias a su estructura de refuerzo."
+        },
+        {
+            "id": 4,
+            "nombre": "Bromelia del Orinoco",
+            "nombreCientifico": "Bromelia pinguin",
+            "imagen": "https://igui-ecologia.s3.amazonaws.com/wp-content/uploads/2017/12/Bromelia.jpg",
+            "ubicacion": "Delta Amacuro",
+            "tipoAgua": "Terrestre",
+            "descripcion": "La Bromelia del Orinoco es una planta terrestre que forma rosetas de hojas espinosas. Sus flores son de color rojo intenso y crecen en el centro de la planta. Es conocida por su capacidad de almacenar agua en sus hojas, creando pequeños ecosistemas acuáticos que sirven de hábitat para diversas especies de insectos y pequeños anfibios."
+        },
+        {
+            "id": 5,
+            "nombre": "Flor de Maraca",
+            "nombreCientifico": "Heliconia rostrata",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heliconia_rostrata1.jpg/500px-Heliconia_rostrata1.jpg",
+            "ubicacion": "Amazonas",
+            "tipoAgua": "Terrestre",
+            "descripcion": "La Flor de Maraca, también conocida como platanillo o heliconia, es una planta terrestre que se caracteriza por sus flores colgantes de color rojo brillante con puntas amarillas. Es muy popular en los bosques tropicales y juega un papel importante en la polinización, atrayendo colibríes y otras aves nectarívoras."
+        },
+        {
+            "id": 6,
+            "nombre": "Cabomba Verde",
+            "nombreCientifico": "Cabomba caroliniana ",
+            "imagen": "https://laguiadelacuario.es/wp-content/uploads/2019/06/cabomba_carolinianapda-1.jpg",
+            "ubicacion": "Bolívar y Amazonas",
+            "tipoAgua": "Dulce",
+            "descripcion": "Planta sumergida con hojas finamente divididas que ofrecen refugio a pequeños peces y otros organismos acuáticos. Crece en aguas tranquilas y claras."
+        },
+        {
+            "id": 7,
+            "nombre": "Lechuga de Agua",
+            "nombreCientifico": "Pistia stratiotes ",
+            "imagen": "https://blog.cambiagro.com/wp-content/uploads/2023/01/Featured-78-lechugaagua.jpg",
+            "ubicacion": "Delta Amacuro",
+            "tipoAgua": "Dulce",
+            "descripcion": "Planta flotante con hojas suaves y gruesas, que forman rosetas flotantes. Prefiere aguas cálidas y tranquilas."
+        },
+        {
+            "id": 8,
+            "nombre": "Plantas carnívoras acuáticas",
+            "nombreCientifico": "Utricularia spp",
+            "imagen": "https://www.traconsa.com/wp-content/uploads/2020/07/Aldrovanda-Vesiculosa.jpg",
+            "ubicacion": "Bolivar",
+            "tipoAgua": "Terrestre",
+            "descripcion": "Pequeñas plantas sumergidas que se alimentan de pequeños organismos acuáticos. "
+        }
+    ]
+} 

@@ -1,0 +1,48 @@
+{
+    "libros": [
+        {
+            "titulo": "El Orinoco ilustrado y defendido",
+            "sipnosis": "El libro presenta detalles sobre los afluentes de este río, como también las costumbres de los pobladores indígenas, medicinas, comidas, etc",
+            "imagen": "https://i0.wp.com/museodellibrovenezolano.libroria.com/wp-content/uploads/2021/02/Segunda-parte.-El-Orinoco-Ilustrado.jpg",
+            "año de publicación": "1745",
+            "autor":"José Gumilla"
+        },
+        {
+            "titulo": "El Orinoco",
+            "sipnosis": "Un grupo de veinte científicos, entre ellos tres jóvenes franceses, que inicialmente planeaban bajar por el Cassiquiare y luego el río Negro para contar la historia como lo habían hecho sus predecesores, son reclutados por las autoridades para una empresa más ambiciosa.",
+            "imagen": "https://prodavinci.com/wp-content/uploads/2024/11/Orinoco-portada-1-1347x2048.jpg",
+            "año de publicación": "1951",
+            "autor":"Daniel Bourdon"
+        },
+        {
+            "titulo": "El soberbio Orinoco",
+            "sipnosis": "Juana desea reencontrarse con su padre, sin embargo al verse imposibilitada a viajar como mujer, decide disfrazarse de hombre y toma el nombre de Juan, acompañada por un sargento que se hace pasar por su tío sale en su búsqueda, en el trayecto se encontrará con los venezolanos Miguel, Felipe y Varinas y los franceses Jacques Helloch y Germán Paterne que viajan por el río Orinoco para realizar investigaciones, todos se unirán en la búsqueda del coronel Kernor.",
+            "imagen": "https://librosccs.com/cdn/shop/files/Libro-El-soberbio-orinoco-Julio-Verne.jpg",
+            "año de publicación": "1898",
+            "autor":"Julio Verne"
+        },
+        {
+            "titulo": "LA CUENCA DEL RÍO CARONÍ, UNA VISIÓN EN CIFRAS",
+            "sipnosis": "Libro publicado por la extinta C.V.G – EDELCA en el 2004 sobre la cuenca del río Caroní y su importancia para la generación hidroeléctrica en Venezuela. Ilustrados bellamente con fotografí",
+            "imagen": "https://www.pantepui.com/wp-content/uploads/2021/07/LA_CUENCA_DEL_RIO_CARONI.jpg",
+            "año de publicación": "2004",
+            "autor":"varios"
+        },
+        {
+            "titulo": "Caroní, polvo de oro",
+            "sipnosis": " es el encuentro de dos miradas, la de la realidad y la del mito, que se traduce en el también encuentro de los ríos que forman parte de la geográfica acuática de esa región de Venezuela, convertida desde hace algunos años en centro de explotación",
+            "imagen": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1697759673i/198614887.jpg",
+            "año de publicación": "2023",
+            "autor":"Marisol Marrero"
+        },
+        {
+            "titulo": "Una tormenta perfecta en la Amazonía",
+            "sipnosis": " relata los esfuerzos y fracasos en la lucha por salvar este ecosistema crítico. Timothy Killeen, autor del libro, presenta un análisis de las complejidades ambientales y políticas que amenazan la Amazonía",
+            "imagen": "https://www.environmentandsociety.org/sites/default/files/thumbnails/image/spanish_cover.png",
+            "año de publicación": "2023",
+            "autor":"Timothy Killeen"
+        }
+    
+
+    ]
+}

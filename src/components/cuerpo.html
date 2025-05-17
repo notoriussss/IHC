@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modal with Articulos Content</title>
+<style>
+  /* Basic reset */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  /* Button styling */
+  button {
+    background-color: #0669db;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(6,105,219,0.6);
+    transition: background-color 0.3s ease;
+  }
+  button:hover, button:focus {
+    background-color: #034a82;
+    outline: none;
+  }
+  /* Modal backdrop */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-backdrop.active {
+    display: flex;
+  }
+  /* Modal window */
+  .modal {
+    background: white;
+    border-radius: 12px;
+    width: 1300px;
+    height: 700px;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+    text-align: left;
+  }
+  /* Close button */
+  .close-btn {
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    background: #0669db;
+    border: none;
+    color: #ededf0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    padding: 0;
+    transition: background-color 0.3s ease;
+  }
+  .close-btn:hover {
+    background-color: #034a82;
+  }
+  .decoration{
+    background-color: #0669db;
+    width: 100%;
+    height: 190px;
+  }
+  .modalbody{
+    padding: 20px 30px;
+  }
+</style>
+</head>
+<body>
+
+<button id="openModalBtn" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false">
+  Abrir Modal con Artículos
+</button>
+
+<div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" tabindex="-1" aria-hidden="true">
+  <div class="modal" tabindex="0" id="modalContent">
+    <button class="close-btn" aria-label="Cerrar modal">&lt;</button>
+    <!-- Aquí se cargará el contenido de articulos.html -->
+    <div class="modalbody" id="externalContent">
+      Cargando contenido...
+    </div>
+
+    <div class="decoration"></div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const openBtn = document.getElementById('openModalBtn');
+    const modal = document.getElementById('modal');
+    const closeBtn = modal.querySelector('.close-btn');
+    const externalContent = document.getElementById('externalContent');
+
+    function openModal() {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      modal.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      openBtn.focus();
+    }
+
+    // Cargar contenido de articulos.html dentro del modal
+    function loadArticulosContent() {
+      fetch('listarticulos.html')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('No se pudo cargar el archivo articulos.html');
+          }
+          return response.text();
+        })
+        .then(html => {
+          externalContent.innerHTML = html;
+          openModal();
+        })
+        .catch(error => {
+          externalContent.innerHTML = '<p style="color:red;">Error cargando contenido: ' + error.message + '</p>';
+          openModal();
+        });
+    }
+
+    openBtn.addEventListener('click', loadArticulosContent);
+    closeBtn.addEventListener('click', closeModal);
+
+    // Cerrar modal al hacer clic fuera del contenido
+    modal.addEventListener('click', e => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', e => {
+      if ((e.key === 'Escape' || e.key === 'Esc') && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
+

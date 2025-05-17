@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>External Content</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        .morebt{
+            display:block;
+            margin:auto;
+        }
+
+        /*evite tocar configuracion para las casillas*/
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            border-radius: 50%;
+            opacity: 0.03;
+            z-index: -1;
+        }
+
+        body::before {
+            top: -200px;
+            left: -200px;
+            transform: rotate(-15deg);
+        }
+
+        body::after {
+            bottom: -200px;
+            right: -200px;
+            transform: rotate(15deg);
+        }
+
+        .background-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .background-decoration .dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #3182ce;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+
+        .background-decoration .dot:nth-child(1) { top: 15%; left: 10%; }
+        .background-decoration .dot:nth-child(2) { top: 45%; left: 20%; }
+        .background-decoration .dot:nth-child(3) { top: 75%; left: 15%; }
+        .background-decoration .dot:nth-child(4) { top: 25%; right: 15%; }
+        .background-decoration .dot:nth-child(5) { top: 65%; right: 10%; }
+        .background-decoration .dot:nth-child(6) { top: 85%; right: 25%; }
+
+        .background-decoration .line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #3182ce, transparent);
+            height: 1px;
+            width: 150px;
+            opacity: 0.05;
+        }
+
+        .background-decoration .line:nth-child(7) { top: 20%; left: 5%; transform: rotate(45deg); }
+        .background-decoration .line:nth-child(8) { top: 40%; right: 10%; transform: rotate(-45deg); }
+        .background-decoration .line:nth-child(9) { bottom: 30%; left: 15%; transform: rotate(-30deg); }
+        .background-decoration .line:nth-child(10) { bottom: 15%; right: 20%; transform: rotate(30deg); }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            margin: 20px 0 30px;
+        }
+
+        .card {
+            width: calc(33.33% - 40px);
+            height: 300px;
+            margin: 20px;
+            background-color: white;
+            box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        .card:hover .card__caption {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .card:hover .card__image {
+            transform: translateY(-10px);
+        }
+        .card:hover .card__thumb::after {
+            top: 0;
+        }
+        .card:hover .card__snippet {
+            margin: 20px 0;
+        }
+        .card:hover .card__title {
+            border-bottom-width: 2px; /* Grosor del borde */
+            border-bottom-style: solid; /* Estilo del borde */
+            border-bottom-color: #3498db; /* Cambiado de #ffc115 a un azul que combine */
+        }
+
+        .card__thumb {
+            height: 100%;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            position: relative;
+            max-height: 500px;
+            overflow: hidden;
+        }
+        .card__thumb::after {
+            position: absolute;
+            top: 0;
+            display: block;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 40%, rgba(255, 255, 255, 0) 100%);
+            transition: 0.3s;
+        }
+        @media (min-width: 1024px) {
+        .card__thumb::after {
+            top: calc(100% - 140px);
+        }
+        }
+        .card__image {
+            transition: 0.5s ease-in-out;
+        }
+        .card__caption {
+            position: absolute;
+            top: 50%;
+            z-index: 1;
+            padding: 0 20px;
+            color: white;
+            transform: translateY(-50%);
+            text-align: center;
+            transition: 0.3s;
+        }
+        @media (min-width: 1024px) {
+        .card__caption {
+            top: calc(100% - 110px);
+            transform: unset;
+        }
+        }
+        .card__title {
+            display: -webkit-box;
+            max-height: 85px;
+            overflow: hidden;
+            font-family: "Playfair Display", serif;
+            font-size: 23px;
+            line-height: 28px;
+            text-shadow: 0px 1px 5px black;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+
+        }
+        .card__snippet {
+            display: -webkit-box;
+            max-height: 150px;
+            margin: 20px 0;
+            overflow: hidden;
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            text-overflow: ellipsis;
+            transition: 0.5s ease-in-out;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+        }
+        @media (min-width: 1024px) {
+        .card__snippet {
+            margin: 60px 0;
+        }
+        }
+        .card__button {
+            display: inline-block;
+            padding: 10px 20px;
+            color: rgb(0, 0, 0);
+            border: 1px solid white;
+            font-family: "Roboto", sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: 0.3s;
+            background-color: #576676FF;
+        }
+        .card__button:hover {
+            color: rgb(255, 255, 255);
+            background-color: rgb(0, 0, 0);
+        }
+        .card__autor{
+
+        }
+
+        /* Estilos para los filtros */
+        .filters {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto 40px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.3),
+                0 8px 10px -6px rgba(0, 0, 0, 0.2);
+            width: auto;
+            min-width: 320px;
+            max-width: 520px;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            text-align: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 0 5px;
+            position: relative;
+        }
+
+        .clear-filter {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            color: #718096;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 4px;
+            margin: 0 auto;
+        }
+
+        .chips-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(65px, max-content));
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            padding: 5px;
+            margin: 0 auto;
+        }
+
+        .chip {
+            padding: 8px 12px;
+            background: #ffffff;
+            color: #4a5568;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            min-width: 65px;
+        }
+
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .chip:hover {
+            color: #3182ce;
+            border-color: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(49, 130, 206, 0.1);
+        }
+
+        .chip.active {
+            color: #ffffff;
+            border-color: transparent;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 6px -1px rgba(49, 130, 206, 0.2),
+                0 2px 4px -1px rgba(49, 130, 206, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                width: 90%;
+                padding: 15px 20px;
+                top: 15px;
+            }
+
+            .filter-header {
+                margin-bottom: 12px;
+            }
+
+            .filter-group label {
+                font-size: 13px;
+            }
+
+            .chips-container {
+                grid-template-columns: repeat(auto-fit, minmax(60px, max-content));
+                gap: 8px;
+            }
+
+            .chip {
+                padding: 6px 10px;
+                font-size: 12px;
+                min-width: 60px;
+            }
+
+            .clear-filter {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+        }
+
+        .lista {
+            width: 100%;
+            margin-top: 0;
+            padding: 0 20px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-start;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 40px 20px;
+            scroll-behavior: smooth;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 40px;
+            width: 95%;
+            max-width: 1000px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            padding: 8px;
+            margin: -8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #000;
+        }
+
+        /* Article styles from articulos.html */
+        .Header {
+            text-wrap: balance;
+            margin: 0 0 40px 0;
+            padding-bottom: 20px;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: #000;
+            text-align: justify;
+        }
+
+        .Title {
+            color: #0669db;
+            font-size: 42px;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .autor {
+            color: #666;
+            font-size: 18px;
+        }
+
+        .Image-cont {
+            margin: 0 0 40px 0;
+            text-align: center;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .Image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .Article-Body {
+            margin: 0 0 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: justify;
+        }
+
+        .Conten {
+            margin: 0 auto;
+            max-width: 800px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .Footer {
+            margin: 40px 0 0 0;
+            padding-top: 40px;
+            border-top-width: 2px;
+            border-top-style: solid;
+            border-top-color: #000;
+        }
+
+        .Footer .Title {
+            color: #0669db;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .other-articles {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .other-articles:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-Img-conte {
+            display: block;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .sub-Img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .other-articles:hover .sub-Img {
+            transform: scale(1.05);
+        }
+
+        .sub-date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .sub-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .sub-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        @media (max-width: 1024px) {
+            .modal-content {
+                padding: 30px;
+            }
+
+            .Title {
+                font-size: 36px;
+            }
+
+            .wrapper {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card {
+                width: calc(50% - 40px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 20px 10px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .Title {
+                font-size: 28px;
+            }
+
+            .Conten {
+                font-size: 15px;
+            }
+
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .Image-cont {
+                height: 300px;
+            }
+
+            .card {
+                width: calc(100% - 40px);
+            }
+
+            .sub-Img-conte {
+                height: 180px;
+            }
+
+            .lista {
+                margin-top: 70px;
+            }
+        }
+
+        /* Animaciones para el contenido del artículo */
+        .Header, .Image-cont, .Article-Body, .Footer {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .Header.animate, .Image-cont.animate, .Article-Body.animate, .Footer.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .Header {
+            transition-delay: 0.1s;
+        }
+
+        .Image-cont {
+            transition-delay: 0.2s;
+        }
+
+        .Article-Body {
+            transition-delay: 0.3s;
+        }
+
+        .Footer {
+            transition-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-decoration">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+    <div class="filters">
+        <div class="filter-group">
+            <div class="filter-header">
+                <label>Año de publicación</label>
+                <span class="clear-filter" onclick="clearYearFilter()">Limpiar</span>
+            </div>
+            <div class="chips-container" id="yearChips">
+                <!-- Los años se agregarán dinámicamente aquí -->
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-header">
+                <label>Temática</label>
+                <span class="clear-filter" onclick="clearThemeFilter()">Limpiar</span>
+            </div>
+            <div class="chips-container" id="themeChips">
+                <!-- Las temáticas se agregarán dinámicamente aquí -->
+            </div>
+        </div>
+    </div>
+
+    <div class="lista">
+        <div class="container" id="articlesContainer">
+            <!-- Los artículos se cargarán dinámicamente aquí -->
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="Header">
+                <h2 class="Title"></h2>
+                <p class="autor"><b>Autor:</b> <span class="article-author"></span>. <b>Fecha de publicación: </b><span class="article-date"></span></p>
+            </div>
+            <div class="Image-cont">
+                <img class="Image" src="" alt="Article Image">
+            </div>
+            <div class="Article-Body">
+                <p class="Conten"></p>
+            </div>
+            <div class="Footer">
+                <h2 class="Title">NUEVOS ARTICULOS</h2>
+                <div class="wrapper">
+                    <!-- Other articles will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let articles = [];
+        let filteredArticles = [];
+        let currentPage = 1;
+        const articlesPerPage = 6;
+        let selectedYear = '';
+        let selectedTheme = '';
+
+        // Función para cargar el JSON
+        async function loadArticles() {
+            try {
+                const response = await fetch('../data/articulos.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                // Filtrar solo artículos de economía y ordenarlos por fecha
+                articles = data.articulos
+                    .filter(article => article.tematica === 'economía' && article.titulo)
+                    .sort((a, b) => parseInt(b.fecha) - parseInt(a.fecha));
+                filteredArticles = [...articles];
+                
+                initializeFilters();
+                displayArticles();
+            } catch (error) {
+                console.error('Error al cargar los artículos:', error);
+                document.getElementById('articlesContainer').innerHTML = 
+                    '<div style="color: white; text-align: center;">Error al cargar los artículos. Por favor, intente nuevamente.</div>';
+            }
+        }
+
+        // Función para inicializar los filtros
+        function initializeFilters() {
+            const years = [...new Set(articles.map(article => article.fecha))].sort((a, b) => b - a);
+            
+            const yearChips = document.getElementById('yearChips');
+            const themeChips = document.getElementById('themeChips').parentElement;
+            
+            // Ocultar el filtro de temáticas ya que solo mostraremos economía
+            themeChips.style.display = 'none';
+
+            years.forEach(year => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.textContent = year;
+                chip.onclick = () => {
+                    document.querySelectorAll('#yearChips .chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    selectedYear = year;
+                    handleFilterChange();
+                };
+                yearChips.appendChild(chip);
+            });
+        }
+
+        function clearYearFilter() {
+            selectedYear = '';
+            document.querySelectorAll('#yearChips .chip').forEach(c => c.classList.remove('active'));
+            handleFilterChange();
+        }
+
+        function clearThemeFilter() {
+            selectedTheme = '';
+            document.querySelectorAll('#themeChips .chip').forEach(c => c.classList.remove('active'));
+            handleFilterChange();
+        }
+
+        // Función para manejar cambios en los filtros
+        function handleFilterChange() {
+            filteredArticles = articles.filter(article => {
+                const yearMatch = !selectedYear || article.fecha === selectedYear;
+                return yearMatch;
+            });
+
+            currentPage = 1;
+            displayArticles();
+        }
+
+        // Function to show modal with article data
+        function showArticleModal(article) {
+            const modal = document.getElementById('articleModal');
+            const modalContent = modal.querySelector('.modal-content');
+            const articleTitle = document.querySelector('.Header .Title');
+            const articleAuthor = document.querySelector('.article-author');
+            const articleDate = document.querySelector('.article-date');
+            const articleImage = document.querySelector('.Image');
+            const articleContent = document.querySelector('.Conten');
+            const otherArticlesWrapper = document.querySelector('.wrapper');
+            const closeModal = document.querySelector('.close-modal');
+
+            // Remover clases de animación
+            document.querySelector('.Header').classList.remove('animate');
+            document.querySelector('.Image-cont').classList.remove('animate');
+            document.querySelector('.Article-Body').classList.remove('animate');
+            document.querySelector('.Footer').classList.remove('animate');
+
+            // Set article content
+            articleTitle.textContent = article.titulo;
+            articleAuthor.textContent = article.autor || 'Anónimo';
+            articleDate.textContent = article.fecha;
+            articleImage.src = article.imagen;
+            articleContent.textContent = article.descripcion_detallada;
+
+            // Get other articles excluding the current one
+            const otherArticles = articles
+                .filter(a => a.titulo !== article.titulo)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+
+            // Populate other articles
+            otherArticlesWrapper.innerHTML = otherArticles.map(otherArticle => `
+                <div class="other-articles" onclick="handleSuggestedArticleClick(${JSON.stringify(otherArticle).replace(/"/g, '&quot;')})" style="cursor: pointer;">
+                    <p class="sub-date">Fecha ${otherArticle.fecha}</p>
+                    <div class="sub-Img-conte">
+                        <img class="sub-Img" src="${otherArticle.imagen}" alt="${otherArticle.titulo}">
+                    </div>
+                    <p class="sub-title"><b>${otherArticle.titulo}</b></p>
+                    <p class="sub-text">${otherArticle.descripcion_resumida}</p>
+                </div>
+            `).join('');
+
+            // Show modal if not already visible
+            if (modal.style.display !== 'flex') {
+                modal.style.display = 'flex';
+                void modal.offsetWidth;
+                modal.classList.add('show');
+            }
+
+            // Trigger animations
+            requestAnimationFrame(() => {
+                document.querySelector('.Header').classList.add('animate');
+                document.querySelector('.Image-cont').classList.add('animate');
+                document.querySelector('.Article-Body').classList.add('animate');
+                document.querySelector('.Footer').classList.add('animate');
+            });
+
+            // Scroll al inicio del modal
+            modal.scrollTop = 0;
+
+            // Close modal when clicking the close button
+            closeModal.onclick = function() {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            };
+
+            // Close modal when clicking outside
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+            };
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Nueva función para manejar el clic en artículos sugeridos
+        function handleSuggestedArticleClick(article) {
+            const modal = document.getElementById('articleModal');
+            
+            // Hacer scroll suave al inicio
+            modal.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            // Remover las clases de animación actuales
+            document.querySelector('.Header').classList.remove('animate');
+            document.querySelector('.Image-cont').classList.remove('animate');
+            document.querySelector('.Article-Body').classList.remove('animate');
+            document.querySelector('.Footer').classList.remove('animate');
+
+            // Esperar a que termine el scroll
+            setTimeout(() => {
+                showArticleModal(article);
+            }, 300);
+        }
+
+        // Modify the displayArticles function to use the modal
+        function displayArticles() {
+            const container = document.getElementById('articlesContainer');
+            const startIndex = 0;
+            const endIndex = currentPage * articlesPerPage;
+            const articlesToShow = filteredArticles.slice(startIndex, endIndex);
+
+            if (articlesToShow.length === 0) {
+                container.innerHTML = '<div style="color: white; text-align: center;">No se encontraron artículos con los filtros seleccionados.</div>';
+                return;
+            }
+
+            container.innerHTML = articlesToShow.map(article => `
+                <div class="card" onclick="showArticleModal(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                    <figure class="card__thumb">
+                        <img src="${article.imagen}" class="card__image" alt="${article.titulo}">
+                        <figcaption class="card__caption">
+                            <h2 class="card__title">${article.titulo}</h2>
+                            <p class="card__snippet">${article.descripcion_resumida}</p>
+                        </figcaption>
+                    </figure>
+                </div>
+            `).join('');
+        }
+
+        // Event listener para cargar más artículos al hacer scroll
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+                currentPage++;
+                displayArticles();
+            }
+        });
+
+        // Cargar los artículos cuando el documento esté listo
+        window.onload = loadArticles;
+    </script>
+</body>
+</html>

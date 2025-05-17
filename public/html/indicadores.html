@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicadores</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #576676FF;
+            color: #000;
+            padding: 1em;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.15;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        hr { /*dummy content*/
+            height: 6px;
+            border: none;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        hr:last-child {  /*dummy content*/
+            margin-right: 60%;
+        }
+
+        hr.image { /*dummy content*/
+            padding-bottom: 50%;
+        } 
+
+        .page {
+            padding: 1.5em;
+            background: rgba(255, 255, 255, 0.95);
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .archive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-gap: 1em;
+            grid-auto-flow: dense;
+        }
+
+        .article {
+            padding: 1.2em;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .article:nth-child(1) {
+            grid-column: 1 / 3;
+            background: rgba(200,200,255,0.3)
+        }
+
+        .article:nth-child(1)>hr:last-child {
+            margin-right: 20%;
+            height: 28px
+        }
+
+        .article:nth-child(1):after {
+            content: "grid-column: 1 / 3";
+        }
+
+        .article:nth-child(8) {
+            grid-column: -3 / -1;
+            background: rgba(255,200,255,0.3)
+        }
+        .article:nth-child(8):after {
+            content: "grid-column: -3 / -1";
+        }
+
+        .article:nth-child(12) {
+            grid-column: 1 / 3;
+            background: rgba(255,200,255,0.3)
+        }
+        .article:nth-child(12):after {
+            content: "grid-column: 1 / 3";
+        }
+
+        .article:after {
+            color: #808;
+            font-weight: bold;
+            font-family: courier;
+        }
+
+        /* New styles for water access information */
+        .progress-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 15px auto;
+        }
+
+        .progress-circle svg {
+            transform: rotate(-90deg);
+            width: 100px;
+            height: 100px;
+        }
+
+        .progress-circle circle {
+            fill: none;
+            stroke-width: 8;
+            cx: 50;
+            cy: 50;
+            r: 45;
+        }
+
+        .progress-circle .background {
+            stroke: #E5E5EA;
+        }
+
+        .progress-circle .progress {
+            stroke: #007AFF;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-circle .percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .info-container {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .info-item {
+            margin: 8px 0;
+            font-size: 13px;
+            color: #8E8E93;
+        }
+
+        .info-item strong {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .state-title {
+            text-align: center;
+            color: #000;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        /* Different colors for each state */
+        .article:nth-child(2) .progress {
+            stroke: #4CAF50; /* Green for Bolivar */
+        }
+
+        .article:nth-child(3) .progress {
+            stroke: #2196F3; /* Blue for Amazonas */
+        }
+
+        .article:nth-child(4) .progress {
+            stroke: #9C27B0; /* Purple for Delta Amacuro */
+        }
+
+        /* Chart container styles */
+        .chart-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+            margin: 15px 0;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .chart-title {
+            text-align: center;
+            color: #000;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .chart-subtitle {
+            text-align: center;
+            color: #8E8E93;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .view-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .view-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #007AFF;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.85em;
+        }
+
+        .view-button:hover {
+            background: #0066CC;
+            transform: translateY(-1px);
+        }
+
+        .view-button.active {
+            background: #0066CC;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0 0 0.8em 0;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>Indicadores Ambientales</h1>
+        <div class="archive">
+            <article class="article">
+                <div class="chart-title">Comparativa de Ríos</div>
+                <div class="chart-subtitle">Orinoco vs Caroní</div>
+                <div class="view-buttons">
+                    <button class="view-button active" data-view="comparison">Comparación Directa</button>
+                    <button class="view-button" data-view="percentage">Porcentajes</button>
+                    <button class="view-button" data-view="normalized">Valores Normalizados</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="riverChart"></canvas>
+                </div>
+            </article>
+            <article class="article" data-state="Bolivar">
+                <div class="state-title">Bolivar</div>
+                <div class="info-container">
+                    <div class="progress-circle">
+                        <svg width="120" height="120">
+                            <circle class="background" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress" cx="60" cy="60" r="54"></circle>
+                        </svg>
+                        <div class="percentage">22%</div>
+                    </div>
+                    <div class="info-item">
+                        <strong>Población Total:</strong> <span>1,795,353</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Con Acceso:</strong> <span>395,000</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Sin Acceso:</strong> <span>1,400,000</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Comunidades Afectadas:</strong> <span>80%</span>
+                    </div>
+                </div>
+            </article>
+            <article class="article" data-state="Amazonas">
+                <div class="state-title">Amazonas</div>
+                <div class="info-container">
+                    <div class="progress-circle">
+                        <svg width="120" height="120">
+                            <circle class="background" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress" cx="60" cy="60" r="54"></circle>
+                        </svg>
+                        <div class="percentage">30%</div>
+                    </div>
+                    <div class="info-item">
+                        <strong>Población Total:</strong> <span>176,614</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Con Acceso:</strong> <span>53,000</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Sin Acceso:</strong> <span>124,000</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Comunidades Afectadas:</strong> <span>40%</span>
+                    </div>
+                </div>
+            </article>
+            <article class="article" data-state="Delta Amacuro">
+                <div class="state-title">Delta Amacuro</div>
+                <div class="info-container">
+                    <div class="progress-circle">
+                        <svg width="120" height="120">
+                            <circle class="background" cx="60" cy="60" r="54"></circle>
+                            <circle class="progress" cx="60" cy="60" r="54"></circle>
+                        </svg>
+                        <div class="percentage">54.7%</div>
+                    </div>
+                    <div class="info-item">
+                        <strong>Población Total:</strong> <span>196,960</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Con Acceso:</strong> <span>107,700</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Sin Acceso:</strong> <span>89,200</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Comunidades Afectadas:</strong> <span>15%</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress circles
+        document.querySelectorAll('.progress-circle').forEach(circle => {
+            const progressCircle = circle.querySelector('.progress');
+            const percentage = parseInt(circle.querySelector('.percentage').textContent);
+            const radius = progressCircle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            
+            progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+            const offset = circumference - (percentage / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+        });
+
+        // River data
+        const riverData = {
+            Orinoco: {
+                "longitud": 2140,
+                "caudal": 39000,
+                "superficie": 989000
+            },
+            Caroni: {
+                "longitud": 952,
+                "caudal": 4850,
+                "superficie": 92169
+            }
+        };
+
+        // Calculate percentages
+        function calculatePercentages() {
+            const totalLongitud = riverData.Orinoco.longitud + riverData.Caroni.longitud;
+            const totalCaudal = riverData.Orinoco.caudal + riverData.Caroni.caudal;
+            const totalSuperficie = riverData.Orinoco.superficie + riverData.Caroni.superficie;
+
+            return {
+                Orinoco: {
+                    longitud: (riverData.Orinoco.longitud / totalLongitud) * 100,
+                    caudal: (riverData.Orinoco.caudal / totalCaudal) * 100,
+                    superficie: (riverData.Orinoco.superficie / totalSuperficie) * 100
+                },
+                Caroni: {
+                    longitud: (riverData.Caroni.longitud / totalLongitud) * 100,
+                    caudal: (riverData.Caroni.caudal / totalCaudal) * 100,
+                    superficie: (riverData.Caroni.superficie / totalSuperficie) * 100
+                }
+            };
+        }
+
+        // Normalize data
+        function normalizeData() {
+            const maxValues = {
+                longitud: Math.max(riverData.Orinoco.longitud, riverData.Caroni.longitud),
+                caudal: Math.max(riverData.Orinoco.caudal, riverData.Caroni.caudal),
+                superficie: Math.max(riverData.Orinoco.superficie, riverData.Caroni.superficie)
+            };
+
+            return {
+                Orinoco: {
+                    longitud: (riverData.Orinoco.longitud / maxValues.longitud) * 100,
+                    caudal: (riverData.Orinoco.caudal / maxValues.caudal) * 100,
+                    superficie: (riverData.Orinoco.superficie / maxValues.superficie) * 100
+                },
+                Caroni: {
+                    longitud: (riverData.Caroni.longitud / maxValues.longitud) * 100,
+                    caudal: (riverData.Caroni.caudal / maxValues.caudal) * 100,
+                    superficie: (riverData.Caroni.superficie / maxValues.superficie) * 100
+                }
+            };
+        }
+
+        // Create the chart
+        const ctx = document.getElementById('riverChart').getContext('2d');
+        const riverChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Longitud (km)', 'Caudal Medio (m³/s)', 'Superficie de Cuenca (km²)'],
+                datasets: [
+                    {
+                        label: 'Orinoco',
+                        data: [
+                            riverData.Orinoco.longitud,
+                            riverData.Orinoco.caudal,
+                            riverData.Orinoco.superficie
+                        ],
+                        backgroundColor: 'rgba(0, 122, 255, 0.8)',
+                        borderColor: 'rgba(0, 122, 255, 1)',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barThickness: 35
+                    },
+                    {
+                        label: 'Caroní',
+                        data: [
+                            riverData.Caroni.longitud,
+                            riverData.Caroni.caudal,
+                            riverData.Caroni.superficie
+                        ],
+                        backgroundColor: 'rgba(255, 69, 58, 0.8)',
+                        borderColor: 'rgba(255, 69, 58, 1)',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barThickness: 35
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: '-apple-system',
+                                size: 13,
+                                weight: '500'
+                            },
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#000',
+                        bodyColor: '#000',
+                        borderColor: '#E5E5EA',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                return `${context.dataset.label}: ${value.toLocaleString()}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#E5E5EA',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                family: '-apple-system',
+                                size: 11
+                            },
+                            padding: 8,
+                            color: '#8E8E93'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Valor',
+                            font: {
+                                family: '-apple-system',
+                                size: 13,
+                                weight: '500'
+                            },
+                            padding: {top: 10, bottom: 10},
+                            color: '#000'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: '-apple-system',
+                                size: 11
+                            },
+                            padding: 8,
+                            color: '#8E8E93'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+
+        // View button click handlers
+        document.querySelectorAll('.view-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.view-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Update chart based on selected view
+                const view = button.dataset.view;
+                let data, yAxisTitle, tooltipFormat;
+
+                switch(view) {
+                    case 'comparison':
+                        data = {
+                            Orinoco: [
+                                riverData.Orinoco.longitud,
+                                riverData.Orinoco.caudal,
+                                riverData.Orinoco.superficie
+                            ],
+                            Caroni: [
+                                riverData.Caroni.longitud,
+                                riverData.Caroni.caudal,
+                                riverData.Caroni.superficie
+                            ]
+                        };
+                        yAxisTitle = 'Valor';
+                        tooltipFormat = value => value.toLocaleString();
+                        break;
+
+                    case 'percentage':
+                        const percentages = calculatePercentages();
+                        data = {
+                            Orinoco: [
+                                percentages.Orinoco.longitud,
+                                percentages.Orinoco.caudal,
+                                percentages.Orinoco.superficie
+                            ],
+                            Caroni: [
+                                percentages.Caroni.longitud,
+                                percentages.Caroni.caudal,
+                                percentages.Caroni.superficie
+                            ]
+                        };
+                        yAxisTitle = 'Porcentaje (%)';
+                        tooltipFormat = value => `${value.toFixed(1)}%`;
+                        break;
+
+                    case 'normalized':
+                        const normalized = normalizeData();
+                        data = {
+                            Orinoco: [
+                                normalized.Orinoco.longitud,
+                                normalized.Orinoco.caudal,
+                                normalized.Orinoco.superficie
+                            ],
+                            Caroni: [
+                                normalized.Caroni.longitud,
+                                normalized.Caroni.caudal,
+                                normalized.Caroni.superficie
+                            ]
+                        };
+                        yAxisTitle = 'Valor Normalizado (%)';
+                        tooltipFormat = value => `${value.toFixed(1)}%`;
+                        break;
+                }
+
+                // Update chart data
+                riverChart.data.datasets[0].data = data.Orinoco;
+                riverChart.data.datasets[1].data = data.Caroni;
+                riverChart.options.scales.y.title.text = yAxisTitle;
+                riverChart.options.plugins.tooltip.callbacks.label = function(context) {
+                    return `${context.dataset.label}: ${tooltipFormat(context.raw)}`;
+                };
+                
+                // Update the chart
+                riverChart.update();
+            });
+        });
+    </script>
+</body>
+</html>
+

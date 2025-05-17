@@ -1,0 +1,95 @@
+{
+    "animales": [
+        {
+            "id": "1",
+            "nombre": "Paiche o pirarucú",
+            "nombreCientifico": "Arapaima gigas",
+            "imagen": "https://thumbs.dreamstime.com/b/one-arapaima-gigas-es-uno-de-los-peces-agua-dulce-m%C3%A1s-grandes-del-amaz%C3%B3n-351906297.jpg",
+            "habitat": "Ríos, lagos y pantanos de la cuenca del Amazonas en América del Sur, incluyendo países como Perú, Brasil, Colombia, Ecuador y Bolivia.",
+            "tamano": "Hasta 3 metros de longitud y 250 kilogramos de peso.",
+            "peligroExtincion": "Vulnerable debido a la sobrepesca y pérdida de hábitat; protegido por la CITES.",
+            "dieta": "Principalmente peces, pero también consume frutas, semillas, insectos y pequeños animales terrestres que caen al agua."
+        },
+        {
+            "id": "2",
+            "nombre": "Piraña de vientre rojo",
+            "nombreCientifico": "Pygocentrus nattereri",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Gregory_Moine_-_Red_bellied_Piranha_%28by%29.jpg/500px-Gregory_Moine_-_Red_bellied_Piranha_%28by%29.jpg",
+            "habitat": "Ríos y lagos del Amazonas con aguas cálidas y turbias.",
+            "tamano": "Hasta 50 cm de longitud.",
+            "peligroExtincion": "No evaluado; poblaciones estables.",
+            "dieta": "Peces, crustáceos, insectos y ocasionalmente carroña."
+        },
+        {
+            "id": "3",
+            "nombre": "Bagre candirú",
+            "nombreCientifico": "Vandellia cirrhosa",
+            "imagen": "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/YRVWZPOZIBGGNPPFPO3PAC6L5M.jpg",
+            "habitat": "Ríos del Amazonas, especialmente en aguas turbias.",
+            "tamano": "Entre 2 y 15 cm de longitud.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Parásito hematófago; se alimenta de la sangre de otros peces."
+        },
+        {
+            "id": "4",
+            "nombre": "Pez hoja del Amazonas",
+            "nombreCientifico": "Monocirrhus polyacanthus",
+            "imagen": "https://natur.com.ve/cdn/shop/products/pezhoja_1200x1200.jpg",
+            "habitat": "Aguas negras y tranquilas del Amazonas.",
+            "tamano": "Hasta 10 cm de longitud.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Peces pequeños e invertebrados acuáticos."
+        },
+        {
+            "id": "5",
+            "nombre": "Pez gato gigante",
+            "nombreCientifico": "Brachyplatystoma filamentosum",
+            "imagen": "https://lemag.ird.fr/sites/lemag/files/2024-10/Poisson-chat.jpg",
+            "habitat": "Grandes ríos y canales profundos del Amazonas.",
+            "tamano": "Hasta 3,6 metros de longitud.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Peces y otros animales acuáticos."
+        },
+        {
+            "id": "6",
+            "nombre": "Raya motoro",
+            "nombreCientifico": "Potamotrygon motoro",
+            "imagen": "https://www.a-alvarez.com/img/ybc_blog/post/RayaMotor.jpg",
+            "habitat": "Ríos y lagos de aguas tranquilas en la cuenca del Amazonas.",
+            "tamano": "Hasta 1 metro de diámetro.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Invertebrados bentónicos y pequeños peces."
+        },
+        {
+            "id": "7",
+            "nombre": "Pez Óscar",
+            "nombreCientifico": "Astronotus ocellatus",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/0/08/Astronotus_ocellatus.jpg",
+            "habitat": "Ríos y arroyos de aguas lentas en el Amazonas.",
+            "tamano": "Hasta 45 cm de longitud.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Peces pequeños, insectos y crustáceos."
+        },
+        {
+            "id": "8",
+            "nombre": "Pez gato esmeralda",
+            "nombreCientifico": "Corydoras splendens",
+            "imagen": "https://cdn0.expertoanimal.com/es/posts/5/6/4/pez_gato_esmeralda_corydoras_splendens_27465_8_600.jpg",
+            "habitat": "Aguas tranquilas y fondos arenosos del Amazonas.",
+            "tamano": "Hasta 7 cm de longitud.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Detritos, pequeños invertebrados y restos orgánicos."
+        },
+        {
+            "id": "9",
+            "nombre": "Pez disco",
+            "nombreCientifico": "Symphysodon discus",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/7/76/Blue_Discus.jpg",
+            "habitat": "Aguas negras y ácidas del Amazonas.",
+            "tamano": "Hasta 20 cm de longitud.",
+            "peligroExtincion": "No evaluado.",
+            "dieta": "Pequeños invertebrados, algas y detritos."
+        }
+    ]
+}
+  

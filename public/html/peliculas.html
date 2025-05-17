@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Movie Carousel</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #1a1c20 0%, #2c3e50 100%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(44, 62, 80, 0.8) 0%, rgba(26, 28, 32, 0.95) 70%);
+            z-index: -2;
+            animation: rotate 45s linear infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .element {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            width: 90%;
+            max-width: 1200px;
+            padding: 40px;
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            display: flex;
+            background-color: #f8f8f8;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .Card_image {
+            width: 400px;
+            border-radius: 20px 0 0 20px;
+            object-fit: cover;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .info {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .titulo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        .contenido {
+            color: #555555;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            cursor: pointer;
+            background-color: #11539a;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            transition: all 0.4s ease;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 5px 20px rgba(0,123,255,0.3);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0,123,255,0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(0,123,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="element" style="left: 5%; animation-delay: 0s;"></div>
+        <div class="element" style="left: 25%; animation-delay: 4s;"></div>
+        <div class="element" style="left: 45%; animation-delay: 8s;"></div>
+        <div class="element" style="left: 65%; animation-delay: 12s;"></div>
+        <div class="element" style="left: 85%; animation-delay: 16s;"></div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <img id="Card_image" src="vinilo.png" class="Card_image">
+            <div class="info">
+                <p class="titulo" id="titulo">Cargando...</p>
+                <p class="contenido" id="contenido">
+                    Cargando información...
+                </p>
+                <div class="buttons">
+                    <button id="prevButton">⬅ Anterior</button>
+                    <button id="nextButton">Siguiente ➡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let movies = [];
+
+        function loadMovies() {
+            fetch('../data/lista de peliculas.json')
+                .then(response => response.json())
+                .then(data => {
+                    movies = data;
+                    if (movies.length > 0) updateDisplay();
+                })
+                .catch(error => {
+                    console.error('Error al cargar el JSON:', error);
+                    document.getElementById('titulo').textContent = 'Error al cargar las películas';
+                    document.getElementById('contenido').textContent = 'Por favor, verifica que el archivo JSON existe y está en el formato correcto.';
+                });
+        }
+
+        function updateDisplay() {
+            const movie = movies[currentIndex];
+            document.getElementById('titulo').textContent = movie.titulo;
+            document.getElementById('contenido').innerHTML = `Director: ${movie.director}<br>Año: ${movie.fecha}<br>Sinopsis: ${movie.sinopsis}`;
+            document.getElementById('Card_image').src = movie.poster;
+        }
+
+        document.getElementById('prevButton').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + movies.length) % movies.length;
+            updateDisplay();
+        });
+
+        document.getElementById('nextButton').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % movies.length;
+            updateDisplay();
+        });
+
+        window.onload = loadMovies;
+    </script>
+</body>
+</html>

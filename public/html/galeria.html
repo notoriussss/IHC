@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Amazónica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .album-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .album-container::before {
+            display: none;
+        }
+
+        .filter-pills {
+            margin: 1rem 0 3rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .filter-pill {
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-pill:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-pill.active {
+            background-color: #0056b3;
+            color: white;
+            border-color: transparent;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            transform: rotate(-1deg);
+        }
+
+        .gallery-item:nth-child(2n) {
+            transform: rotate(1deg);
+        }
+
+        .gallery-item:nth-child(3n) {
+            transform: rotate(-0.5deg);
+        }
+        
+        .gallery-item:hover {
+            transform: rotate(0) scale(1.03);
+            z-index: 2;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+        
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+        
+        .gallery-item h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .gallery {
+                gap: 1rem;
+            }
+            
+            .gallery-item {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="album-container">
+        <div class="filter-pills" id="filters">
+            <div class="filter-pill active" data-category="todos">Todos</div>
+            <div class="filter-pill" data-category="indigenas">Indígenas</div>
+            <div class="filter-pill" data-category="turismo">Turismo</div>
+            <div class="filter-pill" data-category="flora">Flora</div>
+            <div class="filter-pill" data-category="fauna">Fauna</div>
+            <div class="filter-pill" data-category="economia">Economía</div>
+            <div class="filter-pill" data-category="contaminacion">Contaminación</div>
+        </div>
+        
+        <div class="gallery" id="gallery">
+            <!-- Las imágenes se cargarán dinámicamente aquí -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('../data/galeria.json');
+                const data = await response.json();
+                
+                const gallery = document.getElementById('gallery');
+                const filters = document.getElementById('filters');
+                let allImages = [];
+
+                // Procesar todas las imágenes
+                for (const [category, images] of Object.entries(data)) {
+                    images.forEach(item => {
+                        if (item.imagen && item.titulos) {
+                            allImages.push({
+                                ...item,
+                                category: category.toLowerCase()
+                            });
+                        }
+                    });
+                }
+
+                // Función para mostrar imágenes
+                function displayImages(category = 'todos') {
+                    gallery.innerHTML = '';
+                    const imagesToShow = category === 'todos' 
+                        ? allImages 
+                        : allImages.filter(img => img.category === category);
+
+                    imagesToShow.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'gallery-item';
+                        div.innerHTML = `
+                            <img src="${item.imagen}" alt="${item.titulos}">
+                            <div class="overlay">
+                                <h3>${item.titulos}</h3>
+                            </div>
+                        `;
+                        gallery.appendChild(div);
+                    });
+                }
+
+                // Manejar filtros
+                filters.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('filter-pill')) {
+                        // Remover clase activa de todos los filtros
+                        document.querySelectorAll('.filter-pill').forEach(pill => {
+                            pill.classList.remove('active');
+                        });
+                        
+                        // Agregar clase activa al filtro seleccionado
+                        e.target.classList.add('active');
+                        
+                        // Mostrar imágenes filtradas
+                        displayImages(e.target.dataset.category);
+                    }
+                });
+
+                // Mostrar todas las imágenes inicialmente
+                displayImages();
+            } catch (error) {
+                console.error('Error cargando la galería:', error);
+                document.getElementById('gallery').innerHTML = '<p class="text-center">Error al cargar la galería</p>';
+            }
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

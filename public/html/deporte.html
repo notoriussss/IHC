@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Deportes en Venezuela</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 550;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+  padding: 30px 20px 20px;
+}
+
+.header p {
+  font-size: 30px;
+  color: #13539B;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.15);
+}
+
+.separator {
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #13539B, transparent);
+  margin: 0 auto 20px auto;
+  border-radius: 5px;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  padding: 0 2%;
+  box-sizing: border-box;
+  height: 65vh;
+  position: relative;
+}
+
+.box {
+  flex: 1;
+  overflow: hidden;
+  transition: .5s;
+  margin: 0 2%;
+  box-shadow: 0 20px 40px rgba(0,0,0,.2);
+  border-radius: 15px;
+  line-height: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.box:not(.active):hover {
+  flex: 1.2;
+  margin: 0 1%;
+  transform: scale(1.02);
+}
+
+.box > img {
+  width: 200%;
+  height: 100%;
+  object-fit: cover; 
+  transition: .5s;
+  border-radius: 15px;
+}
+
+.box:not(.active):hover > img {
+  width: 100%;
+  transform: scale(1.05);
+}
+
+.box.active {
+  flex: 1 1 50%;
+  cursor: pointer;
+}
+
+.box.active > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+.content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(19,83,155,0.95) 0%, rgba(19,83,155,0.85) 70%, rgba(0,0,0,0) 100%);
+  color: white;
+  z-index: 2;
+  transform: translateY(101%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 30px;
+  border-radius: 0 0 15px 15px;
+  box-sizing: border-box;
+}
+
+.box > span {
+  font-size: 2.8vh;
+  display: block;
+  text-align: center;
+  height: 12vh;
+  line-height: 4;
+  transition: opacity 0.3s;
+  color: #ffffff;
+  border-radius: 0 0 15px 15px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(19,83,155,0.95) 0%, rgba(19,83,155,0.85) 70%, rgba(0,0,0,0) 100%);
+  z-index: 1;
+}
+
+.box.active .content {
+  transform: translateY(0);
+}
+
+.content h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+  width: 100%;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+.content p {
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  font-weight: 300;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.box.active > span {
+  opacity: 0;
+}
+.waves-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-top: -20px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.waves-container svg {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 100%;
+  animation: wave-move 10s linear infinite;
+}
+
+@keyframes wave-move {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 20px;
+  }
+  .content h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  .content p {
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+<body>
+    <div class="header">
+        <p>Ríos que inspiran fuerza y espíritu deportivo.</p>
+    </div>
+    <div class="separator"></div>
+    <div class="container" id="sportsContainer"></div>
+    <div class="waves-container">
+      <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+          <path d="M0,100 C150,200 350,0 600,100 C850,200 1050,0 1200,100 L1200,200 L0,200 Z" 
+                fill="#13539B" />
+      </svg>
+      <svg viewBox="0 0 1200 200" preserveAspectRatio="none" style="opacity: 0.5;">
+          <path d="M0,150 C150,250 350,50 600,150 C850,250 1050,50 1200,150 L1200,200 L0,200 Z" 
+                fill="#ffffff" />
+      </svg>
+  </div>
+    <script>
+      let currentActiveCard = null;
+      async function cargarDeportes() {
+        try {
+          const response = await fetch('../data/deportes.json');
+          const deportes = await response.json();
+          const container = document.getElementById('sportsContainer');
+          deportes.forEach((deporte, index) => {
+            const box = document.createElement('div');
+            box.className = 'box';
+            box.dataset.index = index;
+            const img = document.createElement('img');
+            img.src = deporte.imagen;
+            img.alt = deporte.nombre;
+            const span = document.createElement('span');
+            span.textContent = deporte.nombre;
+            const content = document.createElement('div');
+            content.className = 'content';
+            const h2 = document.createElement('h2');
+            h2.textContent = deporte.nombre;
+            const p = document.createElement('p');
+            p.textContent = deporte.descripcion;
+            content.appendChild(h2);
+            content.appendChild(p);
+            box.appendChild(img);
+            box.appendChild(span);
+            box.appendChild(content);
+            box.addEventListener('click', () => {
+              if (currentActiveCard && currentActiveCard !== box) {
+                currentActiveCard.classList.remove('active');
+              }
+              if (!box.classList.contains('active')) {
+                box.classList.add('active');
+                currentActiveCard = box;
+              } else {
+                box.classList.remove('active');
+                currentActiveCard = null;
+              }
+            });
+            container.appendChild(box);
+          });
+        } catch (error) {
+          console.error('Error al cargar los deportes:', error);
+        }
+      }
+      document.addEventListener('DOMContentLoaded', cargarDeportes);
+    </script>
+</body>
+</html>

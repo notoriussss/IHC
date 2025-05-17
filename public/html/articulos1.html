@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>External Content</title>
+
+    <style>
+        body{
+            padding: 20px 30px;
+        }
+        /* Cabecera*/
+        .Header{
+            text-wrap: balance;
+            margin: 20px;
+            margin-top: 60px;
+            border-bottom-width: 2px; /* Grosor del borde */
+            border-bottom-style: solid; /* Estilo del borde */
+            border-bottom-color: #000; /* Color del borde */
+            text-align: justify;
+        }
+        .Title{
+            color: #0669db;
+            size: 50px;
+            text-align: justify;
+        }
+        .autor{
+            color: gray;
+            size: 20px;
+        }
+        
+        /* Imagen*/
+        .Image-cont{
+            
+        }
+        .Image{
+            display:block;
+            margin:auto;
+            width: 800px;
+            height: 600px;
+        }
+
+        /* Cuerpor*/
+        .Article-Body{
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: justify;
+        }
+        .Conten{
+            margin: 30px 20%;
+            
+        }
+
+        /* pie de pagina*/
+        .Footer{
+            margin: 20px;
+            border-top-width: 2px; /* Grosor del borde */
+            border-top-style: solid; /* Estilo del borde */
+            border-top-color: #000; /* Color del borde */
+        }
+        .Footer Title {
+            color:blue;
+        }
+        .wrapper {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        .other-articles{
+            border: 1px solid #000;
+            padding: 0 10px;
+        }
+        .sub-Img-conte{ 
+            display:block;
+            margin:auto;   
+            width: 200px;
+            height: 200px;
+            overflow: hidden; /* Oculta cualquier parte de la imagen que se salga del contenedor */
+        }
+        .sub-Img{             
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Hace que la imagen cubra completamente el contenedor */
+            object-position: center; /* Centra la imagen dentro del contenedor */
+        }
+        .sub-date{
+            color: gray;
+            size: 20px;
+        }
+
+
+
+  </style>
+</head>
+<body>
+    <div class="Header">
+        <h2 class="Title">Titulo del articulo</h2>
+        <p class="autor"><b>Autor:</b>{}. <b>Fecha de publicacion: </b>{}</p>
+    </div>
+    <div class="Image-cont">
+
+    </div>
+    <img class="Image" src="https://eldiario.com/wp-content/uploads/2021/11/image-14.jpeg">
+    <div class="Article-Body">
+        <p class="Conten">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugit, molestiae error officia aut autem soluta nihil at unde doloremque quam, nobis ut cumque sint reiciendis atque similique recusandae minus officiis.
+        </p>
+    </div>
+
+    <div class="Footer">
+        <h2 class="Title">NUEVOS ARTICULOS</h2>
+        <div class="wrapper">
+            <div class="other-articles">
+                <p class="sub-date">Fecha {}</p>
+                <div class="sub-Img-conte">
+                    <img class="sub-Img" src="https://eldiario.com/wp-content/uploads/2021/11/image-14.jpeg">
+                </div>
+                <p class="sub-title"><b>TITULO DEL ARTICULO </b></p>
+                <p class="sub-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+            </div>
+            <div class="other-articles">
+                <p class="sub-date">Fecha {}</p>
+                <div class="sub-Img-conte">
+                    <img class="sub-Img" src="https://eldiario.com/wp-content/uploads/2021/11/image-14.jpeg">
+                </div>
+                <p class="sub-title"><b>TITULO DEL ARTICULO </b></p>
+                <p class="sub-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+            </div>
+            <div class="other-articles">
+                <p class="sub-date">Fecha {}</p>
+                <div class="sub-Img-conte">
+                    <img class="sub-Img" src="https://eldiario.com/wp-content/uploads/2021/11/image-14.jpeg">
+                </div>
+                <p class="sub-title"><b>TITULO DEL ARTICULO </b></p>
+                <p class="sub-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

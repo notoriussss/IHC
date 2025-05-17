@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etnias Indígenas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a4c7e 0%, #3498db 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, rgba(26, 76, 126, 0.95) 70%);
+            z-index: -2;
+            animation: rotate 45s linear infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50 C 20 30, 80 30, 100 50 C 80 70, 20 70, 0 50' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 30px 30px, 30px 30px, 100px 100px;
+            z-index: -1;
+            animation: wave 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes wave {
+            0% {
+                background-position: 0 0, 0 0, 0 0;
+            }
+            100% {
+                background-position: 30px 0, 0 30px, 100px 100px;
+            }
+        }
+
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .element {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+            clip-path: path('M15 0C15 0 30 20 30 30C30 35.5228 23.2843 40 15 40C6.71573 40 0 35.5228 0 30C0 20 15 0 15 0Z');
+            animation: rainDrop 8s linear infinite;
+            backdrop-filter: blur(3px);
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes rainDrop {
+            0% {
+                transform: translateY(-100px) translateX(0) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+                transform: translateY(0) translateX(10px) scale(0.4);
+            }
+            50% {
+                transform: translateY(300px) translateX(-10px) scale(0.7);
+            }
+            90% {
+                opacity: 0.8;
+                transform: translateY(600px) translateX(10px) scale(0.5);
+            }
+            100% {
+                transform: translateY(800px) translateX(0) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 300px);
+            gap: 40px;
+            padding: 40px;
+            justify-content: center;
+        }
+
+        .card {
+            position: relative;
+            width: 300px;
+            height: 350px;
+            margin: 0 auto;
+            perspective: 1000px;
+            border-radius: 15px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-front {
+            background: rgba(240, 248, 255, 0.9);
+            z-index: 2;
+        }
+
+        .card-back {
+            background: white;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .etnia-titulo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: left;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .etnia-nombre {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a4c7e;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(25, 25, 112, 0.2);
+        }
+
+        .etnia-info {
+            color: #0c2d4a;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-y: auto;
+            height: calc(100% - 60px);
+            padding-right: 10px;
+            margin-top: 10px;
+        }
+
+        .etnia-info::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .etnia-info::-webkit-scrollbar-track {
+            background: rgba(25, 25, 112, 0.1);
+            border-radius: 2px;
+        }
+
+        .etnia-info::-webkit-scrollbar-thumb {
+            background: rgba(25, 25, 112, 0.3);
+            border-radius: 2px;
+        }
+
+        .etnia-info::-webkit-scrollbar-thumb:hover {
+            background: rgba(25, 25, 112, 0.5);
+        }
+
+        .etnia-ubicacion {
+            font-weight: 500;
+            color: #6b4423;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .etnia-poblacion {
+            font-weight: 500;
+            color: #6b4423;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .titulo-principal {
+            text-align: left;
+            color: #ffffff;
+            font-size: 42px;
+            margin-bottom: 50px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+            max-width: 800px;
+            margin-left: 50px;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="element" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="element" style="left: 20%; animation-delay: 1.5s;"></div>
+        <div class="element" style="left: 30%; animation-delay: 3s;"></div>
+        <div class="element" style="left: 40%; animation-delay: 4.5s;"></div>
+        <div class="element" style="left: 50%; animation-delay: 6s;"></div>
+        <div class="element" style="left: 60%; animation-delay: 7.5s;"></div>
+        <div class="element" style="left: 70%; animation-delay: 9s;"></div>
+        <div class="element" style="left: 80%; animation-delay: 10.5s;"></div>
+        <div class="element" style="left: 90%; animation-delay: 12s;"></div>
+    </div>
+    <h1 class="titulo-principal">Nuestros pueblos indígenas y su relación espiritual con el agua</h1>
+    <div class="container" id="etnias-container"></div>
+
+    <script>
+        function loadEtnias() {
+            fetch('../data/indigenas.json')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('etnias-container');
+                    data.forEach(etnia => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        
+                        card.innerHTML = `
+                            <div class="card-inner">
+                                <div class="card-front">
+                                    <img src="${etnia.imagen || './img/placeholder-etnia.jpg'}" alt="${etnia.etnia}" class="card-image">
+                                    <div class="etnia-titulo">${etnia.etnia}</div>
+                                </div>
+                                <div class="card-back">
+                                    <div class="etnia-nombre">${etnia.etnia}</div>
+                                    <div class="etnia-info">${etnia.relacion}</div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar los datos:', error);
+                    document.getElementById('etnias-container').innerHTML = 
+                        '<p style="color: #ffffff;">Error al cargar la información de las etnias.</p>';
+                });
+        }
+
+        window.onload = loadEtnias;
+    </script>
+</body>
+</html>
