@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import fishes from '@/data/fishes.json';
 import './Aquarium.css';
 
@@ -99,25 +99,45 @@ const iconAnimation = {
     }
 };
 
+// Generar las letras del alfabeto que tienen peces asociados
+const getAvailableLetters = (fishes: any[]) => {
+    const letters = new Set(fishes.map(fish => fish.name.charAt(0).toUpperCase()));
+    return ['Todos', ...Array.from(letters).sort()];
+};
+
 export function Aquarium() {
     const navigate = useNavigate();
     const [currentFishIndex, setCurrentFishIndex] = useState(0);
     const [isFirstRender, setIsFirstRender] = useState(true);
-    const currentFish = fishes[currentFishIndex];
+    const [selectedLetter, setSelectedLetter] = useState('Todos');
+
+    // Obtener letras disponibles
+    const availableLetters = useMemo(() => getAvailableLetters(fishes), []);
+
+    // Filtrado de peces por letra inicial
+    const filteredFishes = useMemo(() => {
+        if (selectedLetter === 'Todos') return fishes;
+        return fishes.filter((fish) => 
+            fish.name.toUpperCase().startsWith(selectedLetter)
+        );
+    }, [selectedLetter]);
+
+    const currentFish = filteredFishes[currentFishIndex];
 
     useEffect(() => {
         setIsFirstRender(false);
-    }, []);
+        setCurrentFishIndex(0); // Resetear el índice cuando cambia el filtro
+    }, [selectedLetter]);
 
     const handlePreviousFish = () => {
         setCurrentFishIndex((prevIndex) =>
-            prevIndex === 0 ? fishes.length - 1 : prevIndex - 1
+            prevIndex === 0 ? filteredFishes.length - 1 : prevIndex - 1
         );
     };
 
     const handleNextFish = () => {
         setCurrentFishIndex((prevIndex) =>
-            prevIndex === fishes.length - 1 ? 0 : prevIndex + 1
+            prevIndex === filteredFishes.length - 1 ? 0 : prevIndex + 1
         );
     };
 
@@ -219,44 +239,82 @@ export function Aquarium() {
                         </div>
                     </div>
 
+                    {/* Filtro alfabético */}
+                    <motion.div 
+                        className="fixed top-32 left-0 right-0 z-40"
+                        initial={{ y: -50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                        <div className="flex justify-center gap-2 overflow-x-auto pb-2 px-4">
+                            {availableLetters.map((letter) => (
+                                <motion.button
+                                    key={letter}
+                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer
+                                        ${selectedLetter === letter 
+                                            ? 'bg-white text-black shadow-lg' 
+                                            : 'bg-black/30 text-white hover:bg-black/50 hover:shadow-md'}`}
+                                    onClick={() => setSelectedLetter(letter)}
+                                    whileHover={{ 
+                                        scale: 1.05,
+                                        boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
+                                    }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    {letter}
+                                </motion.button>
+                            ))}
+                        </div>
+                    </motion.div>
+
                     {/* Contenedor centralizado */}
-                    <div className="flex-1 flex items-center justify-center px-8 mt-24 mb-8">
+                    <div className="flex-1 flex items-center justify-center px-8 mt-44 mb-8">
                         <div className="w-[60%] mx-auto flex flex-col items-center justify-start text-center h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
                             <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={currentFishIndex}
-                                    variants={fishVariants}
-                                    initial={isFirstRender ? false : "initial"}
-                                    animate="animate"
-                                    exit="exit"
-                                    transition={{ duration: 0.5 }}
-                                    className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-8 rounded-xl w-full my-4"
-                                >
-                                    <h1 className="text-4xl font-bold mb-8">{currentFish.name}</h1>
-                                    <p className="text-lg mb-8">{currentFish.data}</p>
-                                    
-                                    <div className="flex flex-wrap justify-center gap-4 mb-8">
-                                        {Object.entries(currentFish.characteristics).map(([key, value]) => (
-                                            <motion.div
-                                                key={key}
-                                                className="bg-gray-800/60 p-2 rounded-md shadow-md text-sm"
-                                                whileHover={{
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                                    scale: 1.05
-                                                }}
-                                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            >
-                                                <strong>{key}:</strong> {value}
-                                            </motion.div>
-                                        ))}
-                                    </div>
+                                {filteredFishes.length > 0 ? (
+                                    <motion.div
+                                        key={currentFishIndex}
+                                        variants={fishVariants}
+                                        initial={isFirstRender ? false : "initial"}
+                                        animate="animate"
+                                        exit="exit"
+                                        transition={{ duration: 0.5 }}
+                                        className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-8 rounded-xl w-full my-4"
+                                    >
+                                        <h1 className="text-4xl font-bold mb-8">{currentFish.name}</h1>
+                                        <p className="text-lg mb-8">{currentFish.data}</p>
+                                        
+                                        <div className="flex flex-wrap justify-center gap-4 mb-8">
+                                            {Object.entries(currentFish.characteristics).map(([key, value]) => (
+                                                <motion.div
+                                                    key={key}
+                                                    className="bg-gray-800/60 p-2 rounded-md shadow-md text-sm"
+                                                    whileHover={{
+                                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                        scale: 1.05
+                                                    }}
+                                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                                >
+                                                    <strong>{key}:</strong> {value}
+                                                </motion.div>
+                                            ))}
+                                        </div>
 
-                                    <img
-                                        src={currentFish.image}
-                                        alt={currentFish.name}
-                                        className="w-125 h-80 object-cover rounded-lg mt-8"
-                                    />
-                                </motion.div>
+                                        <img
+                                            src={currentFish.image}
+                                            alt={currentFish.name}
+                                            className="w-125 h-80 object-cover rounded-lg mt-8"
+                                        />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="flex flex-col items-center bg-black/20 backdrop-blur-sm p-8 rounded-xl w-full my-4"
+                                    >
+                                        <h2 className="text-2xl font-bold text-white">No hay peces que empiecen con la letra {selectedLetter}</h2>
+                                    </motion.div>
+                                )}
                             </AnimatePresence>
                         </div>
                     </div>
