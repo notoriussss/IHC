@@ -1135,44 +1135,6 @@ const TypingText = ({ text }: { text: string }) => {
 type ModelType = 'default' | 'guayana' | 'invernadero' | 'cultura' | 'acuario';
 type ViewType = 'default' | 'wall1' | 'wall2' | 'wall3' | 'wall4' | 'wall5';
 
-// Agregar este nuevo componente antes del componente ModelViewer
-function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | 'invernadero' }) {
-  return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ 
-            duration: 0.5, 
-            ease: [0.25, 0.8, 0.25, 1]
-          }}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: model === 'invernadero' ? '37%' : '41%',
-            transform: 'translate(-50%, -50%)',
-            color: 'white',
-            fontSize: '4rem',
-            fontWeight: '400',
-            fontFamily: '"Anton", sans-serif',
-            letterSpacing: '4px',
-            textTransform: 'uppercase',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            zIndex: 1,
-            pointerEvents: 'none',
-            mixBlendMode: 'normal',
-            opacity: 0.8
-          }}
-        >
-          {model === 'invernadero' ? 'INVERNADERO' : 'ACUARIO'}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
 function ModelViewer() {
   const [error, setError] = useState<string | null>(null);
   const [showLobbyText, setShowLobbyText] = useState(false);
@@ -2149,12 +2111,6 @@ function ModelViewer() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Agregar el nuevo componente para acuario e invernadero */}
-          <SpecialModelText 
-            show={showLobbyText && (currentModel === 'acuario' || currentModel === 'invernadero')} 
-            model={currentModel as 'acuario' | 'invernadero'} 
-          />
 
           {/* Botones del mapa y explorar */}
           <div style={{
