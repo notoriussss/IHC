@@ -1937,14 +1937,25 @@ function ModelViewer() {
         
         // Esperamos a que la cámara esté en posición
         setTimeout(() => {
-          setIsTransitioning(false);
-          setShowUIElements(true);
-          setShowLobbyText(true);
+          // Forzamos una interacción inicial para posicionar los botones sin mostrar el mapa
+          setShowMap(true);
           
-          // Ocultamos el texto de lobby después de 2 segundos
+          // Cerramos el mapa inmediatamente
           setTimeout(() => {
-            setShowLobbyText(false);
-          }, 2000);
+            setShowMap(false);
+            
+            // Después de que el mapa se cierre, mostramos la UI y el texto
+            setTimeout(() => {
+              setIsTransitioning(false);
+              setShowUIElements(true);
+              setShowLobbyText(true);
+              
+              // Ocultamos el texto de lobby después de 2 segundos
+              setTimeout(() => {
+                setShowLobbyText(false);
+              }, 2000);
+            }, 100);
+          }, 100);
         }, 1000);
       } else if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function' && newModel !== 'invernadero' && newModel !== 'acuario') {
         clearInterval(checkModelLoaded);
