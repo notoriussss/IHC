@@ -3,14 +3,18 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Html, Float, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
+import { motion } from 'framer-motion';
+import { TypingText } from './TypingText';
 
 interface CircularButtonProps {
   position: [number, number, number];
   onClick: () => void;
   label: string;
+  tooltip: string;
 }
 
-function CircularButton({ position, onClick, label }: CircularButtonProps) {
+function CircularButton({ position, onClick, label, tooltip }: CircularButtonProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
   return (
     <Billboard
       position={position}
@@ -23,6 +27,8 @@ function CircularButton({ position, onClick, label }: CircularButtonProps) {
         <div
           className="pulsing-button"
           onClick={onClick}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
           style={{
             width: '20px',
             height: '20px',
@@ -35,7 +41,35 @@ function CircularButton({ position, onClick, label }: CircularButtonProps) {
             animation: 'pulse 1.5s infinite',
             zIndex: 1000
           }}
-        />
+        >
+          {showTooltip && tooltip && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              style={{
+                position: 'absolute',
+                top: '-35px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'rgba(0,0,0,0.85)',
+                color: 'white',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '0.95rem',
+                whiteSpace: 'nowrap',
+                pointerEvents: 'none',
+                fontFamily: 'Anton, sans-serif',
+                letterSpacing: '1px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                zIndex: 2000
+              }}
+            >
+              <TypingText text={tooltip} />
+            </motion.div>
+          )}
+        </div>
       </Html>
     </Billboard>
   );
@@ -52,7 +86,8 @@ const CulturaModel = forwardRef<THREE.Group, {
   onShowProjects: (show: boolean) => void,
   onShowPueblos: (show: boolean) => void,
   onShowGaleria: (show: boolean) => void,
-  onNavigationChange: (arrows: Array<{ position: string, direction: string, onClick: () => void }>) => void
+  onNavigationChange: (arrows: Array<{ position: string, direction: string, onClick: () => void }>) => void,
+  openModal?: (content: string, title: string, onClose?: () => void) => void
 }>(({ 
   onViewChange, 
   showMap, 
@@ -64,9 +99,12 @@ const CulturaModel = forwardRef<THREE.Group, {
   onShowProjects,
   onShowPueblos,
   onShowGaleria,
-  onNavigationChange 
+  onNavigationChange,
+  openModal
 }, ref) => {
   const [error, setError] = useState<string | null>(null);
+  const [showCinemaElements, setShowCinemaElements] = useState(true);
+  const [showSportsElements, setShowSportsElements] = useState(true);
   const gltf = useGLTF('/dracoFlora/cultura.glb');
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
@@ -351,27 +389,210 @@ const CulturaModel = forwardRef<THREE.Group, {
             position={[-5.4, 0.1, 6.4]} 
             onClick={moveToWall1} 
             label="Pared 1" 
+            tooltip="Deportes"
           />
           <CircularButton 
             position={[-6.4, 0, 2.7]} 
             onClick={moveToWall2} 
             label="Pared 2" 
+            tooltip="Música"
           />
           <CircularButton 
             position={[-6.4, 0, -2.5]} 
             onClick={moveToWall4} 
             label="Pared 4" 
+            tooltip="Biblioteca"
           />
           <CircularButton 
-           position={[-6.4, 0, -6.7]} 
+            position={[-6.4, 0, -6.7]} 
             onClick={moveToWall5} 
             label="Pared 5" 
+            tooltip="Cine"
           />
           <CircularButton 
             position={[-6.4, -0.8, 1.5]} 
             onClick={moveToWall3} 
             label="Pared 3" 
+            tooltip="Galería"
           />
+        </>
+      )}
+
+      {currentView === 'wall1' && !showMap && showSportsElements && (
+        <>
+          <Html position={[-4.5, 1.75, 10.62]} center>
+            <div
+              style={{
+                width: '200px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowSportsElements(false);
+                openModal && openModal('/html/deporte.html', 'Deportes', () => {
+                  setShowSportsElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[3.5, 2.55, 10.62]} center>
+            <div
+              style={{
+                width: '200px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowSportsElements(false);
+                openModal && openModal('/html/deporte.html', 'Deportes', () => {
+                  setShowSportsElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[3.5, 0, 10.62]} center>
+            <div
+              style={{
+                width: '200px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowSportsElements(false);
+                openModal && openModal('/html/deporte.html', 'Deportes', () => {
+                  setShowSportsElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+        </>
+      )}
+
+      {(currentView === 'wall5' || currentView === 'default') && !showMap && showCinemaElements && (
+        <>
+          <Html position={[-5.9, 2.5, -15.62]} center>
+            <div
+              style={{
+                width: '120px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowCinemaElements(false);
+                openModal && openModal('/html/peliculas.html', 'Cine', () => {
+                  setShowCinemaElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[-5.9, -1.5, -15.62]} center>
+            <div
+              style={{
+                width: '120px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowCinemaElements(false);
+                openModal && openModal('/html/peliculas.html', 'Cine', () => {
+                  setShowCinemaElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[4.5, 2.5, -15.62]} center>
+            <div
+              style={{
+                width: '120px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowCinemaElements(false);
+                openModal && openModal('/html/peliculas.html', 'Cine', () => {
+                  setShowCinemaElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[4.7, -1.5, -15.62]} center>
+            <div
+              style={{
+                width: '120px',
+                height: '160px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => {
+                setShowCinemaElements(false);
+                openModal && openModal('/html/peliculas.html', 'Cine', () => {
+                  setShowCinemaElements(true);
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
         </>
       )}
     </group>

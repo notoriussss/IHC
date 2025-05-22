@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import Modal from './Modal';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MapaProps {
   isOpen: boolean;
@@ -96,8 +97,6 @@ const buttonStyle: CSSProperties = {
 };
 
 const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Click, onButton3Click, onButton2Click, onButton4Click, style }) => {
-  if (!isOpen) return null;
-
   return (
     <Modal
       isOpen={isOpen}
@@ -105,62 +104,76 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
       title="Mapa de Ubicaciones"
       style={style}
     >
-      <div style={fondomapa}>
-        <div style={imageContainerStyle}>
-          <div style={rowStyle}>
-            <img
-              src="/iconos/bt5.svg"
-              style={{ ...imageStyle, filter: 'brightness(1)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onClick={() => window.open('http://localhost:5173/', '_blank')}
-              alt="Botón 5"
-            />
-            <img
-              src="/iconos/bt4.svg"
-              style={{ ...imageStyle, filter: 'brightness(1)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onClick={onButton4Click}
-              alt="Botón 4"
-            />
-            <img
-              src="/iconos/bt3.svg"
-              style={{ ...imageStyle, filter: 'brightness(1)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onClick={onButton3Click}
-              alt="Botón 3"
-            />
-          </div>
-          <div style={rowStyle}>
-            <img
-              src="/iconos/bt2.svg"
-              style={{ ...imageStyle, filter: 'brightness(1)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onClick={onButton2Click}
-              alt="Botón 2"
-            />
-            <img
-              src="/iconos/bt1.svg"
-              style={{ ...imageStyle, filter: 'brightness(1)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onClick={onButtonClick}
-              alt="Botón 1"
-            />
-            <img
-              src="/iconos/bt0.svg"
-              style={{ ...imageStyle, filter: 'brightness(1)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-              onClick={onButton0Click}
-              alt="Botón 0"
-            />
-          </div>
-        </div>
-      </div>
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            key="mapa-content"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ 
+              duration: 0.5,
+              ease: [0.25, 0.8, 0.25, 1]
+            }}
+            style={fondomapa}
+          >
+            <div style={imageContainerStyle}>
+              <div style={rowStyle}>
+                <img
+                  src="/iconos/bt5.svg"
+                  style={{ ...imageStyle, filter: 'brightness(1)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  onClick={() => window.location.href = 'http://localhost:5173/'}
+                  alt="Botón 5"
+                />
+                <img
+                  src="/iconos/bt4.svg"
+                  style={{ ...imageStyle, filter: 'brightness(1)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  onClick={onButton4Click}
+                  alt="Botón 4"
+                />
+                <img
+                  src="/iconos/bt3.svg"
+                  style={{ ...imageStyle, filter: 'brightness(1)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  onClick={onButton3Click}
+                  alt="Botón 3"
+                />
+              </div>
+              <div style={rowStyle}>
+                <img
+                  src="/iconos/bt2.svg"
+                  style={{ ...imageStyle, filter: 'brightness(1)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  onClick={onButton2Click}
+                  alt="Botón 2"
+                />
+                <img
+                  src="/iconos/bt1.svg"
+                  style={{ ...imageStyle, filter: 'brightness(1)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  onClick={onButtonClick}
+                  alt="Botón 1"
+                />
+                <img
+                  src="/iconos/bt0.svg"
+                  style={{ ...imageStyle, filter: 'brightness(1)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  onClick={onButton0Click}
+                  alt="Botón 0"
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Modal>
   );
 };

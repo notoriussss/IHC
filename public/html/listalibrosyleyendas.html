@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Libros y Leyendas</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="common-modal-styles.css" rel="stylesheet">
 <style>
     * {
         margin: 0;
@@ -309,7 +312,9 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center;
         display: block;
+        transition: transform 0.3s ease;
     }
 
     .synopsis {
@@ -322,6 +327,11 @@
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
+        background: linear-gradient(to top, 
+            rgba(0,0,0,0.9) 0%,
+            rgba(0,0,0,0.7) 50%,
+            rgba(0,0,0,0) 100%);
+        padding: 30px 20px;
     }
 
     .synopsis p {
@@ -503,7 +513,7 @@
     .source-link {
         background: #0284a8;
         border: none;
-        color: #fff;
+        color: #ffffff !important;
         padding: 8px 16px;
         font-weight: 600;
         font-size: 14px;
@@ -520,10 +530,12 @@
         background: #026585;
         transform: translateY(-1px);
         box-shadow: 0 2px 4px rgba(2, 132, 168, 0.2);
+        color: #ffffff !important;
     }
 
     .source-link i {
         font-size: 14px;
+        color: #ffffff !important;
     }
 
     @media (max-width: 600px) {
@@ -712,8 +724,8 @@
         }
 
         .bk-list li {
-            width: 250px;
-            height: 450px;
+            width: 280px;
+            height: 420px;
         }
 
         .bk-list.show-details {
@@ -735,8 +747,8 @@
         }
 
         .bk-list.show-details li.active .bk-book {
-            width: 250px;
-            height: 350px;
+            width: 280px;
+            height: 380px;
             margin: 0 auto;
         }
 
@@ -745,13 +757,12 @@
         }
 
         .bk-book, .bk-front, .bk-back, .bk-front > div {
-            width: 250px;
-            height: 350px;
+            width: 280px;
+            height: 380px;
         }
 
-        .book-meta-grid {
-            grid-template-columns: 1fr;
-            padding: 15px;
+        .book-cover-img {
+            object-position: center;
         }
     }
 
@@ -800,6 +811,71 @@
         padding: 8px;
         border-radius: 8px;
         background: rgba(0, 0, 0, 0.03);
+    }
+
+    /* Ajustes para las imágenes de las leyendas */
+    .bk-list li[data-view="myths"] .bk-cover {
+        background-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    .bk-list li[data-view="myths"] .book-cover-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        background-color: #000;
+        padding: 0;
+    }
+
+    /* Ajustes específicos para cada imagen de leyenda */
+    .bk-list li[data-view="myths"] .book-cover-img[alt*="El Silbón"] {
+        object-position: center 30% !important;
+    }
+
+    .bk-list li[data-view="myths"] .book-cover-img[alt*="La Sayona"] {
+        object-position: center 40% !important;
+    }
+
+    .bk-list li[data-view="myths"] .book-cover-img[alt*="Florentino"] {
+        object-position: center 35% !important;
+    }
+
+    .bk-list li[data-view="myths"] .book-cover-img[alt*="Juan Machete"] {
+        object-position: center 45% !important;
+    }
+
+    /* Ajustes para la vista detallada */
+    .bk-list.show-details li[data-view="myths"].active .book-cover-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+
+    /* Ajustes responsivos */
+    @media (max-width: 768px) {
+        .bk-list li[data-view="myths"] .book-cover-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+        }
+    }
+
+    /* Ajustes específicos para el contenedor del libro */
+    .bk-list li[data-view="myths"] .bk-book {
+        background-color: #000;
+    }
+
+    .bk-list li[data-view="myths"] .bk-front {
+        background-color: #000;
     }
 </style>
 </head>
@@ -913,6 +989,7 @@
 
                 data.forEach((item, index) => {
                     const li = document.createElement('li');
+                    li.setAttribute('data-view', view);
                     const title = view === 'books' ? item.titulo : item.nombre;
                     const author = view === 'books' ? item.autor : 'Leyenda Popular';
                     const year = view === 'books' ? item['año de publicación'] : '';
@@ -970,6 +1047,26 @@
                             </div>
                         </div>
                     `;
+
+                    // Ajustar el estilo de la imagen según el tipo de contenido
+                    const imgElement = li.querySelector('.book-cover-img');
+                    if (view === 'myths') {
+                        imgElement.style.cssText = `
+                            width: 100% !important;
+                            height: 100% !important;
+                            object-fit: cover !important;
+                            object-position: center !important;
+                            background-color: #000;
+                        `;
+                    } else {
+                        imgElement.style.cssText = `
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            object-position: center;
+                        `;
+                    }
+                    
                     bkList.appendChild(li);
                 });
 

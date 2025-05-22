@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Deportes en Venezuela</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deportes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="common-modal-styles.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap");
@@ -22,31 +25,7 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-}
-
-.header {
-  width: 100%;
-  text-align: center;
-  padding: 30px 20px 20px;
-}
-
-.header p {
-  font-size: 30px;
-  color: #13539B;
-  line-height: 1.6;
-  max-width: 800px;
-  margin: 0 auto;
-  font-weight: 750;
-  letter-spacing: 0.2px;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.15);
-}
-
-.separator {
-  width: 80%;
-  height: 3px;
-  background: linear-gradient(to right, transparent, #13539B, transparent);
-  margin: 0 auto 20px auto;
-  border-radius: 5px;
+  padding-top: 20px;
 }
 
 .container {
@@ -54,8 +33,10 @@ body {
   width: 100%;
   padding: 0 2%;
   box-sizing: border-box;
-  height: 65vh;
+  height: 75vh;
   position: relative;
+  align-items: stretch;
+  margin-top: 40px;
 }
 
 .box {
@@ -68,25 +49,51 @@ body {
   line-height: 0;
   cursor: pointer;
   position: relative;
+  height: 100%;
+  background-color: #000;
+}
+
+.box > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: .5s;
+  border-radius: 15px;
+  display: block;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+.box:nth-child(1) > img {
+  object-position: 50% 35%;
+  transform: scale(1.1);
+}
+
+.box:nth-child(2) > img {
+  object-position: 50% 45%;
+  transform: scale(1.15);
+}
+
+.box:nth-child(3) > img {
+  object-position: 50% 40%;
+  transform: scale(1.1);
+}
+
+.box:nth-child(4) > img {
+  object-position: 50% 40%;
+  transform: scale(1.2);
+}
+
+.box:nth-child(5) > img {
+  object-position: 50% 35%;
+  transform: scale(1.1);
 }
 
 .box:not(.active):hover {
   flex: 1.2;
   margin: 0 1%;
-  transform: scale(1.02);
-}
-
-.box > img {
-  width: 200%;
-  height: 100%;
-  object-fit: cover; 
-  transition: .5s;
-  border-radius: 15px;
-}
-
-.box:not(.active):hover > img {
-  width: 100%;
-  transform: scale(1.05);
+  transform: scale(1.15);
 }
 
 .box.active {
@@ -95,9 +102,7 @@ body {
 }
 
 .box.active > img {
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
+  transform: scale(1.1);
 }
 
 .content {
@@ -106,7 +111,7 @@ body {
   left: 0;
   width: 100%;
   background: linear-gradient(0deg, rgba(19,83,155,0.95) 0%, rgba(19,83,155,0.85) 70%, rgba(0,0,0,0) 100%);
-  color: white;
+  color: #ffffff !important;
   z-index: 2;
   transform: translateY(101%);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -122,7 +127,7 @@ body {
   height: 12vh;
   line-height: 4;
   transition: opacity 0.3s;
-  color: #ffffff;
+  color: #ffffff !important;
   border-radius: 0 0 15px 15px;
   position: absolute;
   bottom: 0;
@@ -130,6 +135,7 @@ body {
   width: 100%;
   background: linear-gradient(0deg, rgba(19,83,155,0.95) 0%, rgba(19,83,155,0.85) 70%, rgba(0,0,0,0) 100%);
   z-index: 1;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
 }
 
 .box.active .content {
@@ -143,7 +149,8 @@ body {
   font-weight: 600;
   width: 100%;
   box-sizing: border-box;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  color: #ffffff !important;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
 }
 
 .content p {
@@ -154,6 +161,8 @@ body {
   width: 100%;
   margin: 0;
   box-sizing: border-box;
+  color: #ffffff !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 .box.active > span {
@@ -186,6 +195,9 @@ body {
 }
 
 @media (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+  }
   .content {
     padding: 20px;
   }
@@ -196,14 +208,50 @@ body {
   .content p {
     font-size: 14px;
   }
+  .box > img {
+    object-position: center;
+  }
+  
+  .box:nth-child(1) > img,
+  .box:nth-child(2) > img,
+  .box:nth-child(3) > img,
+  .box:nth-child(4) > img,
+  .box:nth-child(5) > img {
+    transform: scale(1.05);
+  }
+  
+  .box:not(.active):hover > img {
+    transform: scale(1.1);
+  }
+  .header p {
+    font-size: 22px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  }
+  
+  .content h2 {
+    font-size: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+  }
+  
+  .content p {
+    font-size: 14px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+  .box > span {
+    color: #ffffff !important;
+  }
+  
+  .content h2 {
+    color: #ffffff !important;
+  }
+  
+  .content p {
+    color: #ffffff !important;
+  }
 }
 </style>
 </head>
 <body>
-    <div class="header">
-        <p>Ríos que inspiran fuerza y espíritu deportivo.</p>
-    </div>
-    <div class="separator"></div>
     <div class="container" id="sportsContainer"></div>
     <div class="waves-container">
       <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
@@ -214,7 +262,7 @@ body {
           <path d="M0,150 C150,250 350,50 600,150 C850,250 1050,50 1200,150 L1200,200 L0,200 Z" 
                 fill="#ffffff" />
       </svg>
-  </div>
+    </div>
     <script>
       let currentActiveCard = null;
       async function cargarDeportes() {

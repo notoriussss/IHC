@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <title>External Content</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="common-modal-styles.css" rel="stylesheet">
 
     <style>
         .morebt{
@@ -17,7 +18,7 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: linear-gradient(135deg, #e6edf5 0%, #d4e1f0 100%);
             position: relative;
             min-height: 100vh;
             overflow-x: hidden;
@@ -28,24 +29,39 @@
         body::after {
             content: '';
             position: fixed;
-            width: 600px;
-            height: 600px;
+            width: 1000px;
+            height: 1000px;
             background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
             border-radius: 50%;
-            opacity: 0.03;
+            opacity: 0.12;
             z-index: -1;
+            filter: blur(60px);
         }
 
         body::before {
-            top: -200px;
-            left: -200px;
+            top: -400px;
+            left: -400px;
             transform: rotate(-15deg);
+            animation: floatBackground 25s ease-in-out infinite alternate;
         }
 
         body::after {
-            bottom: -200px;
-            right: -200px;
+            bottom: -400px;
+            right: -400px;
             transform: rotate(15deg);
+            animation: floatBackground 30s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes floatBackground {
+            0% {
+                transform: rotate(-15deg) translate(0, 0) scale(1);
+            }
+            50% {
+                transform: rotate(-15deg) translate(50px, 50px) scale(1.1);
+            }
+            100% {
+                transform: rotate(-15deg) translate(0, 0) scale(1);
+            }
         }
 
         .background-decoration {
@@ -61,32 +77,46 @@
 
         .background-decoration .dot {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #3182ce;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
             border-radius: 50%;
-            opacity: 0.05;
+            opacity: 0.15;
+            animation: float 10s ease-in-out infinite;
+            filter: blur(2px);
+            box-shadow: 0 0 20px rgba(49, 130, 206, 0.3);
         }
 
-        .background-decoration .dot:nth-child(1) { top: 15%; left: 10%; }
-        .background-decoration .dot:nth-child(2) { top: 45%; left: 20%; }
-        .background-decoration .dot:nth-child(3) { top: 75%; left: 15%; }
-        .background-decoration .dot:nth-child(4) { top: 25%; right: 15%; }
-        .background-decoration .dot:nth-child(5) { top: 65%; right: 10%; }
-        .background-decoration .dot:nth-child(6) { top: 85%; right: 25%; }
+        .background-decoration .dot:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; width: 25px; height: 25px; }
+        .background-decoration .dot:nth-child(2) { top: 45%; left: 20%; animation-delay: 1s; width: 15px; height: 15px; }
+        .background-decoration .dot:nth-child(3) { top: 75%; left: 15%; animation-delay: 2s; width: 20px; height: 20px; }
+        .background-decoration .dot:nth-child(4) { top: 25%; right: 15%; animation-delay: 3s; width: 18px; height: 18px; }
+        .background-decoration .dot:nth-child(5) { top: 65%; right: 10%; animation-delay: 4s; width: 22px; height: 22px; }
+        .background-decoration .dot:nth-child(6) { top: 85%; right: 25%; animation-delay: 5s; width: 16px; height: 16px; }
+        .background-decoration .dot:nth-child(7) { top: 35%; left: 35%; animation-delay: 6s; width: 19px; height: 19px; }
+        .background-decoration .dot:nth-child(8) { top: 55%; right: 35%; animation-delay: 7s; width: 21px; height: 21px; }
+        .background-decoration .dot:nth-child(9) { top: 10%; left: 50%; animation-delay: 8s; width: 17px; height: 17px; }
+        .background-decoration .dot:nth-child(10) { top: 80%; left: 40%; animation-delay: 9s; width: 23px; height: 23px; }
 
         .background-decoration .line {
             position: absolute;
             background: linear-gradient(90deg, transparent, #3182ce, transparent);
-            height: 1px;
-            width: 150px;
-            opacity: 0.05;
+            height: 3px;
+            width: 300px;
+            opacity: 0.12;
+            animation: float 15s ease-in-out infinite;
+            filter: blur(2px);
+            box-shadow: 0 0 15px rgba(49, 130, 206, 0.2);
         }
 
-        .background-decoration .line:nth-child(7) { top: 20%; left: 5%; transform: rotate(45deg); }
-        .background-decoration .line:nth-child(8) { top: 40%; right: 10%; transform: rotate(-45deg); }
-        .background-decoration .line:nth-child(9) { bottom: 30%; left: 15%; transform: rotate(-30deg); }
-        .background-decoration .line:nth-child(10) { bottom: 15%; right: 20%; transform: rotate(30deg); }
+        .background-decoration .line:nth-child(11) { top: 20%; left: 5%; transform: rotate(45deg); animation-delay: 0.5s; }
+        .background-decoration .line:nth-child(12) { top: 40%; right: 10%; transform: rotate(-45deg); animation-delay: 1.5s; }
+        .background-decoration .line:nth-child(13) { bottom: 30%; left: 15%; transform: rotate(-30deg); animation-delay: 2.5s; }
+        .background-decoration .line:nth-child(14) { bottom: 15%; right: 20%; transform: rotate(30deg); animation-delay: 3.5s; }
+        .background-decoration .line:nth-child(15) { top: 60%; left: 25%; transform: rotate(60deg); animation-delay: 4.5s; }
+        .background-decoration .line:nth-child(16) { top: 30%; right: 30%; transform: rotate(-60deg); animation-delay: 5.5s; }
+        .background-decoration .line:nth-child(17) { top: 70%; left: 30%; transform: rotate(15deg); animation-delay: 6.5s; }
+        .background-decoration .line:nth-child(18) { top: 25%; right: 40%; transform: rotate(-15deg); animation-delay: 7.5s; }
 
         .container {
             display: flex;
@@ -100,10 +130,11 @@
             width: calc(33.33% - 40px);
             height: 300px;
             margin: 20px;
-            background-color: white;
+            background-color: transparent;
             box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.5);
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
         }
 
         .card:hover {
@@ -132,13 +163,12 @@
 
         .card__thumb {
             height: 100%;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-top: 0px;
-            margin-bottom: 0px;
+            margin: 0;
             position: relative;
             max-height: 500px;
             overflow: hidden;
+            width: 100%;
+            background-color: transparent;
         }
         .card__thumb::after {
             position: absolute;
@@ -156,7 +186,16 @@
         }
         }
         .card__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
             transition: 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-height: 100%;
+            min-width: 100%;
         }
         .card__caption {
             position: absolute;
@@ -178,21 +217,20 @@
             display: -webkit-box;
             max-height: 85px;
             overflow: hidden;
-            font-family: "Playfair Display", serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
             font-size: 23px;
             line-height: 28px;
             text-shadow: 0px 1px 5px black;
             text-overflow: ellipsis;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
-
         }
         .card__snippet {
             display: -webkit-box;
             max-height: 150px;
             margin: 20px 0;
             overflow: hidden;
-            font-family: "Roboto", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
             font-size: 14px;
             line-height: 20px;
             text-overflow: ellipsis;
@@ -228,39 +266,40 @@
         /* Estilos para los filtros */
         .filters {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+            align-items: flex-start;
             justify-content: center;
             position: relative;
-            margin: 0 auto 40px;
+            margin-top: 35px;
             z-index: 1000;
             background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-            padding: 20px 30px;
+            padding: 25px 35px;
             border-radius: 20px;
             box-shadow: 
-                0 10px 25px -5px rgba(0, 0, 0, 0.3),
-                0 8px 10px -6px rgba(0, 0, 0, 0.2);
+                0 10px 25px -5px rgba(0, 0, 0, 0.1),
+                0 8px 10px -6px rgba(0, 0, 0, 0.05);
             width: auto;
             min-width: 320px;
-            max-width: 520px;
+            max-width: 800px;
             font-family: 'Inter', sans-serif;
             border: 1px solid rgba(226, 232, 240, 0.8);
-            text-align: center;
+            gap: 30px;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
+            justify-content: flex-start;
             width: 100%;
             position: relative;
+            padding: 0 15px;
         }
 
         .filter-header {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             width: 100%;
             margin-bottom: 15px;
             padding: 0 5px;
@@ -268,10 +307,7 @@
         }
 
         .clear-filter {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            position: relative;
             font-size: 13px;
             color: #718096;
             text-decoration: none;
@@ -287,28 +323,32 @@
             gap: 4px;
         }
 
+        .clear-filter:hover {
+            background-color: rgba(49, 130, 206, 0.1);
+            color: #3182ce;
+        }
+
         .filter-group label {
             color: #2d3748;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
-            text-align: center;
+            text-align: left;
             position: relative;
             padding-bottom: 4px;
-            margin: 0 auto;
+            margin: 0;
         }
 
         .chips-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(65px, max-content));
+            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            justify-content: center;
             width: 100%;
             padding: 5px;
-            margin: 0 auto;
+            margin: 0;
         }
 
         .chip {
-            padding: 8px 12px;
+            padding: 8px 16px;
             background: #ffffff;
             color: #4a5568;
             font-size: 13px;
@@ -320,20 +360,8 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            min-width: 65px;
-        }
-
-        .chip::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
+            min-width: 70px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .chip:hover {
@@ -355,9 +383,14 @@
 
         @media (max-width: 768px) {
             .filters {
+                flex-direction: column;
                 width: 90%;
-                padding: 15px 20px;
-                top: 15px;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .filter-group {
+                padding: 0;
             }
 
             .filter-header {
@@ -365,16 +398,11 @@
             }
 
             .filter-group label {
-                font-size: 13px;
-            }
-
-            .chips-container {
-                grid-template-columns: repeat(auto-fit, minmax(60px, max-content));
-                gap: 8px;
+                font-size: 14px;
             }
 
             .chip {
-                padding: 6px 10px;
+                padding: 6px 12px;
                 font-size: 12px;
                 min-width: 60px;
             }
@@ -387,7 +415,7 @@
 
         .lista {
             width: 100%;
-            margin-top: 0;
+            margin-top: 40px;
             padding: 0 20px;
         }
 
@@ -409,6 +437,16 @@
             overflow-y: auto;
             padding: 40px 20px;
             scroll-behavior: smooth;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .modal.show {
@@ -416,6 +454,7 @@
         }
 
         .modal-content {
+            animation: slideIn 0.4s ease-out;
             background-color: #fff;
             padding: 40px;
             width: 95%;
@@ -426,10 +465,23 @@
             transition: all 0.3s ease;
             margin: 0 auto;
             border-radius: 8px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal.show .modal-content {
-            transform: scale(1);
+            transform: none;
         }
 
         .close-modal {
@@ -466,7 +518,9 @@
             border-bottom-width: 2px;
             border-bottom-style: solid;
             border-bottom-color: #000;
-            text-align: justify;
+            text-align: center;
+            width: 100%;
+            display: block;
         }
 
         .Title {
@@ -474,12 +528,19 @@
             font-size: 42px;
             line-height: 1.2;
             margin-bottom: 15px;
-            text-align: justify;
+            text-align: center;
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            width: 100%;
+            display: block;
         }
 
         .autor {
             color: #666;
             font-size: 18px;
+            text-align: center;
         }
 
         .Image-cont {
@@ -489,6 +550,7 @@
             height: 400px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
         }
 
         .Image {
@@ -496,14 +558,17 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: none;
         }
 
         .Article-Body {
             margin: 0 0 40px 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             text-align: justify;
+            width: 100%;
         }
 
         .Conten {
@@ -512,6 +577,34 @@
             font-size: 16px;
             line-height: 1.8;
             color: #333;
+            width: 100%;
+        }
+
+        .article-url {
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            padding-top: 20px;
+            border-top: 1px solid #2c5282;
+            width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .article-url a {
+            color: #3182ce;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-block;
+            max-width: 100%;
+            word-break: break-all;
+        }
+
+        .article-url a:hover {
+            color: #2c5282;
+            text-decoration: underline;
         }
 
         .Footer {
@@ -673,6 +766,311 @@
         .Footer {
             transition-delay: 0.4s;
         }
+
+        /* Animaciones generales */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(var(--rotation, 0deg)) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) rotate(var(--rotation, 0deg)) scale(1.1);
+            }
+            100% {
+                transform: translateY(0) rotate(var(--rotation, 0deg)) scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(49, 130, 206, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(49, 130, 206, 0);
+            }
+        }
+
+        /* Aplicar animaciones a los elementos */
+        .filters {
+            animation: fadeInUp 0.6s ease-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .filters:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 30px -5px rgba(0, 0, 0, 0.15),
+                0 10px 15px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chip {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        .chip:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(49, 130, 206, 0.15);
+        }
+
+        .chip.active {
+            animation: pulse 2s infinite;
+        }
+
+        .card {
+            animation: fadeInUp 0.6s ease-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.2),
+                0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card__image {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover .card__image {
+            transform: scale(1.1);
+        }
+
+        .background-decoration .dot {
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .background-decoration .dot:nth-child(1) { animation-delay: 0s; }
+        .background-decoration .dot:nth-child(2) { animation-delay: 1s; }
+        .background-decoration .dot:nth-child(3) { animation-delay: 2s; }
+        .background-decoration .dot:nth-child(4) { animation-delay: 3s; }
+        .background-decoration .dot:nth-child(5) { animation-delay: 4s; }
+        .background-decoration .dot:nth-child(6) { animation-delay: 5s; }
+        .background-decoration .dot:nth-child(7) { animation-delay: 6s; }
+        .background-decoration .dot:nth-child(8) { animation-delay: 7s; }
+        .background-decoration .dot:nth-child(9) { animation-delay: 8s; }
+        .background-decoration .dot:nth-child(10) { animation-delay: 9s; }
+
+        .background-decoration .line {
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .background-decoration .line:nth-child(11) { animation-delay: 0.5s; }
+        .background-decoration .line:nth-child(12) { animation-delay: 1.5s; }
+        .background-decoration .line:nth-child(13) { animation-delay: 2.5s; }
+        .background-decoration .line:nth-child(14) { animation-delay: 3.5s; }
+        .background-decoration .line:nth-child(15) { animation-delay: 4.5s; }
+        .background-decoration .line:nth-child(16) { animation-delay: 5.5s; }
+        .background-decoration .line:nth-child(17) { animation-delay: 6.5s; }
+        .background-decoration .line:nth-child(18) { animation-delay: 7.5s; }
+
+        /* Animaciones para el modal */
+        .modal {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal.show .modal-content {
+            transform: none;
+        }
+
+        .close-modal {
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Eliminar las animaciones de zoom del contenido del modal */
+        .Image-cont {
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .Image-cont:hover {
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.2),
+                0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .Image {
+            transition: none;
+        }
+
+        .Image-cont:hover .Image {
+            transform: none;
+        }
+
+        .Conten {
+            transition: none;
+        }
+
+        .Conten:hover {
+            transform: none;
+        }
+
+        .Title {
+            transition: none;
+        }
+
+        .Title::after {
+            display: none;
+        }
+
+        .Title:hover::after {
+            width: 0;
+        }
+
+        /* Animación para los artículos sugeridos */
+        .other-articles {
+            animation: fadeInUp 0.5s ease-out;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .other-articles:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 
+                0 15px 25px -5px rgba(0, 0, 0, 0.15),
+                0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-Img {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .other-articles:hover .sub-Img {
+            transform: scale(1.08);
+        }
+
+        /* Animación para el botón de limpiar filtros */
+        .clear-filter {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .clear-filter:hover {
+            transform: translateX(3px);
+            background-color: rgba(49, 130, 206, 0.1);
+            color: #3182ce;
+        }
+
+        /* Estilos para la transición de páginas */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e6edf5 0%, #d4e1f0 100%);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.5s ease-in-out;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .page-transition.active {
+            transform: translateX(0);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            display: none;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+
+        /* Ajustar estilos para la página de artículo */
+        .page-transition .Header,
+        .page-transition .Image-cont,
+        .page-transition .Article-Body,
+        .page-transition .Footer {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .page-transition .Image-cont {
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .page-transition {
+                padding: 20px 10px;
+            }
+
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -683,6 +1081,14 @@
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
         <div class="line"></div>
         <div class="line"></div>
         <div class="line"></div>
@@ -715,25 +1121,28 @@
         </div>
     </div>
 
-    <!-- Modal Structure -->
-    <div id="articleModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal">&times;</button>
-            <div class="Header">
-                <h2 class="Title"></h2>
-                <p class="autor"><b>Autor:</b> <span class="article-author"></span>. <b>Fecha de publicación: </b><span class="article-date"></span></p>
+    <!-- Botón volver fijo en la pantalla -->
+    <button class="back-button" onclick="goBack()" style="display: none;">← Volver</button>
+
+    <!-- Página de artículo individual -->
+    <div id="articlePage" class="page-transition">
+        <div class="Header">
+            <h2 class="Title"></h2>
+            <p class="autor"><b>Autor:</b> <span class="article-author"></span>. <b>Fecha de publicación: </b><span class="article-date"></span></p>
+        </div>
+        <div class="Image-cont">
+            <img class="Image" src="" alt="Article Image">
+        </div>
+        <div class="Article-Body">
+            <div class="Conten"></div>
+            <div class="article-url">
+                <b>Fuente:</b> <a href="" target="_blank" class="article-link"></a>
             </div>
-            <div class="Image-cont">
-                <img class="Image" src="" alt="Article Image">
-            </div>
-            <div class="Article-Body">
-                <p class="Conten"></p>
-            </div>
-            <div class="Footer">
-                <h2 class="Title">NUEVOS ARTICULOS</h2>
-                <div class="wrapper">
-                    <!-- Other articles will be populated here -->
-                </div>
+        </div>
+        <div class="Footer">
+            <h2 class="Title">NUEVOS ARTICULOS</h2>
+            <div class="wrapper">
+                <!-- Other articles will be populated here -->
             </div>
         </div>
     </div>
@@ -741,8 +1150,6 @@
     <script>
         let articles = [];
         let filteredArticles = [];
-        let currentPage = 1;
-        const articlesPerPage = 6;
         let selectedYear = '';
         let selectedTheme = '';
 
@@ -812,27 +1219,28 @@
                 return yearMatch;
             });
 
-            currentPage = 1;
             displayArticles();
         }
 
-        // Function to show modal with article data
-        function showArticleModal(article) {
-            const modal = document.getElementById('articleModal');
-            const modalContent = modal.querySelector('.modal-content');
-            const articleTitle = document.querySelector('.Header .Title');
-            const articleAuthor = document.querySelector('.article-author');
-            const articleDate = document.querySelector('.article-date');
-            const articleImage = document.querySelector('.Image');
-            const articleContent = document.querySelector('.Conten');
-            const otherArticlesWrapper = document.querySelector('.wrapper');
-            const closeModal = document.querySelector('.close-modal');
+        function showArticle(article) {
+            const articlePage = document.getElementById('articlePage');
+            const backButton = document.querySelector('.back-button');
+            const articleTitle = articlePage.querySelector('.Header .Title');
+            const articleAuthor = articlePage.querySelector('.article-author');
+            const articleDate = articlePage.querySelector('.article-date');
+            const articleImage = articlePage.querySelector('.Image');
+            const articleContent = articlePage.querySelector('.Conten');
+            const articleLink = articlePage.querySelector('.article-link');
+            const otherArticlesWrapper = articlePage.querySelector('.wrapper');
+
+            // Mostrar el botón volver
+            backButton.style.display = 'block';
 
             // Remover clases de animación
-            document.querySelector('.Header').classList.remove('animate');
-            document.querySelector('.Image-cont').classList.remove('animate');
-            document.querySelector('.Article-Body').classList.remove('animate');
-            document.querySelector('.Footer').classList.remove('animate');
+            articlePage.querySelector('.Header').classList.remove('animate');
+            articlePage.querySelector('.Image-cont').classList.remove('animate');
+            articlePage.querySelector('.Article-Body').classList.remove('animate');
+            articlePage.querySelector('.Footer').classList.remove('animate');
 
             // Set article content
             articleTitle.textContent = article.titulo;
@@ -840,6 +1248,8 @@
             articleDate.textContent = article.fecha;
             articleImage.src = article.imagen;
             articleContent.textContent = article.descripcion_detallada;
+            articleLink.href = article.url;
+            articleLink.textContent = article.url;
 
             // Get other articles excluding the current one
             const otherArticles = articles
@@ -849,7 +1259,7 @@
 
             // Populate other articles
             otherArticlesWrapper.innerHTML = otherArticles.map(otherArticle => `
-                <div class="other-articles" onclick="handleSuggestedArticleClick(${JSON.stringify(otherArticle).replace(/"/g, '&quot;')})" style="cursor: pointer;">
+                <div class="other-articles" onclick="showArticle(${JSON.stringify(otherArticle).replace(/"/g, '&quot;')})" style="cursor: pointer;">
                     <p class="sub-date">Fecha ${otherArticle.fecha}</p>
                     <div class="sub-Img-conte">
                         <img class="sub-Img" src="${otherArticle.imagen}" alt="${otherArticle.titulo}">
@@ -859,89 +1269,41 @@
                 </div>
             `).join('');
 
-            // Show modal if not already visible
-            if (modal.style.display !== 'flex') {
-                modal.style.display = 'flex';
-                void modal.offsetWidth;
-                modal.classList.add('show');
-            }
+            // Mostrar la página del artículo con animación
+            articlePage.classList.add('active');
+            document.body.style.overflow = 'hidden';
 
             // Trigger animations
             requestAnimationFrame(() => {
-                document.querySelector('.Header').classList.add('animate');
-                document.querySelector('.Image-cont').classList.add('animate');
-                document.querySelector('.Article-Body').classList.add('animate');
-                document.querySelector('.Footer').classList.add('animate');
+                articlePage.querySelector('.Header').classList.add('animate');
+                articlePage.querySelector('.Image-cont').classList.add('animate');
+                articlePage.querySelector('.Article-Body').classList.add('animate');
+                articlePage.querySelector('.Footer').classList.add('animate');
             });
 
-            // Scroll al inicio del modal
-            modal.scrollTop = 0;
-
-            // Close modal when clicking the close button
-            closeModal.onclick = function() {
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                }, 300);
-            };
-
-            // Close modal when clicking outside
-            modal.onclick = function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                    setTimeout(() => {
-                        modal.style.display = 'none';
-                    }, 300);
-                }
-            };
-
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    modal.classList.remove('show');
-                    setTimeout(() => {
-                        modal.style.display = 'none';
-                    }, 300);
-                }
-            });
+            // Scroll al inicio de la página
+            articlePage.scrollTop = 0;
         }
 
-        // Nueva función para manejar el clic en artículos sugeridos
-        function handleSuggestedArticleClick(article) {
-            const modal = document.getElementById('articleModal');
-            
-            // Hacer scroll suave al inicio
-            modal.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
-            // Remover las clases de animación actuales
-            document.querySelector('.Header').classList.remove('animate');
-            document.querySelector('.Image-cont').classList.remove('animate');
-            document.querySelector('.Article-Body').classList.remove('animate');
-            document.querySelector('.Footer').classList.remove('animate');
-
-            // Esperar a que termine el scroll
-            setTimeout(() => {
-                showArticleModal(article);
-            }, 300);
+        function goBack() {
+            const articlePage = document.getElementById('articlePage');
+            const backButton = document.querySelector('.back-button');
+            articlePage.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            backButton.style.display = 'none';
         }
 
-        // Modify the displayArticles function to use the modal
+        // Función para mostrar todos los artículos
         function displayArticles() {
             const container = document.getElementById('articlesContainer');
-            const startIndex = 0;
-            const endIndex = currentPage * articlesPerPage;
-            const articlesToShow = filteredArticles.slice(startIndex, endIndex);
 
-            if (articlesToShow.length === 0) {
+            if (filteredArticles.length === 0) {
                 container.innerHTML = '<div style="color: white; text-align: center;">No se encontraron artículos con los filtros seleccionados.</div>';
                 return;
             }
 
-            container.innerHTML = articlesToShow.map(article => `
-                <div class="card" onclick="showArticleModal(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+            container.innerHTML = filteredArticles.map(article => `
+                <div class="card" onclick="showArticle(${JSON.stringify(article).replace(/"/g, '&quot;')})">
                     <figure class="card__thumb">
                         <img src="${article.imagen}" class="card__image" alt="${article.titulo}">
                         <figcaption class="card__caption">
@@ -952,14 +1314,6 @@
                 </div>
             `).join('');
         }
-
-        // Event listener para cargar más artículos al hacer scroll
-        window.addEventListener('scroll', () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
-                currentPage++;
-                displayArticles();
-            }
-        });
 
         // Cargar los artículos cuando el documento esté listo
         window.onload = loadArticles;

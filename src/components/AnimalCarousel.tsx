@@ -9,6 +9,7 @@ interface Animal {
   nombreCientifico: string;
   imagen: string;
   habitat: string;
+  ubicacionGuayana: string[];
   tamano: string;
   peligroExtincion: string;
   dieta: string;
@@ -124,6 +125,19 @@ const AnimalCarousel = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(({
     setTimeout(() => setIsAnimating(false), 500);
   };
 
+  const handleWheel = (event: React.WheelEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (isAnimating) return;
+    
+    if (event.deltaY > 0) {
+      moveToCenter(activeIndex + 1);
+    } else {
+      moveToCenter(activeIndex - 1);
+    }
+  };
+
   useImperativeHandle(ref, () => ({
     goToNext: () => {
       if (animales.length > 0) {
@@ -169,11 +183,16 @@ const AnimalCarousel = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(({
   const nextIndex = (activeIndex + 1) % animales.length;
 
   return (
-    <div className="carousel-container" ref={carouselRef} style={{ 
-      width: '100%', 
-      maxWidth: '600px',
-      padding: '20px'
-    }}>
+    <div 
+      className="carousel-container" 
+      ref={carouselRef} 
+      onWheel={handleWheel}
+      style={{ 
+        width: '100%', 
+        maxWidth: '600px',
+        padding: '20px'
+      }}
+    >
       <div className="carousel">
         {animales.map((animal, index) => {
           const isActive = index === activeIndex;
@@ -204,6 +223,9 @@ const AnimalCarousel = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(({
               <div style={{ background: 'rgba(0, 0, 0, 0.2)', padding: '15px', borderRadius: '15px' }}>
                 <p style={{ color: '#a0d8ef', marginBottom: '8px' }}><strong>Hábitat:</strong> {animal.habitat}</p>
                 <p style={{ color: '#a0d8ef', marginBottom: '8px' }}><strong>Tamaño:</strong> {animal.tamano}</p>
+                <p style={{ color: '#a0d8ef', marginBottom: '8px' }}>
+                  <strong>Ubicación:</strong> {animal.ubicacionGuayana.join(', ')}
+                </p>
                 <p style={{ marginBottom: '8px' }}>
                   <strong style={{ color: '#a0d8ef' }}>Estado:</strong>
                   <span style={{ color: getStatusColor(animal.peligroExtincion) }}> {animal.peligroExtincion}</span>
@@ -214,20 +236,6 @@ const AnimalCarousel = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(({
           );
         })}
       </div>
-      <button 
-        className="navigation-button prev-button" 
-        onClick={() => moveToCenter(activeIndex - 1)}
-        aria-label="Animal anterior"
-      >
-        ←
-      </button>
-      <button 
-        className="navigation-button next-button" 
-        onClick={() => moveToCenter(activeIndex + 1)}
-        aria-label="Animal siguiente"
-      >
-        →
-      </button>
     </div>
   );
 });
@@ -384,6 +392,9 @@ const AnimalCarousel3D = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(
                   <div style={{ background: 'rgba(13, 42, 76, 0.95)', padding: '15px', borderRadius: '15px' }}>
                     <p style={{ color: '#a0d8ef', marginBottom: '8px' }}><strong>Hábitat:</strong> {animal.habitat}</p>
                     <p style={{ color: '#a0d8ef', marginBottom: '8px' }}><strong>Tamaño:</strong> {animal.tamano}</p>
+                    <p style={{ color: '#a0d8ef', marginBottom: '8px' }}>
+                      <strong>Ubicación:</strong> {animal.ubicacionGuayana.join(', ')}
+                    </p>
                     <p style={{ marginBottom: '8px' }}>
                       <strong style={{ color: '#a0d8ef' }}>Estado:</strong>
                       <span style={{ color: getStatusColor(animal.peligroExtincion) }}> {animal.peligroExtincion}</span>
@@ -394,20 +405,6 @@ const AnimalCarousel3D = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(
               );
             })}
           </div>
-          <button 
-            className="navigation-button prev-button" 
-            onClick={() => moveToCenter(activeIndex - 1)}
-            aria-label="Animal anterior"
-          >
-            ←
-          </button>
-          <button 
-            className="navigation-button next-button" 
-            onClick={() => moveToCenter(activeIndex + 1)}
-            aria-label="Animal siguiente"
-          >
-            →
-          </button>
         </div>
       </div>
     </Html>

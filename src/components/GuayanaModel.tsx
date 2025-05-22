@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
+import { TypingText } from './TypingText';
 
 // Importar el sonido de hover desde ModelViewer o definirlo aquí si se necesita
 // Acceder a la variable global definida en ModelViewer
@@ -16,14 +17,18 @@ interface CircularButtonProps {
   position: [number, number, number];
   onClick: () => void;
   label: string;
+  tooltip: string;
 }
 
-function CircularButton({ position, onClick, label }: CircularButtonProps) {
+function CircularButton({ position, onClick, label, tooltip }: CircularButtonProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
   return (
     <Html position={position} center>
       <div
         className="pulsing-button"
         onClick={onClick}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
         style={{
           width: '20px',
           height: '20px',
@@ -36,7 +41,35 @@ function CircularButton({ position, onClick, label }: CircularButtonProps) {
           animation: 'pulse 1.5s infinite',
           zIndex: 1000
         }}
-      />
+      >
+        {showTooltip && tooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              position: 'absolute',
+              top: '-35px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(0,0,0,0.85)',
+              color: 'white',
+              padding: '6px 14px',
+              borderRadius: '8px',
+              fontSize: '0.95rem',
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              fontFamily: 'Anton, sans-serif',
+              letterSpacing: '1px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+              zIndex: 2000
+            }}
+          >
+            <TypingText text={tooltip} />
+          </motion.div>
+        )}
+      </div>
     </Html>
   );
 }
@@ -335,6 +368,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
               moveToWall2();
             }}
             label="Vista 2"
+            tooltip="Nuestros Pueblos"
           />
           <CircularButton 
             position={[-6, 0.17, -7.5]} 
@@ -347,6 +381,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
               moveToWall5();
             }}
             label="Vista 5"
+            tooltip="Contaminación"
           />
           <CircularButton 
             position={[1.8, 1.33, 3.25]} 
@@ -359,6 +394,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
               moveToWall1();
             }}
             label="Vista 1"
+            tooltip="Economía"
           />
          
           <CircularButton 
@@ -372,6 +408,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
               moveToWall3();
             }}
             label="Vista 3"
+            tooltip="Turismo"
           />
         </>
       )}
@@ -381,6 +418,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
           position={[1.3, 0.5, 1]} 
           onClick={handleShowEconomiaModal}
           label="Ver Economía"
+          tooltip="Ver Economía"
         />
       )}
 
@@ -389,6 +427,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
           position={[0, 0.3, 0.5]} 
           onClick={handleShowIndigenasModal}
           label="Ver Pueblos Indígenas"
+          tooltip="Ver Pueblos Indígenas"
         />
       )}
 
@@ -397,6 +436,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
           position={[0, 0.3, 0.5]} 
           onClick={handleShowTurismoModal}
           label="Ver Turismo"
+          tooltip="Ver Turismo"
         />
       )}
 
@@ -405,6 +445,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
           position={[0, 0.3, 0.5]} 
           onClick={handleShowContaminacionModal}
           label="Ver Contaminación"
+          tooltip="Ver Contaminación"
         />
       )}
 

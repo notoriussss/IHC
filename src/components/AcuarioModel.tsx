@@ -113,37 +113,44 @@ const AcuarioModel = forwardRef<AcuarioModelHandles, AcuarioModelProps>(({ isAct
       />
       
       {/* Integramos el carrusel dentro del modelo 3D */}
-      {!showMap && (
-        <group position={[-0.4, 0.5, -1]} rotation={[-0.08, 0.305, 0.025]}>
-          <Html
-            position={[0.1, 0, 1]} 
-            center
-            distanceFactor={2.5}
-            transform
-            occlude={false}
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              pointerEvents: 'all'
-            }}
-          >
-            <div style={{
-              width: '600px',
-              height: 'auto',
-              padding: '20px',
-              borderRadius: '25px'
-            }}>
-              <AnimalCarousel ref={carouselRef} />
-            </div>
-          </Html>
-        </group>
-      )}
+      <group 
+        position={[
+          showMap ? -100 : -0.4,
+          0.5,
+          -1
+        ]} 
+        rotation={[-0.08, 0.305, 0.025]}
+      >
+        <Html
+          position={[0.1, 0, 1]} 
+          center
+          distanceFactor={2.3}
+          transform
+          occlude={false}
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            pointerEvents: 'all',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <div style={{
+            width: '600px',
+            height: 'auto',
+            padding: '20px',
+            borderRadius: '25px',
+            position: 'relative',
+            zIndex: 1
+          }}>
+            <AnimalCarousel ref={carouselRef} />
+          </div>
+        </Html>
+      </group>
     </>
   );
 });
 
 export default AcuarioModel;
-

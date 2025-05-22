@@ -49,6 +49,8 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
   const [currentView, setCurrentView] = useState('default');
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [hasReachedTarget, setHasReachedTarget] = useState(false);
+  const [isCarouselReady, setIsCarouselReady] = useState(false);
+  const [isInitialMovementComplete, setIsInitialMovementComplete] = useState(false);
 
   useFrame(() => {
     if (targetPosition && targetQuaternion && currentPosition && currentQuaternion && camera instanceof THREE.PerspectiveCamera) {
@@ -84,6 +86,9 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
             }
           });
           setHasReachedTarget(true);
+          setTimeout(() => {
+            setIsInitialMovementComplete(true);
+          }, 500);
         }
       }
 
@@ -107,12 +112,20 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
       );
       const newQuaternion = new THREE.Quaternion().setFromEuler(newRotation);
 
-      setCurrentPosition(camera.position.clone());
-      setCurrentQuaternion(camera.quaternion.clone());
+      // Establecer la posición directamente
+      camera.position.copy(newPosition);
+      camera.quaternion.copy(newQuaternion);
+      camera.updateProjectionMatrix();
+
+      // Actualizar estados
+      setCurrentPosition(newPosition);
+      setCurrentQuaternion(newQuaternion);
       setTargetPosition(newPosition);
       setTargetQuaternion(newQuaternion);
       setCurrentView('default');
       onViewChange('default');
+      setHasReachedTarget(true);
+      setIsInitialMovementComplete(true);
     }
   };
 
@@ -151,9 +164,23 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
         ref.current.scale.set(scale, scale, scale);
 
         if (camera instanceof THREE.PerspectiveCamera) {
-          camera.position.set(0, 2, 5);
-          camera.lookAt(0, 0, 0);
+          // Establecer la posición default directamente
+          camera.position.set(0.92, 1.52, 6.51);
+          const rotation = new THREE.Euler(
+            THREE.MathUtils.degToRad(-4.35),
+            THREE.MathUtils.degToRad(-0.85),
+            THREE.MathUtils.degToRad(-0.06)
+          );
+          camera.quaternion.setFromEuler(rotation);
           camera.updateProjectionMatrix();
+
+          // Actualizar estados para mantener la posición
+          setCurrentPosition(camera.position.clone());
+          setCurrentQuaternion(camera.quaternion.clone());
+          setTargetPosition(camera.position.clone());
+          setTargetQuaternion(camera.quaternion.clone());
+          setHasReachedTarget(true);
+          setIsInitialMovementComplete(true);
         }
 
         setIsModelLoaded(true);
@@ -163,9 +190,21 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
     }
   }, [gltf, camera, ref]);
 
+  // Exponer el estado de carga al componente padre
+  useEffect(() => {
+    if (ref && 'current' in ref) {
+      (ref.current as any).isLoading = !(isInitialMovementComplete && isCarouselReady);
+      // Exponer el estado de carga para que el componente padre pueda usarlo
+      (ref.current as any).isLoadingState = !(isInitialMovementComplete && isCarouselReady);
+    }
+  }, [isInitialMovementComplete, isCarouselReady, ref]);
+
   if (error) {
     return null;
   }
+
+  // Si está cargando, no permitir que se abra el mapa
+  const effectiveShowMap = !(isInitialMovementComplete && isCarouselReady) ? false : showMap;
 
   return (
     <group ref={ref}>
@@ -195,7 +234,7 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
         castShadow
         shadow-mapSize={[2048, 2048]}
       />
-      {hasReachedTarget && !showMap && (
+      {hasReachedTarget && !effectiveShowMap && (
         <Html
           position={[0, 2, -2.5]}
           center
@@ -206,7 +245,7 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
             top: 0,
             left: 0,
             pointerEvents: 'all',
-            zIndex: 1000,
+            zIndex: 10,
             transform: 'scale(120)'
           }}
           distanceFactor={0.05}
@@ -240,7 +279,10 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
                 transform: 'scale(1)'
               }}
             >
-              <PlantCarousel showMap={showMap} />
+              <PlantCarousel 
+                showMap={effectiveShowMap} 
+                onReady={() => setIsCarouselReady(true)}
+              />
             </div>
           </div>
         </Html>

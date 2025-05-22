@@ -13,9 +13,10 @@ interface Flor {
 
 interface PlantCarouselProps {
   showMap?: boolean;
+  onReady?: () => void;
 }
 
-const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false }) => {
+const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady }) => {
   const [flores, setFlores] = useState<Flor[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -37,18 +38,22 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false }) => {
         if (data.flores && Array.isArray(data.flores)) {
           setFlores(data.flores);
           setIsLoading(false);
+          onReady?.();
           console.log('Flores cargadas:', data.flores.length);
         } else {
           console.error('Formato de datos inválido:', data);
+          setIsLoading(false);
+          onReady?.();
         }
       } catch (error) {
         console.error('Error al cargar los datos:', error);
         setIsLoading(false);
+        onReady?.();
       }
     };
 
     loadData();
-  }, []);
+  }, [onReady]);
 
   // Efecto para loguear la posición del carrusel
   useEffect(() => {

@@ -41,14 +41,18 @@ interface CircularButtonProps {
   position: [number, number, number];
   onClick: () => void;
   label: string;
+  tooltip?: string;
 }
 
-function CircularButton({ position, onClick, label }: CircularButtonProps) {
+function CircularButton({ position, onClick, label, tooltip }: CircularButtonProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
   return (
     <Html position={position} center>
       <div
         className="pulsing-button"
         onClick={onClick}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
         style={{
           width: '20px',
           height: '20px',
@@ -61,7 +65,35 @@ function CircularButton({ position, onClick, label }: CircularButtonProps) {
           animation: 'pulse 1.5s infinite',
           zIndex: 1000
         }}
-      />
+      >
+        {showTooltip && tooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              position: 'absolute',
+              top: '-35px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(0,0,0,0.85)',
+              color: 'white',
+              padding: '6px 14px',
+              borderRadius: '8px',
+              fontSize: '0.95rem',
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              fontFamily: 'Anton, sans-serif',
+              letterSpacing: '1px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+              zIndex: 2000
+            }}
+          >
+            <TypingText text={tooltip} />
+          </motion.div>
+        )}
+      </div>
     </Html>
   );
 }
@@ -152,8 +184,10 @@ const Model = forwardRef<THREE.Group, {
   onViewChange: (view: string) => void, 
   showMap: boolean,
   onShowNews: (show: boolean) => void,
-  onShowIndicadores: (show: boolean) => void
-}>(({ url, onViewChange, showMap, onShowNews, onShowIndicadores }, ref) => {
+  onShowIndicadores: (show: boolean) => void,
+  openModal?: (content: string, title: string, onClose?: () => void) => void,
+  currentModel: string
+}>(({ url, onViewChange, showMap, onShowNews, onShowIndicadores, openModal, currentModel }, ref) => {
   const [error, setError] = useState<string | null>(null);
   const gltf = useGLTF(url);
   const { camera } = useThree();
@@ -162,6 +196,7 @@ const Model = forwardRef<THREE.Group, {
   const [currentPosition, setCurrentPosition] = useState<THREE.Vector3 | null>(null);
   const [currentQuaternion, setCurrentQuaternion] = useState<THREE.Quaternion | null>(null);
   const [currentView, setCurrentView] = useState('default');
+  const [showWall2Elements, setShowWall2Elements] = useState(true);
 
   useFrame(() => {
     if (targetPosition && targetQuaternion && currentPosition && currentQuaternion && camera instanceof THREE.PerspectiveCamera) {
@@ -340,18 +375,186 @@ const Model = forwardRef<THREE.Group, {
             position={[0, 0.7, 0]} 
             onClick={moveToWall1} 
             label="Pared 1" 
+            tooltip="Indicadores" 
           />
           <CircularButton 
             position={[0, 0.7, -3.5]} 
             onClick={moveToWall2} 
             label="Pared 2" 
+            tooltip="Noticias" 
           />
           <CircularButton 
             position={[0, 0.7, 3.5]} 
             onClick={moveToWall3} 
             label="Pared 3" 
+            tooltip="Sobre Nosotros" 
           />
         </>
+      )}
+
+      {currentView === 'wall2' && !showMap && showWall2Elements && (
+        <>
+          <Html position={[-0.5, 2, -2]} center>
+            <div
+              onClick={() => {
+                setShowWall2Elements(false);
+                if (openModal) {
+                  openModal('/html/listarticulos.html', 'Artículos', () => {
+                    setShowWall2Elements(true);
+                  });
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            />
+          </Html>
+          <Html position={[2.45, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                setShowWall2Elements(false);
+                if (openModal) {
+                  openModal('/html/listarticulos.html', 'Artículos', () => {
+                    setShowWall2Elements(true);
+                  });
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            />
+          </Html>
+          <Html position={[3.42, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                setShowWall2Elements(false);
+                if (openModal) {
+                  openModal('/html/listarticulos.html', 'Artículos', () => {
+                    setShowWall2Elements(true);
+                  });
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            />
+          </Html>
+        </>
+      )}
+
+      {currentView === 'wall1' && currentModel === 'cultura' && !showMap && (
+        <>
+          <Html position={[-0.5, 2, -2]} center>
+            <div
+              onClick={() => {
+                if (openModal) {
+                  openModal('/html/deporte.html', 'Deportes');
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[2.45, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                if (openModal) {
+                  openModal('/html/deporte.html', 'Deportes');
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[3.42, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                if (openModal) {
+                  openModal('/html/deporte.html', 'Deportes');
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+        </>
+      )}
+      {currentModel === 'cultura' && currentView === 'wall1' && !showMap && (
+        <Html position={[-1.46, -1.75, 10.62]} center>
+          <div
+            style={{
+              width: '100px',
+              height: '100px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.5)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => openModal && openModal('/html/deporte.html', 'Deportes')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          />
+        </Html>
       )}
     </group>
   );
@@ -482,8 +685,8 @@ interface SceneProps {
   showControls: boolean;
   onCameraPositionChange: (pos: CameraState) => void;
   onViewChange: (view: string) => void;
-  modelRef?: React.RefObject<THREE.Group | null>;
-  acuarioRef?: React.RefObject<AcuarioModelHandles | null>;
+  modelRef: React.RefObject<THREE.Group | null>;
+  acuarioRef: React.RefObject<AcuarioModelHandles | null>;
   currentModel: string;
   showMap: boolean;
   onShowNews: (show: boolean) => void;
@@ -493,23 +696,24 @@ interface SceneProps {
   onShowTourism: (show: boolean) => void;
   onShowProjects: (show: boolean) => void;
   onShowPueblos: (show: boolean) => void;
+  onShowGaleria: (show: boolean) => void;
   isInitialLoad: boolean;
-  showLobbyText?: boolean;
-  activeText?: string | null;
-  setActiveText?: (text: string | null) => void;
-  setShowIndicadoresText?: (show: boolean) => void;
-  setShowNewsText?: (show: boolean) => void;
-  setShowEconomyText?: (show: boolean) => void;
-  setShowContaminationText?: (show: boolean) => void;
-  setShowTourismText?: (show: boolean) => void;
-  setShowProjectsText?: (show: boolean) => void;
-  setShowPueblosText?: (show: boolean) => void;
-  setShowDeportesText?: (show: boolean) => void;
-  setShowMusicaText?: (show: boolean) => void;
-  setShowGaleriaText?: (show: boolean) => void;
-  setShowBibliotecaText?: (show: boolean) => void;
-  setShowCineText?: (show: boolean) => void;
-  openModal?: (content: string, title: string) => void;
+  showLobbyText: boolean;
+  activeText: string | null;
+  setActiveText: (text: string | null) => void;
+  setShowIndicadoresText: (show: boolean) => void;
+  setShowNewsText: (show: boolean) => void;
+  setShowEconomyText: (show: boolean) => void;
+  setShowContaminationText: (show: boolean) => void;
+  setShowTourismText: (show: boolean) => void;
+  setShowProjectsText: (show: boolean) => void;
+  setShowPueblosText: (show: boolean) => void;
+  setShowDeportesText: (show: boolean) => void;
+  setShowMusicaText: (show: boolean) => void;
+  setShowGaleriaText: (show: boolean) => void;
+  setShowBibliotecaText: (show: boolean) => void;
+  setShowCineText: (show: boolean) => void;
+  openModal?: (content: string, title: string, onClose?: () => void) => void;
 }
 
 function Scene({ 
@@ -527,6 +731,7 @@ function Scene({
   onShowTourism,
   onShowProjects,
   onShowPueblos,
+  onShowGaleria,
   isInitialLoad,
   showLobbyText,
   activeText,
@@ -559,6 +764,7 @@ function Scene({
   const [showCineText, setShowCineTextState] = useState(false);
   const [currentView, setCurrentView] = useState('default');
   const [navigationArrows, setNavigationArrows] = useState<Array<{ position: string, direction: string, onClick: () => void }>>([]);
+  const [showWall2Elements, setShowWall2Elements] = useState(true);
 
   // Actualiza los estados locales cuando cambian los props externos
   useEffect(() => {
@@ -669,7 +875,7 @@ function Scene({
   // Agregar este efecto después de los otros useEffect
   useEffect(() => {
     // Si hay flechas visibles (currentView !== 'default') y el modelo cambia
-    if (currentView !== 'default' && modelRef?.current && typeof (modelRef.current as any).moveToDefault === 'function') {
+    if (currentView !== 'default' && modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function') {
       // Pequeño timeout para asegurar que el nuevo modelo esté cargado
       setTimeout(() => {
         if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function') {
@@ -739,6 +945,8 @@ function Scene({
               showMap={showMap} 
               onShowNews={(show) => onShowNews(show)}
               onShowIndicadores={(show) => onShowIndicadores(show)}
+              openModal={openModal}
+              currentModel={currentModel}
             />
           </Float>
         </group>
@@ -751,8 +959,8 @@ function Scene({
             floatingRange={[0, 0]}
           >
             <GuayanaModel 
-              onViewChange={onViewChange}
               ref={modelRef}
+              onViewChange={onViewChange}
               onNavigationChange={handleNavigationChange}
               onShowNews={onShowNews}
               onShowEconomy={onShowEconomy}
@@ -774,40 +982,28 @@ function Scene({
             floatingRange={[0, 0]}
           >
             <Invernadero 
-              onViewChange={onViewChange} 
               ref={modelRef}
+              onViewChange={onViewChange}
               showMap={showMap}
             />
           </Float>
         </group>
       ) : currentModel === 'cultura' ? (
-        <group>
-          <Float
-            speed={1}
-            rotationIntensity={0}
-            floatIntensity={0}
-            floatingRange={[0, 0]}
-          >
-            <CulturaModel 
-              onViewChange={onViewChange}
-              ref={modelRef}
-              onNavigationChange={handleNavigationChange}
-              onShowNews={onShowNews}
-              onShowIndicadores={onShowIndicadores}
-              onShowEconomy={onShowEconomy}
-              onShowContamination={onShowContamination}
-              onShowTourism={onShowTourism}
-              onShowProjects={onShowProjects}
-              onShowPueblos={onShowPueblos}
-              onShowGaleria={(show) => {
-                if (setShowGaleriaText) {
-                  setShowGaleriaText(show);
-                }
-              }}
-              showMap={showMap}
-            />
-          </Float>
-        </group>
+        <CulturaModel
+          ref={modelRef}
+          onViewChange={onViewChange}
+          showMap={showMap}
+          onShowNews={onShowNews}
+          onShowIndicadores={onShowIndicadores}
+          onShowEconomy={onShowEconomy}
+          onShowContamination={onShowContamination}
+          onShowTourism={onShowTourism}
+          onShowProjects={onShowProjects}
+          onShowPueblos={onShowPueblos}
+          onShowGaleria={onShowGaleria}
+          onNavigationChange={setNavigationArrows}
+          openModal={openModal}
+        />
       ) : currentModel === 'acuario' ? (
         <group>
           <Float
@@ -817,8 +1013,8 @@ function Scene({
             floatingRange={[0, 0]}
           >
             <AcuarioModel 
-              onViewChange={onViewChange}
               ref={acuarioRef}
+              onViewChange={onViewChange}
               showMap={showMap}
               isActive={true}
             />
@@ -924,6 +1120,42 @@ const TypingText = ({ text }: { text: string }) => {
 type ModelType = 'default' | 'guayana' | 'invernadero' | 'cultura' | 'acuario';
 type ViewType = 'default' | 'wall1' | 'wall2' | 'wall3' | 'wall4' | 'wall5';
 
+// Agregar este nuevo componente antes del componente ModelViewer
+function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | 'invernadero' }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ 
+            duration: 0.5, 
+            ease: [0.25, 0.8, 0.25, 1]
+          }}
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: model === 'invernadero' ? '37%' : '41%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontSize: '4rem',
+            fontWeight: '400',
+            fontFamily: '"Anton", sans-serif',
+            letterSpacing: '4px',
+            textTransform: 'uppercase',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            zIndex: 2147483647,
+            pointerEvents: 'none',
+          }}
+        >
+          {model === 'invernadero' ? 'INVERNADERO' : 'ACUARIO'}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function ModelViewer() {
   const [error, setError] = useState<string | null>(null);
   const [showLobbyText, setShowLobbyText] = useState(false);
@@ -956,10 +1188,12 @@ function ModelViewer() {
     isOpen: boolean;
     content: string;
     title: string;
+    onClose?: () => void;
   }>({
     isOpen: false,
     content: '',
-    title: ''
+    title: '',
+    onClose: undefined
   });
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -983,9 +1217,19 @@ function ModelViewer() {
           
           // Esperamos a que la cámara esté en posición
           setTimeout(() => {
-            // Solo forzamos la interacción inicial si no es el invernadero
-            if (currentModel !== 'invernadero') {
-              // Forzamos una interacción inicial para posicionar los botones sin mostrar el mapa
+            if (currentModel === 'invernadero') {
+              // Para el invernadero, mostramos directamente la UI y el texto sin mostrar el mapa
+              setIsModelLoaded(true);
+              setShowUIElements(true);
+              setShowLobbyText(true);
+              
+              // Ocultamos el texto de lobby después de 2 segundos
+              setTimeout(() => {
+                setShowLobbyText(false);
+                setIsInitialLoad(false);
+              }, 2000);
+            } else {
+              // Para otros modelos, mostramos el mapa brevemente
               setShowMap(true);
               
               // Cerramos el mapa inmediatamente
@@ -1005,17 +1249,6 @@ function ModelViewer() {
                   }, 2000);
                 }, 100);
               }, 100);
-            } else {
-              // Para el invernadero, mostramos directamente la UI y el texto
-              setIsModelLoaded(true);
-              setShowUIElements(true);
-              setShowLobbyText(true);
-              
-              // Ocultamos el texto de lobby después de 2 segundos
-              setTimeout(() => {
-                setShowLobbyText(false);
-                setIsInitialLoad(false);
-              }, 2000);
             }
           }, 1000);
         }
@@ -1110,7 +1343,7 @@ function ModelViewer() {
     }
   }, [currentModel, showLobbyText]);
 
-  const openModal = (content: string, title: string): void => {
+  const openModal = (content: string, title: string, onClose?: () => void): void => {
     // Resetear todos los estados de texto para evitar conflictos entre secciones
     setShowNewsText(false);
     setShowIndicadoresText(false);
@@ -1185,14 +1418,20 @@ function ModelViewer() {
     setActiveModal({
       isOpen: true,
       content: contenidoFinal,
-      title
+      title,
+      onClose
     });
   };
 
   const closeModal = (): void => {
+    if (activeModal.onClose) {
+      activeModal.onClose();
+    }
+    
     setActiveModal(prev => ({
       ...prev,
-      isOpen: false
+      isOpen: false,
+      onClose: undefined
     }));
     
     // Al cerrar el modal, actualizar los estados de texto según la vista y modelo actuales
@@ -1583,6 +1822,7 @@ function ModelViewer() {
     setShowUIElements(false);
     setShowLobbyText(false);
     setActiveText(null);
+    setCurrentView('default'); // Forzar la vista a default al cambiar de modelo
     
     // Resetear todos los estados de texto al cambiar de modelo
     setShowNewsText(false);
@@ -1644,7 +1884,7 @@ function ModelViewer() {
             setShowLobbyText(false);
           }, 2000);
         }, 1000);
-      } else if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function' && newModel !== 'invernadero') {
+      } else if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function' && newModel !== 'invernadero' && newModel !== 'acuario') {
         clearInterval(checkModelLoaded);
         
         // Movemos la cámara a la posición default
@@ -1762,6 +2002,7 @@ function ModelViewer() {
                 onShowTourism={(show) => setShowTourismText(show)}
                 onShowProjects={(show) => setShowProjectsText(show)}
                 onShowPueblos={(show) => setShowPueblosText(show)}
+                onShowGaleria={(show) => setShowGaleriaText(show)}
                 isInitialLoad={isInitialLoad}
                 showLobbyText={showLobbyText}
                 activeText={activeText}
@@ -1802,7 +2043,7 @@ function ModelViewer() {
       {isModelLoaded && !isInitialLoad && showUIElements && (
         <>
           <AnimatePresence>
-            {showLobbyText && (
+            {showLobbyText && currentModel !== 'acuario' && currentModel !== 'invernadero' && (
               <motion.div
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -1815,10 +2056,8 @@ function ModelViewer() {
                   position: 'fixed',
                   top: '50%',
                   left: currentModel === 'default' ? '43%' : 
-                         currentModel === 'invernadero' ? '37%' : 
                          currentModel === 'guayana' ? '35%' :
-                         currentModel === 'cultura' ? '40%' : 
-                         currentModel === 'acuario' ? '41%' : '35%',
+                         currentModel === 'cultura' ? '40%' : '35%',
                   transform: 'translate(-50%, -50%)',
                   color: 'white',
                   fontSize: '4rem',
@@ -1832,22 +2071,26 @@ function ModelViewer() {
                 }}
               >
                 {currentModel === 'default' ? 'LOBBY' : 
-                 currentModel === 'invernadero' ? 'INVERNADERO' : 
                  currentModel === 'guayana' ? 'REGION GUAYANA' :
-                 currentModel === 'cultura' ? 'CULTURA' : 
-                 currentModel === 'acuario' ? 'ACUARIO' : ''}
+                 currentModel === 'cultura' ? 'CULTURA' : ''}
               </motion.div>
             )}
           </AnimatePresence>
 
+          {/* Agregar el nuevo componente para acuario e invernadero */}
+          <SpecialModelText 
+            show={showLobbyText && (currentModel === 'acuario' || currentModel === 'invernadero')} 
+            model={currentModel as 'acuario' | 'invernadero'} 
+          />
+
           {/* Botones del mapa y explorar */}
           <div style={{
             position: 'fixed',
-            top: showIndicadoresText ? '87.5vh' : (showNewsText || showEconomyText || showContaminationText || showTourismText || showProjectsText || showPueblosText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText ? '87.5vh' : '87.5vh'),
-            left: showPueblosText ? '49vw' : (showProjectsText ? '49vw' : (showIndicadoresText ? '49vw' : (showNewsText || showEconomyText || showContaminationText || showTourismText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText ? '48.5vw' : '48.5vw'))),
+            top: '87.5vh',
+            left: '48.5vw',
             transform: 'translateX(-50%)',
             display: 'flex',
-            gap: showIndicadoresText ? '1px' : '1px',
+            gap: '20px',
             zIndex: 1000,
             transition: 'all 0.5s ease'
           }}>
@@ -1855,8 +2098,7 @@ function ModelViewer() {
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ 
                 scaleX: 1, 
-                opacity: 1,
-                translateX: (showNewsText || showIndicadoresText || showEconomyText || showContaminationText || showTourismText || showProjectsText || showPueblosText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText) ? -15 : 0
+                opacity: 1
               }}
               transition={{
                 duration: 0.5,
@@ -1876,25 +2118,24 @@ function ModelViewer() {
                 transition: 'background 0.3s ease, transform 0.3s ease',
                 fontSize: '1rem',
                 position: 'relative',
-                transform: `translateX(${(showNewsText || showIndicadoresText || showEconomyText || showContaminationText || showTourismText || showProjectsText || showPueblosText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText) ? '-15px' : '0px'})`,
                 willChange: 'transform',
                 transformOrigin: 'center'
               }}
               onClick={() => setShowMap(true)}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.9)';
-                e.currentTarget.style.transform = `translateX(${(showNewsText || showIndicadoresText || showEconomyText || showContaminationText || showTourismText || showProjectsText || showPueblosText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText) ? '-15px' : '0px'}) scale(1.05)`;
+                e.currentTarget.style.transform = 'scale(1.05)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.7)';
-                e.currentTarget.style.transform = `translateX(${(showNewsText || showIndicadoresText || showEconomyText || showContaminationText || showTourismText || showProjectsText || showPueblosText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText) ? '-15px' : '0px'})`;
+                e.currentTarget.style.transform = 'scale(1)';
               }}
             >
               <TypingText text="Ver Mapa" />
             </motion.button>
 
             <AnimatePresence mode="wait">
-              {((showNewsText || showIndicadoresText || showEconomyText || showContaminationText || showTourismText || showProjectsText || showPueblosText || showDeportesText || showMusicaText || showGaleriaText || showBibliotecaText || showCineText) && currentView !== 'default' && !(currentModel === 'default' && currentView === 'wall3')) && (
+              {currentView !== 'default' && !(currentModel === 'default' && currentView === 'wall3') && (
                 <motion.button
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -1904,83 +2145,74 @@ function ModelViewer() {
                     ease: [0.4, 0, 0.2, 1]
                   }}
                   onClick={() => {
-                    // Solo abrir el modal si estamos en la sección correcta que corresponde al texto mostrado
-                    if (
-                      (showPueblosText && currentModel === 'guayana' && currentView === 'wall2') ||
-                      (showEconomyText && currentModel === 'guayana' && currentView === 'wall1') ||
-                      (showContaminationText && currentModel === 'guayana' && currentView === 'wall5') ||
-                      (showTourismText && currentModel === 'guayana' && currentView === 'wall3') ||
-                      (showProjectsText && currentModel === 'guayana' && currentView === 'wall4') ||
-                      (showDeportesText && currentModel === 'cultura' && currentView === 'wall1') ||
-                      (showMusicaText && currentModel === 'cultura' && currentView === 'wall2') ||
-                      (showGaleriaText && currentModel === 'cultura' && currentView === 'wall3') ||
-                      (showBibliotecaText && currentModel === 'cultura' && currentView === 'wall4') ||
-                      (showCineText && currentModel === 'cultura' && currentView === 'wall5') ||
-                      (showIndicadoresText && currentModel === 'default' && currentView === 'wall1') ||
-                      (showNewsText && currentModel === 'default' && currentView === 'wall2')
-                    ) {
-                      // Determinar el título basado en el modelo y la vista actual
-                      let titulo = '';
-                      let contenido = '';
-                      
-                      if (currentModel === 'default' && currentView === 'wall1') {
-                        titulo = 'Indicadores';
-                        contenido = '/html/indicadores.html';
-                      } else if (currentModel === 'default' && currentView === 'wall2') {
-                        titulo = 'Artículos';
-                        contenido = '/html/listarticulos.html';
-                        openModal(contenido, titulo);
-                        return;
-                      } else if (currentModel === 'cultura') {
-                        switch (currentView) {
-                          case 'wall1':
-                            titulo = 'Deportes';
-                            break;
-                          case 'wall2':
-                            titulo = 'Música';
-                            break;
-                          case 'wall3':
-                            titulo = 'Galería';
-                            break;
-                          case 'wall4':
-                            titulo = 'Biblioteca';
-                            break;
-                          case 'wall5':
-                            titulo = 'Cine';
-                            break;
-                        }
-                      } else if (currentModel === 'guayana') {
-                        switch (currentView) {
-                          case 'wall1':
-                            titulo = 'Economía';
-                            break;
-                          case 'wall2':
-                            titulo = 'Nuestros Pueblos';
-                            break;
-                          case 'wall3':
-                            titulo = 'Turismo';
-                            break;
-                          case 'wall4':
-                            titulo = 'Proyectos';
-                            break;
-                          case 'wall5':
-                            titulo = 'Proyectos y Contaminación';
-                            break;
-                        }
-                      } else {
-                        titulo = 'Noticias Recientes';
+                    // Determinar el título basado en el modelo y la vista actual
+                    let titulo = '';
+                    let contenido = '';
+                    
+                    if (currentModel === 'default') {
+                      switch (currentView) {
+                        case 'wall1':
+                          titulo = 'Indicadores';
+                          contenido = '/html/indicadores.html';
+                          break;
+                        case 'wall2':
+                          titulo = 'Artículos';
+                          contenido = '/html/listarticulos.html';
+                          break;
                       }
-                      
-                      // Si es la galería y estamos en la pared 3 de cultura
-                      if (currentModel === 'cultura' && currentView === 'wall3') {
-                        setActiveModal({
-                          isOpen: true,
-                          content: '',
-                          title: 'Galería'
-                        });
-                      } else {
-                        openModal(contenido || '', titulo);
+                    } else if (currentModel === 'cultura') {
+                      switch (currentView) {
+                        case 'wall1':
+                          titulo = 'Deportes';
+                          contenido = '/html/deporte.html';
+                          break;
+                        case 'wall2':
+                          titulo = 'Música';
+                          contenido = '/html/musica.html';
+                          break;
+                        case 'wall3':
+                          setActiveModal({
+                            isOpen: true,
+                            content: '',
+                            title: 'Galería'
+                          });
+                          return;
+                        case 'wall4':
+                          titulo = 'Biblioteca';
+                          contenido = '/html/listalibrosyleyendas.html';
+                          break;
+                        case 'wall5':
+                          titulo = 'Cine';
+                          contenido = '/html/peliculas.html';
+                          break;
                       }
+                    } else if (currentModel === 'guayana') {
+                      switch (currentView) {
+                        case 'wall1':
+                          titulo = 'Economía';
+                          contenido = '/html/listaarticulosEconomia.html';
+                          break;
+                        case 'wall2':
+                          titulo = 'Nuestros Pueblos';
+                          contenido = '/html/indigenas.html';
+                          break;
+                        case 'wall3':
+                          titulo = 'Turismo';
+                          contenido = '/html/turismo.html';
+                          break;
+                        case 'wall4':
+                          titulo = 'Proyectos';
+                          contenido = '/html/proyectos.html';
+                          break;
+                        case 'wall5':
+                          titulo = 'Contaminación';
+                          contenido = '/html/listaarticulosContaminacion.html';
+                          break;
+                      }
+                    }
+                    
+                    if (contenido) {
+                      openModal(contenido, titulo);
                     }
                   }}
                   style={{

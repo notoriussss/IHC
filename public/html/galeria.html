@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galería Amazónica</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="common-modal-styles.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
@@ -39,7 +41,7 @@
         }
 
         .album-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgb(255, 255, 255);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -96,11 +98,19 @@
         .gallery-item {
             position: relative;
             overflow: hidden;
-            background: white;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: rgb(255, 255, 255);
+            padding: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             transform: rotate(-1deg);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 10px solid white;
+            box-shadow: 
+                0 2px 5px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(0,0,0,0.1);
         }
 
         .gallery-item:nth-child(2n) {
@@ -114,13 +124,29 @@
         .gallery-item:hover {
             transform: rotate(0) scale(1.03);
             z-index: 2;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(0,0,0,0.1);
         }
         
         .gallery-item img {
             width: 100%;
-            height: 280px;
+            height: 100%;
             object-fit: cover;
-            border: 1px solid #ddd;
+            border: none;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease;
+            min-width: 100%;
+            min-height: 100%;
+            max-width: none;
+            max-height: none;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
         }
         
         .gallery-item .overlay {
