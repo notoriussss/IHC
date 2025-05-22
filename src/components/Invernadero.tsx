@@ -241,57 +241,45 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
         shadow-mapSize={[2048, 2048]}
       />
       {hasReachedTarget && !effectiveShowMap && (
-        <Html
-          position={[0, 2, -2.5]}
-          center
-          style={{
-            width: '100vw',
-            height: '100vh',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            pointerEvents: 'all',
-            zIndex: 10,
-            transform: 'scale(120)'
-          }}
-          distanceFactor={0.05}
-          transform={false}
-          occlude={false}
-          onOcclude={(visible) => {
-            console.log('HTML visibility changed:', visible);
-          }}
+        <group 
+          position={[
+            showMap ? -100 : -0.4,
+            0.5,
+            -1
+          ]} 
+          rotation={[-0.08, 0, 0.0]}
         >
-          <div 
-            style={{ 
+          <Html
+            position={[0.5, 1.5, 1]} 
+            center
+            distanceFactor={2.3}
+            transform
+            occlude={false}
+            style={{
               width: '100%',
               height: '100%',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              pointerEvents: 'all',
+              transition: 'all 0.3s ease'
             }}
           >
-            <div 
-              style={{
-                width: '380px',
-                height: '600px',
-                padding: '20px',
-                borderRadius: '25px',
-                backdropFilter: 'blur(15px) saturate(150%)',
-                background: 'rgba(40, 40, 40, 0.85)',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.7)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f0f0f0',
-                fontFamily: 'Roboto, sans-serif',
-                transform: 'scale(1)'
-              }}
-            >
+            <div style={{
+              width: '600px',
+              height: 'auto',
+              padding: '20px',
+              borderRadius: '25px',
+              position: 'relative',
+              zIndex: 1
+            }}>
               <PlantCarousel 
                 showMap={effectiveShowMap} 
                 onReady={() => setIsCarouselReady(true)}
               />
             </div>
-          </div>
-        </Html>
+          </Html>
+        </group>
       )}
     </group>
   );
