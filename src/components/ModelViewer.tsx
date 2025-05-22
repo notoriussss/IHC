@@ -1160,7 +1160,7 @@ function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | '
             letterSpacing: '4px',
             textTransform: 'uppercase',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            zIndex: 1000,
+            zIndex: 100,
             pointerEvents: 'none',
             mixBlendMode: 'normal',
             opacity: 0.8
