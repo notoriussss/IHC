@@ -40,6 +40,10 @@ interface CameraState {
   rotZ: number;
 }
 
+interface InvernaderoRef {
+  moveToDefault: () => void;
+}
+
 interface CircularButtonProps {
   position: [number, number, number];
   onClick: () => void;
@@ -709,6 +713,7 @@ interface SceneProps {
   onViewChange: (view: string) => void;
   modelRef: React.RefObject<THREE.Group | null>;
   acuarioRef: React.RefObject<AcuarioModelHandles | null>;
+  invernaderoRef: React.RefObject<InvernaderoRef | null>;
   currentModel: string;
   showMap: boolean;
   onShowNews: (show: boolean) => void;
@@ -744,6 +749,7 @@ function Scene({
   onViewChange, 
   modelRef, 
   acuarioRef,
+  invernaderoRef,
   currentModel, 
   showMap,
   onShowNews,
@@ -946,7 +952,7 @@ function Scene({
       <OrbitControls 
         enablePan={true}
         enableZoom={true}
-        enableRotate={true}
+        enableRotate={currentModel === 'invernadero' || showControls}
         minDistance={1}
         maxDistance={20}
         target={[0, 0, 0]}
@@ -997,10 +1003,37 @@ function Scene({
         </group>
       ) : currentModel === 'invernadero' ? (
         <group>
-          <Invernadero 
-            ref={modelRef}
-            onViewChange={onViewChange}
-            showMap={showMap}
+          <Float
+            speed={1}
+            rotationIntensity={0}
+            floatIntensity={0}
+            floatingRange={[0, 0]}
+          >
+            <Invernadero 
+              ref={invernaderoRef}
+              onViewChange={onViewChange}
+              showMap={showMap}
+            />
+          </Float>
+          {/* Agregar luces adicionales para el invernadero */}
+          <spotLight
+            position={[5, 5, 5]}
+            angle={0.3}
+            penumbra={1}
+            intensity={1}
+            castShadow
+          />
+          <spotLight
+            position={[-5, 5, -5]}
+            angle={0.3}
+            penumbra={1}
+            intensity={1}
+            castShadow
+          />
+          <hemisphereLight
+            intensity={0.5}
+            groundColor={new THREE.Color('#080820')}
+            color={new THREE.Color('#ffffff')}
           />
         </group>
       ) : currentModel === 'cultura' ? (
@@ -1216,6 +1249,7 @@ function ModelViewer() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const modelRef = useRef<THREE.Group | null>(null);
   const acuarioRef = useRef<AcuarioModelHandles | null>(null);
+  const invernaderoRef = useRef<InvernaderoRef | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showTransitionUI, setShowTransitionUI] = useState(true);
   const [activeText, setActiveText] = useState<string | null>(null);
@@ -1929,11 +1963,11 @@ function ModelViewer() {
             setShowLobbyText(false);
           }, 2000);
         }, 1000);
-      } else if (newModel === 'invernadero' && modelRef.current) {
+      } else if (newModel === 'invernadero' && invernaderoRef.current) {
         clearInterval(checkModelLoaded);
         
         // Movemos la cámara a la posición default
-        (modelRef.current as any).moveToDefault();
+        invernaderoRef.current.moveToDefault();
         
         // Esperamos a que la cámara esté en posición
         setTimeout(() => {
@@ -2050,11 +2084,12 @@ function ModelViewer() {
           <Suspense fallback={null}>
             <ErrorBoundary onError={(error) => console.error(error)}>
               <Scene 
-                showControls={false} 
+                showControls={currentModel === 'invernadero'}
                 onCameraPositionChange={setCameraPosition}
                 onViewChange={handleViewChange}
                 modelRef={modelRef}
                 acuarioRef={acuarioRef}
+                invernaderoRef={invernaderoRef}
                 currentModel={currentModel}
                 showMap={showMap}
                 onShowNews={(show) => setShowNewsText(show)}

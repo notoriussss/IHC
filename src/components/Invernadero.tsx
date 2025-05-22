@@ -1,46 +1,22 @@
-import React, { useRef, useState, useEffect, forwardRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import React, { useRef, forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { useGLTF, Html, OrbitControls } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { GLTF } from 'three-stdlib';
 import PlantCarousel from './PlantCarousel';
 
-interface CircularButtonProps {
-  position: [number, number, number];
-  onClick: () => void;
-  label: string;
-}
-
-function CircularButton({ position, onClick, label }: CircularButtonProps) {
-  return (
-    <Html position={position} center>
-      <div
-        className="pulsing-button"
-        onClick={onClick}
-        style={{
-          width: '20px',
-          height: '20px',
-          borderRadius: '50%',
-          border: '1px solid white',
-          background: 'rgba(255, 255, 255, 0.2)',
-          cursor: 'pointer',
-          position: 'relative',
-          display: 'block',
-          animation: 'pulse 1.5s infinite',
-          zIndex: 1000
-        }}
-      />
-    </Html>
-  );
-}
-
 interface InvernaderoProps {
-  onViewChange: (view: string) => void;
+  onViewChange?: (view: string) => void;
   showMap?: boolean;
 }
 
-const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, showMap = false }, ref) => {
+export interface InvernaderoRef {
+  moveToDefault: () => void;
+}
+
+const Invernadero = forwardRef<InvernaderoRef, InvernaderoProps>(({ onViewChange, showMap = false }, ref) => {
   const [error, setError] = useState<string | null>(null);
-  const gltf = useGLTF('/dracoFlora/floraOBJ.glb');
+  const { scene } = useGLTF('/dracoFlora/floraOBJ.glb') as GLTF;
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [targetQuaternion, setTargetQuaternion] = useState<THREE.Quaternion | null>(null);
@@ -49,6 +25,7 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
   const [currentView, setCurrentView] = useState('default');
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [hasReachedTarget, setHasReachedTarget] = useState(false);
+  const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (targetPosition && targetQuaternion && currentPosition && currentQuaternion && camera instanceof THREE.PerspectiveCamera) {
@@ -92,7 +69,6 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
     }
   });
 
-  // Efecto para monitorear cambios en hasReachedTarget
   useEffect(() => {
     console.log('hasReachedTarget changed:', hasReachedTarget);
   }, [hasReachedTarget]);
@@ -112,20 +88,18 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
       setTargetPosition(newPosition);
       setTargetQuaternion(newQuaternion);
       setCurrentView('default');
-      onViewChange('default');
+      if (onViewChange) onViewChange('default');
     }
   };
 
-  useEffect(() => {
-    if (ref && 'current' in ref) {
-      (ref.current as any).moveToDefault = moveToDefault;
-    }
-  }, [ref, moveToDefault]);
+  useImperativeHandle(ref, () => ({
+    moveToDefault,
+  }));
 
   useEffect(() => {
     try {
-      if (ref && 'current' in ref && ref.current) {
-        ref.current.traverse((child) => {
+      if (groupRef.current) {
+        groupRef.current.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             const material = child.material as THREE.Material;
             if (material instanceof THREE.MeshStandardMaterial) {
@@ -140,15 +114,15 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
           }
         });
 
-        const box = new THREE.Box3().setFromObject(ref.current);
+        const box = new THREE.Box3().setFromObject(groupRef.current);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         
-        ref.current.position.sub(center);
+        groupRef.current.position.sub(center);
         
         const maxDim = Math.max(size.x, size.y, size.z);
         const scale = 2 / maxDim;
-        ref.current.scale.set(scale, scale, scale);
+        groupRef.current.scale.set(scale, scale, scale);
 
         if (camera instanceof THREE.PerspectiveCamera) {
           camera.position.set(0, 2, 5);
@@ -161,16 +135,16 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
     } catch (e) {
       setError(`Error processing model: ${e instanceof Error ? e.message : 'Unknown error'}`);
     }
-  }, [gltf, camera, ref]);
+  }, [scene, camera]);
 
   if (error) {
     return null;
   }
 
   return (
-    <group ref={ref}>
+    <group ref={groupRef}>
       <primitive 
-        object={gltf.scene} 
+        object={scene} 
         scale={1}
         position={[0, 0, 0]}
       />
@@ -231,13 +205,10 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
                 height: '600px',
                 padding: '20px',
                 borderRadius: '25px',
-                backdropFilter: 'blur(15px) saturate(150%)',
-                background: 'rgba(40, 40, 40, 0.85)',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.7)',
-                border: '1px solid rgba(255,255,255,0.1)',
+         
+               
                 color: '#f0f0f0',
                 fontFamily: 'Roboto, sans-serif',
-                transform: 'scale(1)'
               }}
             >
               <PlantCarousel showMap={showMap} />
