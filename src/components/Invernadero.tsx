@@ -40,11 +40,11 @@ function CircularButton({ position, onClick, label }: CircularButtonProps) {
 }
 
 interface InvernaderoProps {
-  onViewChange: (view: string) => void;
+  onViewChange?: (view: string) => void;
   showMap?: boolean;
 }
 
-const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, showMap = false }, ref) => {
+const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange = () => {}, showMap = false }, ref) => {
   const [error, setError] = useState<string | null>(null);
   const gltf = useGLTF('/dracoFlora/floraOBJ.glb');
   const { camera } = useThree();
