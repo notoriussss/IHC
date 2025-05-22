@@ -1,0 +1,60 @@
+{
+  "comments": [
+    {
+      "id": 1,
+      "postId": 3,
+      "content": "adssda",
+      "author": "hermano",
+      "date": "2025-05-16T15:50:37.353Z"
+    },
+    {
+      "id": 2,
+      "postId": 3,
+      "content": "adsdsa",
+      "author": "hermano",
+      "date": "2025-05-16T15:50:39.511Z"
+    },
+    {
+      "id": 3,
+      "postId": 3,
+      "content": "asddas",
+      "author": "hermano",
+      "date": "2025-05-16T15:50:40.332Z"
+    },
+    {
+      "id": 4,
+      "postId": 3,
+      "content": "dasdas",
+      "author": "hermano",
+      "date": "2025-05-16T15:52:10.966Z"
+    },
+    {
+      "id": 5,
+      "postId": 1,
+      "content": "dasads",
+      "author": "hermano",
+      "date": "2025-05-16T15:52:37.473Z"
+    },
+    {
+      "id": 1,
+      "postId": 2,
+      "content": "dassda",
+      "author": "hermano",
+      "date": "2025-05-16T15:52:43.688Z"
+    },
+    {
+      "id": 1,
+      "postId": 2,
+      "content": "que gran idea\n",
+      "author": "hermano",
+      "date": "2025-05-16T19:09:27.288Z"
+    },
+    {
+      "id": 2,
+      "postId": 2,
+      "content": "que hablas loco",
+      "author": "hermano",
+      "date": "2025-05-19T03:44:39.900Z"
+    }
+  ]
+}
