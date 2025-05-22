@@ -3,6 +3,9 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, Html, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import PlantCarousel from './PlantCarousel';
+import { motion } from 'framer-motion';
+import { TypingText } from './TypingText';
+import { modelStorage } from '../services/modelStorage';
 
 interface CircularButtonProps {
   position: [number, number, number];
@@ -40,6 +43,33 @@ interface InvernaderoProps {
 
 const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, showMap = false }, ref) => {
   const [error, setError] = useState<string | null>(null);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const [hasReachedTarget, setHasReachedTarget] = useState(false);
+  const [isCarouselReady, setIsCarouselReady] = useState(false);
+  const [isInitialMovementComplete, setIsInitialMovementComplete] = useState(false);
+
+  // Precargar el modelo
+  useEffect(() => {
+    const preloadModel = async () => {
+      try {
+        console.log('Iniciando precarga del modelo floraOBJ.glb...');
+        const hasCachedModel = await modelStorage.hasModel('/dracoFlora/floraOBJ.glb');
+        console.log('Modelo en caché:', hasCachedModel ? 'Sí' : 'No');
+        
+        if (!hasCachedModel) {
+          await modelStorage.downloadModel('/dracoFlora/floraOBJ.glb', (progress) => {
+            console.log(`Progreso de descarga: ${progress.toFixed(2)}%`);
+          });
+          console.log('Modelo floraOBJ.glb precargado exitosamente');
+        }
+      } catch (error) {
+        console.error('Error al precargar modelo floraOBJ.glb:', error);
+      }
+    };
+
+    preloadModel();
+  }, []);
+
   const gltf = useGLTF('/dracoFlora/floraOBJ.glb');
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
@@ -47,10 +77,6 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
   const [currentPosition, setCurrentPosition] = useState<THREE.Vector3 | null>(null);
   const [currentQuaternion, setCurrentQuaternion] = useState<THREE.Quaternion | null>(null);
   const [currentView, setCurrentView] = useState('default');
-  const [isModelLoaded, setIsModelLoaded] = useState(false);
-  const [hasReachedTarget, setHasReachedTarget] = useState(false);
-  const [isCarouselReady, setIsCarouselReady] = useState(false);
-  const [isInitialMovementComplete, setIsInitialMovementComplete] = useState(false);
 
   useFrame(() => {
     if (targetPosition && targetQuaternion && currentPosition && currentQuaternion && camera instanceof THREE.PerspectiveCamera) {

@@ -24,9 +24,13 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragThreshold] = useState(30); // Umbral mínimo para considerar un arrastre
+  const dataLoadedRef = useRef(false);
 
   useEffect(() => {
     const loadData = async () => {
+      // Si ya se cargaron los datos, no volver a cargar
+      if (dataLoadedRef.current) return;
+      
       try {
         console.log('Iniciando carga de datos...');
         const response = await fetch('/data/flores.json');
@@ -38,22 +42,32 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady 
         if (data.flores && Array.isArray(data.flores)) {
           setFlores(data.flores);
           setIsLoading(false);
+          dataLoadedRef.current = true;
           onReady?.();
           console.log('Flores cargadas:', data.flores.length);
         } else {
           console.error('Formato de datos inválido:', data);
           setIsLoading(false);
+          dataLoadedRef.current = true;
           onReady?.();
         }
       } catch (error) {
         console.error('Error al cargar los datos:', error);
         setIsLoading(false);
+        dataLoadedRef.current = true;
         onReady?.();
       }
     };
 
     loadData();
   }, [onReady]);
+
+  // Resetear la bandera cuando el componente se desmonte
+  useEffect(() => {
+    return () => {
+      dataLoadedRef.current = false;
+    };
+  }, []);
 
   // Efecto para loguear la posición del carrusel
   useEffect(() => {
