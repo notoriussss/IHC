@@ -997,18 +997,11 @@ function Scene({
         </group>
       ) : currentModel === 'invernadero' ? (
         <group>
-          <Float
-            speed={1}
-            rotationIntensity={0}
-            floatIntensity={0}
-            floatingRange={[0, 0]}
-          >
-            <Invernadero 
-              ref={modelRef}
-              onViewChange={onViewChange}
-              showMap={showMap}
-            />
-          </Float>
+          <Invernadero 
+            ref={modelRef}
+            onViewChange={onViewChange}
+            showMap={showMap}
+          />
         </group>
       ) : currentModel === 'cultura' ? (
         <CulturaModel
@@ -1167,8 +1160,10 @@ function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | '
             letterSpacing: '4px',
             textTransform: 'uppercase',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            zIndex: 2147483647,
+            zIndex: 1000,
             pointerEvents: 'none',
+            mixBlendMode: 'normal',
+            opacity: 0.8
           }}
         >
           {model === 'invernadero' ? 'INVERNADERO' : 'ACUARIO'}

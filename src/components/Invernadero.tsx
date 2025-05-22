@@ -11,29 +11,6 @@ interface CircularButtonProps {
   label: string;
 }
 
-function CircularButton({ position, onClick, label }: CircularButtonProps) {
-  return (
-    <Html position={position} center>
-      <div
-        className="pulsing-button"
-        onClick={onClick}
-        style={{
-          width: '20px',
-          height: '20px',
-          borderRadius: '50%',
-          border: '1px solid white',
-          background: 'rgba(255, 255, 255, 0.2)',
-          cursor: 'pointer',
-          position: 'relative',
-          display: 'block',
-          animation: 'pulse 1.5s infinite',
-          zIndex: 1000
-        }}
-      />
-    </Html>
-  );
-}
-
 interface InvernaderoProps {
   onViewChange: (view: string) => void;
   showMap?: boolean;
@@ -245,7 +222,6 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange, s
             top: 0,
             left: 0,
             pointerEvents: 'all',
-            zIndex: 10,
             transform: 'scale(120)'
           }}
           distanceFactor={0.05}
