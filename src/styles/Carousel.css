@@ -10,6 +10,8 @@
   position: relative;
   perspective: 1000px;
   background: transparent;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .carousel {
@@ -21,6 +23,7 @@
   min-height: 600px;
   transform-style: preserve-3d;
   background: transparent;
+  will-change: transform;
 }
 
 .modal-container {
@@ -46,6 +49,7 @@
   visibility: hidden;
   display: flex;
   flex-direction: column;
+  will-change: transform, opacity;
 }
 
 .modal-container.active {

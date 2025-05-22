@@ -40,8 +40,10 @@ interface CameraState {
   rotZ: number;
 }
 
-interface InvernaderoRef {
+interface InvernaderoRef extends THREE.Group {
   moveToDefault: () => void;
+  isLoading?: boolean;
+  isLoadingState?: boolean;
 }
 
 interface CircularButtonProps {
@@ -1193,10 +1195,8 @@ function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | '
             letterSpacing: '4px',
             textTransform: 'uppercase',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            zIndex: 100,
+            zIndex: 2147483647,
             pointerEvents: 'none',
-            mixBlendMode: 'normal',
-            opacity: 0.8
           }}
         >
           {model === 'invernadero' ? 'INVERNADERO' : 'ACUARIO'}

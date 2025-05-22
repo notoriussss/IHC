@@ -190,7 +190,10 @@ const AnimalCarousel = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(({
       style={{ 
         width: '100%', 
         maxWidth: '600px',
-        padding: '20px'
+        padding: '20px',
+        transform: 'scale(1)',
+        transformOrigin: 'center center',
+        transition: 'transform 0.3s ease-out'
       }}
     >
       <div className="carousel">
@@ -213,7 +216,8 @@ const AnimalCarousel = forwardRef<AnimalCarouselHandles, AnimalCarouselProps>(({
                 padding: '20px',
                 width: '450px',
                 boxShadow: '0 10px 40px rgba(0,0,0,0.7)',
-                border: '1px solid rgba(255,255,255,0.1)'
+                border: '1px solid rgba(255,255,255,0.1)',
+                transformOrigin: 'center center'
               }}
               onClick={() => moveToCenter(index)}
             >
