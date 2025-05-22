@@ -24,7 +24,6 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragThreshold] = useState(30); // Umbral mínimo para considerar un arrastre
-  const initialSizeRef = useRef<{ width: number; height: number } | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -103,23 +102,6 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady 
       };
     }
   }, [activeIndex, isLoading]);
-
-  // Efecto para guardar y mantener el tamaño inicial
-  useEffect(() => {
-    if (carouselRef.current && !isLoading) {
-      const rect = carouselRef.current.getBoundingClientRect();
-      if (!initialSizeRef.current) {
-        initialSizeRef.current = {
-          width: rect.width,
-          height: rect.height
-        };
-      }
-
-      // Forzar el tamaño inicial
-      carouselRef.current.style.width = `${initialSizeRef.current.width}px`;
-      carouselRef.current.style.height = `${initialSizeRef.current.height}px`;
-    }
-  }, [isLoading]);
 
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent, index: number) => {
     if (isAnimating || isLoading) return;
@@ -221,12 +203,6 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady 
       className="carousel-container" 
       ref={carouselRef}
       onWheel={handleWheel}
-      style={{
-        width: initialSizeRef.current?.width ? `${initialSizeRef.current.width}px` : 'auto',
-        height: initialSizeRef.current?.height ? `${initialSizeRef.current.height}px` : 'auto',
-        transform: 'scale(1)',
-        transformOrigin: 'center center'
-      }}
     >
       <div className="carousel">
         {flores.map((flor, index) => {
@@ -242,8 +218,7 @@ const PlantCarousel: React.FC<PlantCarouselProps> = ({ showMap = false, onReady 
               style={{
                 visibility: isVisible ? 'visible' : 'hidden',
                 opacity: isActive ? 1 : 0.6,
-                cursor: 'pointer',
-                transformOrigin: 'center center'
+                cursor: 'pointer'
               }}
               onMouseDown={(e) => handleDragStart(e, index)}
               onMouseUp={(e) => handleDragEnd(e, index)}
