@@ -1,0 +1,29 @@
+[
+    {
+      "nombre": "Canotaje y Kayak",
+      "descripcion": "Actividad que consiste en navegar por ríos y caños usando canoas o kayaks. Se practica en el río Caroní, Parque Nacional Canaima y río Caura, ideal para el turismo de aventura y ecoturismo.",
+      "imagen": "https://i0.wp.com/mundour.com/wp-content/uploads/2024/03/El-kayak-turismo-acuatico-en-Guayana.png"
+    },
+    {
+      "nombre": "Rafting",
+      "descripcion": "Deporte extremo en aguas rápidas, usando balsas inflables. Se practica principalmente en los ríos del Parque Nacional Canaima como el Carrao y el Churún.",
+      "imagen": "https://www.venezuelatuya.com/actividades/fotos/00/20/gradosaltaventura001.jpg"
+    },
+    {
+      "nombre": "Natación en ríos",
+      "descripcion": "Actividad recreativa o deportiva que se realiza en aguas abiertas de ríos como el Caroní, Orinoco y zonas turísticas como El Playón y Cachamay en Ciudad Guayana.",
+      "imagen": "https://www.mppt.gob.ve/wp-content/uploads/2017/04/Foto-2-Paso-a-Nado-1-1024x638.jpg"
+    },
+    {
+      "nombre": "Pesca deportiva",
+      "descripcion": "Consiste en capturar peces por deporte o recreación, generalmente con devolución. Se practica en el río Orinoco, río Caura y el delta del Orinoco, con especies como pavón y payara.",
+      "imagen": "https://i.ytimg.com/vi/x-YKqKVpazs/sddefault.jpg"
+      
+    },
+    {
+      "nombre": "Paseos en curiaras",
+      "descripcion": "Actividad cultural y turística que consiste en navegar en embarcaciones indígenas por ríos y caños. Común en Canaima (hasta el Salto Ángel) y en el Delta del Orinoco.",
+      "imagen": "https://elparaiso.co/es/wp-content/uploads/2023/11/finca-el-paraiso-yopal-casanare-colombia-turismo-aventura-tradicion-plan-pasadia-navegar-curiara-cano-aguas-llanos-pareja-HD-1.jpg"
+    }
+  ]
+  

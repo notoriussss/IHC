@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etnias Indígenas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="common-modal-styles.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a4c7e 0%, #3498db 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(52, 152, 219, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(26, 76, 126, 0.25) 0%, transparent 60%);
+            animation: pulse 20s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 35px 35px;
+            animation: gridMove 30s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes gridMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 35px 35px;
+            }
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -3;
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at center, 
+                rgba(52, 152, 219, 0.2) 0%, 
+                rgba(26, 76, 126, 0.2) 30%, 
+                transparent 60%);
+            animation: rotate 40s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .element {
+            position: absolute;
+            width: 35px;
+            height: 45px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            clip-path: path('M15 0C15 0 30 20 30 30C30 35.5228 23.2843 40 15 40C6.71573 40 0 35.5228 0 30C0 20 15 0 15 0Z');
+            animation: rainDrop 10s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
+        }
+
+        @keyframes rainDrop {
+            0% {
+                transform: translateY(-100px) translateX(0) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+                transform: translateY(0) translateX(15px) scale(0.5);
+            }
+            50% {
+                transform: translateY(300px) translateX(-15px) scale(0.8);
+            }
+            90% {
+                opacity: 0.8;
+                transform: translateY(600px) translateX(15px) scale(0.6);
+            }
+            100% {
+                transform: translateY(800px) translateX(0) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        .floating-elements .element:nth-child(odd) {
+            animation-duration: 12s;
+        }
+
+        .floating-elements .element:nth-child(even) {
+            animation-duration: 8s;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 280px);
+            gap: 25px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            height: 380px;
+            margin: 0 auto;
+            perspective: 1000px;
+            border-radius: 15px;
+            background: transparent;
+            overflow: visible;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            border-radius: 15px;
+            overflow: visible;
+        }
+
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+        }
+
+        .card-front {
+            background: transparent;
+            z-index: 2;
+            overflow: hidden;
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            background: rgba(255, 255, 255, 0.95);
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .card-image {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .card-front img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .etnia-titulo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom, 
+                rgba(0, 0, 0, 0.98) 0%, 
+                rgba(0, 0, 0, 0.95) 10%, 
+                rgba(0, 0, 0, 0.9) 20%, 
+                rgba(0, 0, 0, 0.8) 35%,
+                rgba(0, 0, 0, 0.6) 50%,
+                rgba(0, 0, 0, 0.4) 65%,
+                rgba(0, 0, 0, 0.2) 80%,
+                rgba(0, 0, 0, 0.1) 90%,
+                rgba(0, 0, 0, 0) 100%);
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            text-align: left;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .etnia-nombre {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a4c7e;
+            margin: 0 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(25, 25, 112, 0.2);
+        }
+
+        .etnia-info {
+            color: #0c2d4a;
+            font-size: 15px;
+            line-height: 1.6;
+            text-align: justify;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .etnia-info::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .etnia-info::-webkit-scrollbar-track {
+            background: rgba(25, 25, 112, 0.1);
+            border-radius: 3px;
+        }
+
+        .etnia-info::-webkit-scrollbar-thumb {
+            background: rgba(25, 25, 112, 0.3);
+            border-radius: 3px;
+        }
+
+        .etnia-info::-webkit-scrollbar-thumb:hover {
+            background: rgba(25, 25, 112, 0.5);
+        }
+
+        .etnia-ubicacion {
+            font-weight: 500;
+            color: #6b4423;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .etnia-poblacion {
+            font-weight: 500;
+            color: #6b4423;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: repeat(2, 280px);
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: repeat(1, 280px);
+                gap: 20px;
+                padding: 15px;
+            }
+
+            .card {
+                height: 360px;
+            }
+
+            .card-image {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+            }
+
+            .etnia-titulo {
+                font-size: 20px;
+                padding: 15px;
+            }
+
+            .etnia-nombre {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+
+            .etnia-info {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .titulo-principal {
+                font-size: 28px;
+                margin: 20px auto 30px;
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="floating-elements">
+        <div class="element" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="element" style="left: 20%; animation-delay: 1.5s;"></div>
+        <div class="element" style="left: 30%; animation-delay: 3s;"></div>
+        <div class="element" style="left: 40%; animation-delay: 4.5s;"></div>
+        <div class="element" style="left: 50%; animation-delay: 6s;"></div>
+        <div class="element" style="left: 60%; animation-delay: 7.5s;"></div>
+        <div class="element" style="left: 70%; animation-delay: 9s;"></div>
+        <div class="element" style="left: 80%; animation-delay: 10.5s;"></div>
+        <div class="element" style="left: 90%; animation-delay: 12s;"></div>
+    </div>
+    <div class="container" id="etnias-container"></div>
+
+    <script>
+        function loadEtnias() {
+            fetch('../data/indigenas.json')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('etnias-container');
+                    data.forEach(etnia => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        
+                        const img = new Image();
+                        img.src = etnia.imagen || './img/placeholder-etnia.jpg';
+                        img.onload = function() {
+                            card.innerHTML = `
+                                <div class="card-inner">
+                                    <div class="card-front">
+                                        <img src="${etnia.imagen || './img/placeholder-etnia.jpg'}" 
+                                             alt="${etnia.etnia}" 
+                                             class="card-image"
+                                             style="width: 100%; height: 100%; object-fit: cover; object-position: center; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 0; padding: 0;">
+                                        <div class="etnia-titulo">${etnia.etnia}</div>
+                                    </div>
+                                    <div class="card-back">
+                                        <div class="etnia-nombre">${etnia.etnia}</div>
+                                        <div class="etnia-info">${etnia.relacion}</div>
+                                    </div>
+                                </div>
+                            `;
+                        };
+                        
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar los datos:', error);
+                    document.getElementById('etnias-container').innerHTML = 
+                        '<p style="color: #ffffff;">Error al cargar la información de las etnias.</p>';
+                });
+        }
+
+        window.onload = loadEtnias;
+    </script>
+</body>
+</html>

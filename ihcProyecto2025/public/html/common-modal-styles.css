@@ -1,0 +1,60 @@
+/* Estilos comunes para todos los HTMLs que se cargan en modales */
+body {
+    background: white !important; /* Fondo blanco consistente */
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100vh !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Eliminar cualquier fondo o decoración anterior */
+body::before,
+body::after {
+    display: none !important;
+}
+
+/* Ajustar el contenedor principal */
+.container,
+.main,
+.lista,
+.album-container,
+.waves-container,
+.floating-elements,
+.floating-notes {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Ajustar cualquier elemento con fondo personalizado */
+.modal-content,
+.card,
+.box,
+.article-card,
+.book-card {
+    background: white !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Mantener los estilos de texto y otros elementos */
+h1, h2, h3, h4, h5, h6, p, span, a {
+    color: inherit !important;
+}
+
+/* Ajustar imágenes y elementos multimedia */
+img, video, iframe {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Ajustar el fondo del modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+/* Ajustar el contenido del modal */
+.modal-content {
+    background-color: white !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+} 

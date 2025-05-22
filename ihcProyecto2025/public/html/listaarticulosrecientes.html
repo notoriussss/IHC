@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículos Recientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8edf3 0%, #c5d1e1 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, transparent 20%, #c5d1e1 80%);
+            opacity: 0.85;
+            z-index: -2;
+            animation: rotate 45s linear infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.2) 0px,
+                rgba(255, 255, 255, 0.2) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .articles-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .article-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .article-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: auto;
+        }
+
+        .article-date {
+            font-weight: 500;
+        }
+
+        .article-source {
+            font-style: italic;
+        }
+
+        .read-more {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #007AFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .read-more:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="articles-container" id="articlesContainer">
+        <!-- Los artículos se cargarán dinámicamente aquí -->
+    </div>
+
+    <script>
+        async function loadArticles() {
+            try {
+                const response = await fetch('/data/articulos.json');
+                const articles = await response.json();
+                
+                // Ordenar artículos por fecha (más recientes primero)
+                articles.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                
+                // Tomar solo los 3 más recientes
+                const recentArticles = articles.slice(0, 3);
+                
+                const container = document.getElementById('articlesContainer');
+                
+                recentArticles.forEach(article => {
+                    const articleCard = document.createElement('div');
+                    articleCard.className = 'article-card';
+                    
+                    articleCard.innerHTML = `
+                        <img src="${article.imagen}" alt="${article.titulo}" class="article-image">
+                        <div class="article-content">
+                            <h2 class="article-title">${article.titulo}</h2>
+                            <p class="article-description">${article.descripcion}</p>
+                            <div class="article-meta">
+                                <span class="article-date">${article.fecha}</span>
+                                <span class="article-source">${article.fuente}</span>
+                            </div>
+                            <a href="${article.url}" target="_blank" class="read-more">Leer más</a>
+                        </div>
+                    `;
+                    
+                    container.appendChild(articleCard);
+                });
+            } catch (error) {
+                console.error('Error al cargar los artículos:', error);
+            }
+        }
+
+        // Cargar los artículos cuando la página se cargue
+        window.onload = loadArticles;
+    </script>
+</body>
+</html> 

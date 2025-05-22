@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turismo en Venezuela</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 20px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            color: #1e293b;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .card-location {
+            color: #64748b;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .card-location svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .card-description {
+            color: #475569;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #ef4444;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <main class="cards-grid" id="turisticSites">
+            <!-- Las tarjetas se cargarán dinámicamente aquí -->
+        </main>
+    </div>
+
+    <script>
+        // Función para cargar los datos del JSON
+        async function cargarDatos() {
+            try {
+                const respuesta = await fetch('../data/turismo.json');
+                if (!respuesta.ok) {
+                    throw new Error('No se pudo cargar la información');
+                }
+                const datos = await respuesta.json();
+                mostrarTarjetas(datos);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('turisticSites').innerHTML = `
+                    <div style="text-align: center; color: #ef4444; padding: 20px;">
+                        Error al cargar los datos. Por favor, intenta nuevamente.
+                    </div>
+                `;
+            }
+        }
+
+        // Función para mostrar las tarjetas
+        function mostrarTarjetas(sitios) {
+            const contenedor = document.getElementById('turisticSites');
+            
+            if (!sitios || sitios.length === 0) {
+                contenedor.innerHTML = `
+                    <div style="text-align: center; color: #64748b; padding: 20px;">
+                        No hay sitios turísticos para mostrar.
+                    </div>
+                `;
+                return;
+            }
+
+            contenedor.innerHTML = sitios.map(sitio => `
+                <article class="card">
+                    <img 
+                        src="${sitio.imagen}" 
+                        alt="${sitio.nombre}"
+                        class="card-image"
+                        onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+no+disponible'"
+                    >
+                    <div class="card-content">
+                        <h2 class="card-title">${sitio.nombre}</h2>
+                        <p class="card-location">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                                <circle cx="12" cy="9" r="2.5"/>
+                            </svg>
+                            ${sitio.ubicacion}
+                        </p>
+                        <p class="card-description">${sitio.descripcion}</p>
+                        <div class="card-tags">
+                            ${sitio.actividades.map(actividad => 
+                                `<span class="tag">${actividad}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Cargar los datos cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+    </script>
+</body>
+</html>

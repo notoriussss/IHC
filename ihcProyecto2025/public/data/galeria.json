@@ -1,0 +1,188 @@
+{
+    "Contaminacion":[
+        {
+            "titulos": "Minería ilegal",
+            "imagen": "https://correodelcaroni.com/wp-content/uploads/2021/01/Mineria-5.jpg"
+        },
+        {
+            "titulos": "Contaminación mercurial",
+            "imagen": "https://cronica.uno/wp-content/uploads/2021/05/orinoco-contaminacion-1024x683.jpg"
+        },
+        {
+            "titulos": "Bauxita intoxica el Orinoco",
+            "imagen": "https://cdn2.opendemocracy.net/media/images/MG1_9069.width-1025.jpg"
+        },
+        {
+            "titulos": "Desecho Corrosivo",
+            "imagen": "https://cdn2.opendemocracy.net/media/images/MG1_9105.width-1025.jpg"
+        },
+        {
+            "titulos": "Río Orinoco Bauxita",
+            "imagen": "https://media.elobservador.com.uy/p/b26564734c71363ad886c129f6017f33/adjuntos/362/imagenes/100/080/0100080010/1000x0/smart/1698170960080webp.webp"
+        }
+    ],
+    "Indigenas":[
+        {
+            "titulos": "Waraos",
+            "imagen": "https://waraosamazonicos.com/wp-content/uploads/2021/08/Artesanias-de-los-indigenas-Waraos.jpg"
+        },
+        {
+            "titulos": "Waraos en Canoa",
+            "imagen": "https://www.raisg.org/wp-content/uploads/2020/06/CYDHCMN6DNHD5M73WF3GYLK4ZY.jpg"
+        },
+        {
+            "titulos": "Yanomami",
+            "imagen": "https://imagenes.elpais.com/resizer/v2/ZI3CMNSMKFDWDFYGB3L7T23WKM.jpg?auth=2c392b4c746e85798db0cc30382f3cd3784c8d4c9b56e1e164107cc50e6b85cd&width=1960&height=1470&smart=true"
+        },
+        {
+            "titulos": "Muchacha Pemon Pescando",
+            "imagen": "https://pbs.twimg.com/media/E6v-6RDWUAIt6uZ?format=jpg&name=900x900"
+        },
+        {
+            "titulos": "Vivienda Warao",
+            "imagen": "https://pueblosindigenas.es/wp-content/uploads/2019/10/vivienda-de-waraos.jpg"
+        },
+        {
+            "titulos": "Niños Piaro en el agua",
+            "imagen": "https://www.albasud.org/news/840.1452715573.jpg"
+        }
+    ],
+    "Economia":[
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        }
+    ],
+    "Turismo":[
+        {
+            "titulos": "Quebrada de Jaspe",
+            "imagen": "https://haimaneltroudi.com/wp-content/uploads/2023/05/quebrada-de-jaspe-twitter-5.jpeg"
+        },
+        {
+            "titulos": "El Salto Ángel",
+            "imagen": "https://www.hola.com/horizon/landscape/4430a9c300da-salto-del-angel-canaima-venezuela-t.jpg"
+        },
+        {
+            "titulos": "Camino de Piedras",
+            "imagen": "https://i.pinimg.com/736x/22/3e/f4/223ef43091c1f7f6508698c6f19bcffb.jpg"
+        },
+        {
+            "titulos": "Parque la llovizna",
+            "imagen": "https://i.pinimg.com/736x/57/0e/e2/570ee2e92993036a29828dd4c595963b.jpg"
+        },
+        {
+            "titulos": "Parque Mariusa",
+            "imagen": "https://i.pinimg.com/736x/91/5b/90/915b90d9a6b97e5c05cacc69b6a62c3b.jpg"
+        },
+        {
+            "titulos": "Parque Nacional Canaima",
+            "imagen": "https://i.pinimg.com/736x/11/34/f4/1134f437800eb5092a945b70b4e34746.jpg"
+        },
+        {
+            "titulos": "Paseo malecon manamo",
+            "imagen": "https://images.hive.blog/0x0/https://cdn.steemitimages.com/DQmUzGU1B5YaTfVY2R5rBe1f9AsaesZ7otoxvobRHpjaErZ/P1010862.JPG"
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        },
+        {
+            "titulos": "",
+            "imagen": ""
+        }
+    ],
+    "Flora":[
+        {
+            "titulos": "Lotus",
+            "imagen": "https://i.pinimg.com/736x/a2/47/dc/a247dc7c1ab02f8dec7c5a51c498c787.jpg"
+        },
+        {
+            "titulos": "Nenufar Amazònico",
+            "imagen": "https://i.pinimg.com/736x/7d/da/4a/7dda4a5db8e2c7420186ad881ac9384c.jpg"
+        },
+        {
+            "titulos": "Victoria Regia",
+            "imagen": "https://i.pinimg.com/736x/6b/59/47/6b5947aa2fb6e483af6ff7e2907acaa4.jpg"
+        },
+        {
+            "titulos": "Bromelia",
+            "imagen": "https://content.elmueble.com/medio/2024/05/13/consejos-para-cuidar-la-bromelia-una-planta-con-flor-muy-bonita-para-interiores_8291fee5_240513150000_900x900.jpg"
+        },
+        {
+            "titulos": "Flor de maraca",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Zingiber_spectabile-IMG_0799.JPG/800px-Zingiber_spectabile-IMG_0799.JPG"
+        }
+    ],
+    "Fauna":[
+        {
+            "titulos": "Pez bagre",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Phractocephalus_hemioliopterus_2012_G1.jpg/1920px-Phractocephalus_hemioliopterus_2012_G1.jpg"
+        },
+        {
+            "titulos": "Raya motoro",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Pfauenaugen-Stechrochen_-_Ocellate_river_stingray_-_Potamotrygon_motoro.jpg"
+        },
+        {
+            "titulos": "Pez oscar",
+            "imagen": "https://acuarioadictos.com/wp-content/upps/2012/03/Astronotus-Ocellatus-03.jpg"
+        },
+        {
+            "titulos": "Pez gato esmeralda",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/8/8b/Brochis_splendens_im_Aquarium.jpg"
+        },
+        {
+            "titulos": "Pez disco",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Blue_Discus.jpg/1024px-Blue_Discus.jpg"
+        },
+        {
+            "titulos": "Pez hoja del Amazonas",
+            "imagen": "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/5KNZWIPT5JAVDAVFYN5YCR32SE.jpg"
+        },
+        {
+            "titulos": "Bagre candirú",
+            "imagen": "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/YRVWZPOZIBGGNPPFPO3PAC6L5M.jpg"
+        },
+        {
+            "titulos": "Piraña de vientre rojo",
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Gregory_Moine_-_Red_bellied_Piranha_%28by%29.jpg/1280px-Gregory_Moine_-_Red_bellied_Piranha_%28by%29.jpg"
+        }
+    ],
+    "Deportes":[
+        {
+            "titulos": "Kayak",
+            "imagen": "https://veronikasadventure.com/wp-content/uploads/2024/02/kayak-adventure-in-the-second-largest-swamp-of-trinidad-and-tobago.jpg"
+        },
+        {
+            "titulos": "Pesca",
+            "imagen": "https://i0.wp.com/mundour.com/wp-content/uploads/2024/04/pesca-deportiva.jpeg"
+        },
+        {
+            "titulos": "Kayak 2",
+            "imagen": "https://ecoglobalexpeditions.com/wp-content/uploads/2017/01/llanos-orientales-y-orinoquia-ecoturismocolombia.jpg"
+        }
+    ]
+}
