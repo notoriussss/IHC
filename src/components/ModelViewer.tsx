@@ -1262,48 +1262,50 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
 
   const { progress } = useProgress();
 
-  // Efecto para precargar todos los modelos al iniciar
+  // Modificar el efecto para cargar solo el modelo actual
   useEffect(() => {
-    const preloadAllModels = async () => {
+    const loadCurrentModel = async () => {
       try {
         setIsPreloading(true);
-        await modelStorage.preloadAllModels((progress) => {
-          setPreloadProgress(progress);
-        });
+        const modelUrl = getModelUrl(currentModel);
+        
+        // Intentar cargar desde caché
+        const cachedModel = await modelStorage.getModel(modelUrl);
+        
+        if (!cachedModel) {
+          console.log(`Descargando modelo ${modelUrl} para la sección ${currentModel}`);
+          // Si no está en caché, descargar y guardar
+          await modelStorage.downloadModel(modelUrl, (progress) => {
+            setPreloadProgress(progress);
+            console.log(`Progreso de descarga de ${modelUrl}: ${progress.toFixed(2)}%`);
+          });
+          console.log(`Modelo ${modelUrl} descargado y guardado en caché`);
+        } else {
+          console.log(`Modelo ${modelUrl} cargado desde caché`);
+          setPreloadProgress(100);
+        }
+        
         setIsPreloading(false);
       } catch (error) {
-        console.error('Error al precargar modelos:', error);
+        console.error(`Error al cargar el modelo para ${currentModel}:`, error);
         setIsPreloading(false);
       }
     };
 
-    preloadAllModels();
-  }, []);
+    loadCurrentModel();
+  }, [currentModel]);
 
-  // Efecto para cargar modelos desde IndexedDB al iniciar
-  useEffect(() => {
-    const loadModelsFromIndexedDB = async () => {
-      try {
-        const defaultModel = await getModel('default');
-        const guayanaModel = await getModel('guayana');
-        const invernaderoModel = await getModel('invernadero');
-        const culturaModel = await getModel('cultura');
-        const acuarioModel = await getModel('acuario');
-
-        console.log('Modelos cargados desde IndexedDB:', {
-          default: defaultModel,
-          guayana: guayanaModel,
-          invernadero: invernaderoModel,
-          cultura: culturaModel,
-          acuario: acuarioModel
-        });
-      } catch (error) {
-        console.error('Error al cargar modelos desde IndexedDB:', error);
-      }
-    };
-
-    loadModelsFromIndexedDB();
-  }, []);
+  // Función auxiliar para obtener la URL del modelo
+  const getModelUrl = (model: ModelType): string => {
+    switch (model) {
+      case 'default': return '/dracoFlora/proyecto.glb';
+      case 'guayana': return '/dracoFlora/regGuayana.glb';
+      case 'invernadero': return '/dracoFlora/floraOBJ.glb';
+      case 'cultura': return '/dracoFlora/cultura.glb';
+      case 'acuario': return '/dracoFlora/acuario-final.glb';
+      default: return '/dracoFlora/proyecto.glb';
+    }
+  };
 
   useEffect(() => {
     if (progress === 100) {

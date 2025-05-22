@@ -87,9 +87,10 @@ class ModelStorage {
     try {
       const db = await this.getDB();
       await db.put('models', modelData, url);
-      console.log('Modelo guardado en caché:', url);
+      console.log(`Modelo ${url} guardado en caché`);
     } catch (error) {
-      console.error('Error al guardar modelo en caché:', url, error);
+      console.error(`Error al guardar modelo ${url} en caché:`, error);
+      throw error;
     }
   }
 
@@ -98,11 +99,11 @@ class ModelStorage {
       const db = await this.getDB();
       const model = await db.get('models', url);
       if (model) {
-        console.log('Modelo recuperado de caché:', url);
+        console.log(`Modelo ${url} recuperado de caché`);
       }
       return model || null;
     } catch (error) {
-      console.error('Error al recuperar modelo de caché:', url, error);
+      console.error(`Error al recuperar modelo ${url} de caché:`, error);
       return null;
     }
   }
@@ -138,13 +139,15 @@ class ModelStorage {
       // Verificar si el modelo está en caché
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
+        console.log(`Modelo ${url} encontrado en caché`);
         if (onProgress) onProgress(100);
         return cachedModel;
       }
 
+      console.log(`Iniciando descarga de ${url}`);
       // Si no está en caché, descargar el modelo
       const response = await fetch(url, {
-        cache: 'no-store', // Evitar problemas de caché
+        cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache'
@@ -180,10 +183,6 @@ class ModelStorage {
         if (onProgress) {
           onProgress(progress);
         }
-
-        // Actualizar la información de descarga
-        const modelId = this.getModelIdFromUrl(url);
-        await this.updateDownloadProgress(modelId, receivedLength, contentLength);
       }
 
       // Guardar el modelo en caché
@@ -192,19 +191,19 @@ class ModelStorage {
       
       try {
         await this.saveModel(url, arrayBuffer);
+        console.log(`Modelo ${url} guardado en caché`);
       } catch (error) {
-        console.warn('No se pudo guardar el modelo en caché:', error);
-        // Continuar aunque falle el guardado en caché
+        console.warn(`No se pudo guardar el modelo ${url} en caché:`, error);
       }
 
       return arrayBuffer;
 
     } catch (error) {
-      console.error('Error al descargar el modelo:', error);
+      console.error(`Error al descargar el modelo ${url}:`, error);
       // Intentar recuperar de caché como último recurso
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
-        console.log('Recuperando modelo de caché después de error:', url);
+        console.log(`Recuperando modelo ${url} de caché después de error`);
         if (onProgress) onProgress(100);
         return cachedModel;
       }
