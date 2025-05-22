@@ -1149,7 +1149,7 @@ function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | '
             ease: [0.25, 0.8, 0.25, 1]
           }}
           style={{
-            position: 'fixed',
+            position: 'absolute',
             top: '50%',
             left: model === 'invernadero' ? '37%' : '41%',
             transform: 'translate(-50%, -50%)',
@@ -1160,7 +1160,7 @@ function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | '
             letterSpacing: '4px',
             textTransform: 'uppercase',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            zIndex: 1000,
+            zIndex: 1,
             pointerEvents: 'none',
             mixBlendMode: 'normal',
             opacity: 0.8
