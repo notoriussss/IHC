@@ -249,36 +249,7 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange = 
           ]} 
           rotation={[-0.08, 0, 0.0]}
         >
-          <Html
-            position={[0.5, 1.5, 1]} 
-            center
-            distanceFactor={2.3}
-            transform
-            occlude={false}
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              pointerEvents: 'all',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            <div style={{
-              width: '600px',
-              height: 'auto',
-              padding: '20px',
-              borderRadius: '25px',
-              position: 'relative',
-              zIndex: 1
-            }}>
-              <PlantCarousel 
-                showMap={effectiveShowMap} 
-                onReady={() => setIsCarouselReady(true)}
-              />
-            </div>
-          </Html>
+       
         </group>
       )}
     </group>
