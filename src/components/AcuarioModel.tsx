@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { useThree, useFrame } from '@react-three/fiber';
 import AnimalCarousel3D, { AnimalCarouselHandles, AnimalCarousel } from './AnimalCarousel';
 import '../styles/Carousel.css';
-import { modelStorage } from '../services/modelStorage';
+import { useModelLoader } from '../hooks/useModelLoader';
 
 export interface AcuarioModelHandles {
   goToNext: () => void;
@@ -22,30 +22,7 @@ interface AcuarioModelProps {
 
 const AcuarioModel = forwardRef<AcuarioModelHandles, AcuarioModelProps>(({ isActive, showMap = false, bt2Active = false, onViewChange, carouselRef }, ref) => {
   const modelRef = useRef<THREE.Group | null>(null);
-  
-  // Precargar el modelo
-  useEffect(() => {
-    const preloadModel = async () => {
-      try {
-        console.log('Iniciando precarga del modelo acuario-final.glb...');
-        const hasCachedModel = await modelStorage.hasModel('/dracoFlora/acuario-final.glb');
-        console.log('Modelo en caché:', hasCachedModel ? 'Sí' : 'No');
-        
-        if (!hasCachedModel) {
-          await modelStorage.downloadModel('/dracoFlora/acuario-final.glb', (progress) => {
-            console.log(`Progreso de descarga: ${progress.toFixed(2)}%`);
-          });
-          console.log('Modelo acuario-final.glb precargado exitosamente');
-        }
-      } catch (error) {
-        console.error('Error al precargar modelo acuario-final.glb:', error);
-      }
-    };
-
-    preloadModel();
-  }, []);
-
-  const { scene } = useGLTF('/dracoFlora/acuario-final.glb');
+  const { gltf, loadingProgress, error, isLoaded } = useModelLoader('/dracoFlora/acuario-final.glb');
   const { camera } = useThree();
   const [currentPosition, setCurrentPosition] = useState<THREE.Vector3 | null>(null);
   const [currentQuaternion, setCurrentQuaternion] = useState<THREE.Quaternion | null>(null);
@@ -55,10 +32,12 @@ const AcuarioModel = forwardRef<AcuarioModelHandles, AcuarioModelProps>(({ isAct
   // Inicialización del modelo y la cámara
   useEffect(() => {
     if (isActive) {
+      console.log('Iniciando carga del modelo del acuario');
       // Aplicar rotación al modelo
       if (modelRef.current) {
         modelRef.current.rotation.y = 0;
         modelRef.current.position.y = -0.5;
+        console.log('Modelo del acuario posicionado correctamente');
       }
       
       // Establecer posición fija de la cámara inmediatamente
@@ -82,6 +61,18 @@ const AcuarioModel = forwardRef<AcuarioModelHandles, AcuarioModelProps>(({ isAct
         setCurrentQuaternion(defaultQuaternion.clone());
         setTargetPosition(defaultPosition.clone());
         setTargetQuaternion(defaultQuaternion.clone());
+        console.log('Cámara del acuario configurada en posición inicial:', {
+          position: {
+            x: defaultPosition.x.toFixed(2),
+            y: defaultPosition.y.toFixed(2),
+            z: defaultPosition.z.toFixed(2)
+          },
+          rotation: {
+            x: defaultRotation.x.toFixed(2),
+            y: defaultRotation.y.toFixed(2),
+            z: defaultRotation.z.toFixed(2)
+          }
+        });
       }
     }
   }, [camera, isActive]);
@@ -104,11 +95,13 @@ const AcuarioModel = forwardRef<AcuarioModelHandles, AcuarioModelProps>(({ isAct
   useImperativeHandle(ref, () => ({
     goToNext: () => {
       if (carouselRef && carouselRef.current && carouselRef.current.goToNext) {
+        console.log('Navegando al siguiente elemento del acuario');
         carouselRef.current.goToNext();
       }
     },
     goToPrev: () => {
       if (carouselRef && carouselRef.current && carouselRef.current.goToPrev) {
+        console.log('Navegando al elemento anterior del acuario');
         carouselRef.current.goToPrev();
       }
     },
@@ -123,7 +116,7 @@ const AcuarioModel = forwardRef<AcuarioModelHandles, AcuarioModelProps>(({ isAct
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <primitive 
         ref={modelRef}
-        object={scene} 
+        object={gltf.scene} 
         scale={1}
         position={[0, 0, 0]}
         rotation={[0, 0, 0]}

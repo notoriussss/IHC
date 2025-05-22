@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { TypingText } from './TypingText';
-import { modelStorage } from '../services/modelStorage';
+import { useModelLoader } from '../hooks/useModelLoader';
 
 interface CircularButtonProps {
   position: [number, number, number];
@@ -103,33 +103,9 @@ const CulturaModel = forwardRef<THREE.Group, {
   onNavigationChange,
   openModal
 }, ref) => {
-  const [error, setError] = useState<string | null>(null);
+  const { gltf, loadingProgress, error, isLoaded } = useModelLoader('/dracoFlora/cultura.glb');
   const [showCinemaElements, setShowCinemaElements] = useState(true);
   const [showSportsElements, setShowSportsElements] = useState(true);
-  
-  // Precargar el modelo
-  useEffect(() => {
-    const preloadModel = async () => {
-      try {
-        console.log('Iniciando precarga del modelo cultura.glb...');
-        const hasCachedModel = await modelStorage.hasModel('/dracoFlora/cultura.glb');
-        console.log('Modelo en caché:', hasCachedModel ? 'Sí' : 'No');
-        
-        if (!hasCachedModel) {
-          await modelStorage.downloadModel('/dracoFlora/cultura.glb', (progress) => {
-            console.log(`Progreso de descarga: ${progress.toFixed(2)}%`);
-          });
-          console.log('Modelo cultura.glb precargado exitosamente');
-        }
-      } catch (error) {
-        console.error('Error al precargar modelo cultura.glb:', error);
-      }
-    };
-
-    preloadModel();
-  }, []);
-
-  const gltf = useGLTF('/dracoFlora/cultura.glb');
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [targetQuaternion, setTargetQuaternion] = useState<THREE.Quaternion | null>(null);
@@ -385,7 +361,7 @@ const CulturaModel = forwardRef<THREE.Group, {
         }
       }
     } catch (e) {
-      setError(`Error processing model: ${e instanceof Error ? e.message : 'Unknown error'}`);
+      console.error(`Error processing model: ${e instanceof Error ? e.message : 'Unknown error'}`);
     }
   }, [gltf, camera, ref]);
 

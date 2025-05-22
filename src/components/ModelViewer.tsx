@@ -11,10 +11,9 @@ import CulturaModel from './CulturaModel';
 import AcuarioModel, { AcuarioModelHandles } from './AcuarioModel';
 import AnimalCarousel3D from './AnimalCarousel';
 import Galeria from './Galeria';
-import { modelStorage } from '../services/modelStorage';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import LoadingScreen from './LoadingScreen';
+import { saveModel, getModel } from '../utils/indexedDB';
+import { modelStorage, AVAILABLE_MODELS } from '../services/modelStorage';
+import { useModelLoader } from '../hooks/useModelLoader';
 
 // Agregar estilos globales para la fuente Anton
 const style = document.createElement('style');
@@ -193,81 +192,22 @@ const Model = forwardRef<THREE.Group, {
   currentModel: string
 }>(({ url, onViewChange, showMap, onShowNews, onShowIndicadores, openModal, currentModel }, ref) => {
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [downloadProgress, setDownloadProgress] = useState(0);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [modelData, setModelData] = useState<THREE.Group | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const { gltf, loadingProgress: modelProgress, error: modelError, isLoaded } = useModelLoader(url);
   const { camera } = useThree();
-  const [currentPosition, setCurrentPosition] = useState<THREE.Vector3 | null>(null);
-  const [currentQuaternion, setCurrentQuaternion] = useState<THREE.Quaternion | null>(null);
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [targetQuaternion, setTargetQuaternion] = useState<THREE.Quaternion | null>(null);
+  const [currentPosition, setCurrentPosition] = useState<THREE.Vector3 | null>(null);
+  const [currentQuaternion, setCurrentQuaternion] = useState<THREE.Quaternion | null>(null);
   const [currentView, setCurrentView] = useState('default');
   const [showWall2Elements, setShowWall2Elements] = useState(true);
 
-  // Precargar todos los modelos disponibles
+  // Efecto para precargar el modelo cuando se monta el componente
   useEffect(() => {
-    const preloadAllModels = async () => {
-      try {
-        console.log('Iniciando precarga de todos los modelos...');
-        await modelStorage.preloadAllModels((progress) => {
-          console.log(`Progreso de precarga: ${progress.toFixed(2)}%`);
-        });
-        console.log('Precarga de modelos completada');
-      } catch (error) {
-        console.error('Error durante la precarga de modelos:', error);
-      }
-    };
-
-    preloadAllModels();
-  }, []);
-
-  useEffect(() => {
-    const loadModel = async () => {
-      try {
-        console.log('Iniciando carga del modelo:', url);
-        const loader = new GLTFLoader();
-        const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('/draco/');
-        loader.setDRACOLoader(dracoLoader);
-
-        // Verificar si el modelo está en caché
-        const hasCachedModel = await modelStorage.hasModel(url);
-        console.log('Modelo en caché:', hasCachedModel ? 'Sí' : 'No');
-
-        let arrayBuffer: ArrayBuffer;
-        if (hasCachedModel) {
-          arrayBuffer = await modelStorage.getModel(url) as ArrayBuffer;
-          console.log('Modelo recuperado de caché:', url);
-        } else {
-          setIsDownloading(true);
-          arrayBuffer = await modelStorage.downloadModel(url, (progress) => {
-            setDownloadProgress(progress);
-            console.log(`Progreso de descarga: ${progress.toFixed(2)}%`);
-          });
-          await modelStorage.saveModel(url, arrayBuffer);
-          setIsDownloading(false);
-        }
-
-        // Cargar el modelo con Three.js
-        const blob = new Blob([arrayBuffer]);
-        const objectURL = URL.createObjectURL(blob);
-        
-        const gltf = await loader.loadAsync(objectURL);
-        URL.revokeObjectURL(objectURL);
-        
-        setModelData(gltf.scene);
-        setIsLoading(false);
-        console.log('Modelo cargado exitosamente:', url);
-      } catch (e) {
-        console.error('Error al cargar modelo:', e);
-        setError(e instanceof Error ? e.message : 'Error desconocido al cargar el modelo');
-        setIsLoading(false);
-      }
-    };
-
-    loadModel();
-  }, [url]);
+    if (modelError) {
+      setError(modelError);
+    }
+  }, [modelError]);
 
   useFrame(() => {
     if (targetPosition && targetQuaternion && currentPosition && currentQuaternion && camera instanceof THREE.PerspectiveCamera) {
@@ -379,13 +319,13 @@ const Model = forwardRef<THREE.Group, {
 
   // Exponer las funciones de movimiento al componente padre
   useEffect(() => {
-    if (ref && 'current' in ref && ref.current && modelData) {
+    if (ref && 'current' in ref) {
       (ref.current as any).moveToWall1 = moveToWall1;
       (ref.current as any).moveToWall2 = moveToWall2;
       (ref.current as any).moveToWall3 = moveToWall3;
       (ref.current as any).moveToDefault = moveToDefault;
     }
-  }, [ref, modelData, moveToWall1, moveToWall2, moveToWall3, moveToDefault]);
+  }, [ref, moveToWall1, moveToWall2, moveToWall3, moveToDefault]);
 
   useEffect(() => {
     try {
@@ -425,43 +365,217 @@ const Model = forwardRef<THREE.Group, {
     } catch (e) {
       setError(`Error processing model: ${e instanceof Error ? e.message : 'Unknown error'}`);
     }
-  }, [modelData, camera, ref]);
+  }, [gltf, camera, ref]);
 
   if (error) {
     return null;
   }
 
-  if (!modelData) {
-    return null;
-  }
-
   return (
-    <>
-      <AnimatePresence>
-        {isLoading && (
-          <LoadingScreen 
-            progress={downloadProgress}
-            modelName={url.split('/').pop() || 'Modelo'}
-            isDownloading={isDownloading}
-          />
-        )}
-      </AnimatePresence>
+    <group ref={ref}>
+      <primitive 
+        object={gltf.scene} 
+        scale={1}
+        position={[0, 0, 0]}
+      />
       
-      {modelData && (
-        <primitive 
-          ref={ref}
-          object={modelData}
-          scale={1}
-          position={[0, 0, 0]}
-        />
+      {/* Botones circulares solo en vista por defecto y cuando el mapa está cerrado */}
+      {currentView === 'default' && !showMap && (
+        <>
+          <CircularButton 
+            position={[0, 0.7, 0]} 
+            onClick={moveToWall1} 
+            label="Pared 1" 
+            tooltip="Indicadores" 
+          />
+          <CircularButton 
+            position={[0, 0.7, -3.5]} 
+            onClick={moveToWall2} 
+            label="Pared 2" 
+            tooltip="Noticias" 
+          />
+          <CircularButton 
+            position={[0, 0.7, 3.5]} 
+            onClick={moveToWall3} 
+            label="Pared 3" 
+            tooltip="Sobre Nosotros" 
+          />
+        </>
       )}
-    </>
+
+      {currentView === 'wall2' && !showMap && showWall2Elements && (
+        <>
+          <Html position={[-0.5, 2, -2]} center>
+            <div
+              onClick={() => {
+                setShowWall2Elements(false);
+                if (openModal) {
+                  openModal('/html/listarticulos.html', 'Artículos', () => {
+                    setShowWall2Elements(true);
+                  });
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            />
+          </Html>
+          <Html position={[2.45, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                setShowWall2Elements(false);
+                if (openModal) {
+                  openModal('/html/listarticulos.html', 'Artículos', () => {
+                    setShowWall2Elements(true);
+                  });
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            />
+          </Html>
+          <Html position={[3.42, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                setShowWall2Elements(false);
+                if (openModal) {
+                  openModal('/html/listarticulos.html', 'Artículos', () => {
+                    setShowWall2Elements(true);
+                  });
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            />
+          </Html>
+        </>
+      )}
+
+      {currentView === 'wall1' && currentModel === 'cultura' && !showMap && (
+        <>
+          <Html position={[-0.5, 2, -2]} center>
+            <div
+              onClick={() => {
+                if (openModal) {
+                  openModal('/html/deporte.html', 'Deportes');
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[2.45, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                if (openModal) {
+                  openModal('/html/deporte.html', 'Deportes');
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+          <Html position={[3.42, 2.1, -2]} center>
+            <div
+              onClick={() => {
+                if (openModal) {
+                  openModal('/html/deporte.html', 'Deportes');
+                }
+              }}
+              style={{
+                width: '140px',
+                height: '250px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            />
+          </Html>
+        </>
+      )}
+      {currentModel === 'cultura' && currentView === 'wall1' && !showMap && (
+        <Html position={[-1.46, -1.75, 10.62]} center>
+          <div
+            style={{
+              width: '100px',
+              height: '100px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.5)',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => openModal && openModal('/html/deporte.html', 'Deportes')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          />
+        </Html>
+      )}
+    </group>
   );
 });
 
-function LoadingOverlay() {
+function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boolean, preloadProgress: number }) {
   const { progress } = useProgress();
-  return progress < 100 ? (
+  const totalProgress = isPreloading ? (preloadProgress + progress) / 2 : progress;
+
+  return totalProgress < 100 ? (
     <div style={{
       position: 'fixed',
       top: 0,
@@ -510,7 +624,7 @@ function LoadingOverlay() {
           fontSize: '20px',
           opacity: 0.8
         }}>
-          {progress.toFixed(0)}%
+          {totalProgress.toFixed(0)}%
         </div>
         <div style={{
           width: '200px',
@@ -530,10 +644,19 @@ function LoadingOverlay() {
               transformOrigin: '0%',
             }}
             initial={{ scaleX: 0 }}
-            animate={{ scaleX: progress / 100 }}
+            animate={{ scaleX: totalProgress / 100 }}
             transition={{ duration: 0.3 }}
           />
         </div>
+        {isPreloading && (
+          <div style={{
+            fontSize: '16px',
+            opacity: 0.6,
+            marginTop: '10px'
+          }}>
+            Precargando modelos...
+          </div>
+        )}
       </motion.div>
     </div>
   ) : null;
@@ -1101,8 +1224,53 @@ function ModelViewer() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showTransitionUI, setShowTransitionUI] = useState(true);
   const [activeText, setActiveText] = useState<string | null>(null);
+  const [preloadProgress, setPreloadProgress] = useState(0);
+  const [isPreloading, setIsPreloading] = useState(true);
 
   const { progress } = useProgress();
+
+  // Efecto para precargar todos los modelos al iniciar
+  useEffect(() => {
+    const preloadAllModels = async () => {
+      try {
+        setIsPreloading(true);
+        await modelStorage.preloadAllModels((progress) => {
+          setPreloadProgress(progress);
+        });
+        setIsPreloading(false);
+      } catch (error) {
+        console.error('Error al precargar modelos:', error);
+        setIsPreloading(false);
+      }
+    };
+
+    preloadAllModels();
+  }, []);
+
+  // Efecto para cargar modelos desde IndexedDB al iniciar
+  useEffect(() => {
+    const loadModelsFromIndexedDB = async () => {
+      try {
+        const defaultModel = await getModel('default');
+        const guayanaModel = await getModel('guayana');
+        const invernaderoModel = await getModel('invernadero');
+        const culturaModel = await getModel('cultura');
+        const acuarioModel = await getModel('acuario');
+
+        console.log('Modelos cargados desde IndexedDB:', {
+          default: defaultModel,
+          guayana: guayanaModel,
+          invernadero: invernaderoModel,
+          cultura: culturaModel,
+          acuario: acuarioModel
+        });
+      } catch (error) {
+        console.error('Error al cargar modelos desde IndexedDB:', error);
+      }
+    };
+
+    loadModelsFromIndexedDB();
+  }, []);
 
   useEffect(() => {
     if (progress === 100) {
@@ -1117,21 +1285,16 @@ function ModelViewer() {
           // Esperamos a que la cámara esté en posición
           setTimeout(() => {
             if (currentModel === 'invernadero') {
-              // Para el invernadero, primero establecemos isTransitioning en false
-              setIsTransitioning(false);
+              // Para el invernadero, mostramos directamente la UI y el texto sin mostrar el mapa
+              setIsModelLoaded(true);
+              setShowUIElements(true);
+              setShowLobbyText(true);
               
-              // Luego mostramos la UI y el texto
+              // Ocultamos el texto de lobby después de 2 segundos
               setTimeout(() => {
-                setIsModelLoaded(true);
-                setShowUIElements(true);
-                setShowLobbyText(true);
-                
-                // Ocultamos el texto de lobby después de 2 segundos
-                setTimeout(() => {
-                  setShowLobbyText(false);
-                  setIsInitialLoad(false);
-                }, 2000);
-              }, 100);
+                setShowLobbyText(false);
+                setIsInitialLoad(false);
+              }, 2000);
             } else {
               // Para otros modelos, mostramos el mapa brevemente
               setShowMap(true);
@@ -1796,35 +1959,25 @@ function ModelViewer() {
         
         // Esperamos a que la cámara esté en posición
         setTimeout(() => {
-          // Para el modelo de cultura o guayana, abrimos y cerramos el mapa rápidamente y la pantalla negra cubre todo
-          if (newModel === 'cultura' || newModel === 'guayana') {
-            setShowMap(true);
+          // Forzamos una interacción inicial para posicionar los botones sin mostrar el mapa
+          setShowMap(true);
+          
+          // Cerramos el mapa inmediatamente
+          setTimeout(() => {
+            setShowMap(false);
+            
+            // Después de que el mapa se cierre, mostramos la UI y el texto
             setTimeout(() => {
-              setShowMap(false);
+              setIsTransitioning(false);
+              setShowUIElements(true);
+              setShowLobbyText(true);
+              
+              // Ocultamos el texto de lobby después de 2 segundos
               setTimeout(() => {
-                setShowUIElements(true);
-                setShowLobbyText(true);
-                setTimeout(() => {
-                  setShowLobbyText(false);
-                }, 2000);
-                setIsTransitioning(false); // Aquí termina la transición
-              }, 50);
-            }, 50);
-          } else {
-            // Para otros modelos, mostramos el mapa brevemente
-            setShowMap(true);
-            setTimeout(() => {
-              setShowMap(false);
-              setTimeout(() => {
-                setShowUIElements(true);
-                setShowLobbyText(true);
-                setTimeout(() => {
-                  setShowLobbyText(false);
-                }, 2000);
-                setIsTransitioning(false);
-              }, 100);
+                setShowLobbyText(false);
+              }, 2000);
             }, 100);
-          }
+          }, 100);
         }, 1000);
       }
     }, 100);
@@ -1941,7 +2094,7 @@ function ModelViewer() {
         </Canvas>
       </motion.div>
 
-      {!isModelLoaded && <LoadingOverlay />}
+      {!isModelLoaded && <LoadingOverlay isPreloading={isPreloading} preloadProgress={preloadProgress} />}
 
       <AnimatePresence mode="sync">
         {getVisibleArrows().map((arrow, index) => (
@@ -2403,7 +2556,7 @@ function ModelViewer() {
               fontSize: '20px',
               opacity: 0.8
             }}>
-              {progress.toFixed(0)}%
+              Cargando...
             </div>
             <div style={{
               width: '200px',
@@ -2423,8 +2576,8 @@ function ModelViewer() {
                   transformOrigin: '0%',
                 }}
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: progress / 100 }}
-                transition={{ duration: 0.3 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
               />
             </div>
           </motion.div>

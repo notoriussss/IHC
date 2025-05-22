@@ -22,9 +22,29 @@ class ModelStorage {
   private readonly STORE_NAME = 'models';
   private readonly VERSION = 1;
   private initPromise: Promise<IDBPDatabase<ModelDB>> | null = null;
+  public modelInfo: {
+    currentModel: string;
+    lastUpdated: string;
+    totalSize: number;
+    models: {
+      [key: string]: {
+        name: string;
+        size: number;
+        path: string;
+        downloaded?: number;
+        total?: number;
+      };
+    };
+  } = {
+    currentModel: '',
+    lastUpdated: new Date().toISOString(),
+    totalSize: 0,
+    models: {}
+  };
 
   constructor() {
     this.initPromise = this.init();
+    this.loadModelInfo();
   }
 
   private async init(): Promise<IDBPDatabase<ModelDB>> {
@@ -48,6 +68,19 @@ class ModelStorage {
       }
     }
     return this.db;
+  }
+
+  private async loadModelInfo() {
+    try {
+      const response = await fetch('/data/models-info.json');
+      const data = await response.json();
+      this.modelInfo = {
+        ...data,
+        totalSize: Object.values(data.models).reduce((acc: number, model: any) => acc + model.size, 0)
+      };
+    } catch (error) {
+      console.error('Error al cargar información de modelos:', error);
+    }
   }
 
   async saveModel(url: string, modelData: ArrayBuffer): Promise<void> {
@@ -76,6 +109,11 @@ class ModelStorage {
 
   async hasModel(url: string): Promise<boolean> {
     try {
+      if (!url) {
+        console.warn('URL inválida al verificar modelo en caché');
+        return false;
+      }
+
       const db = await this.getDB();
       const model = await db.get('models', url);
       return model !== undefined;
@@ -97,54 +135,122 @@ class ModelStorage {
 
   async downloadModel(url: string, onProgress?: (progress: number) => void): Promise<ArrayBuffer> {
     try {
-      // Primero intentamos obtener el modelo del IndexedDB
+      // Verificar si el modelo está en caché
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
-        console.log('Modelo encontrado en caché:', url);
+        if (onProgress) onProgress(100);
         return cachedModel;
       }
 
-      // Si no está en caché, lo descargamos
-      console.log('Descargando modelo:', url);
-      const response = await fetch(url);
+      // Si no está en caché, descargar el modelo
+      const response = await fetch(url, {
+        cache: 'no-store', // Evitar problemas de caché
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+
       if (!response.ok) {
-        throw new Error(`Error al descargar modelo: ${response.statusText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const contentLength = response.headers.get('content-length');
-      const total = contentLength ? parseInt(contentLength, 10) : 0;
-      let loaded = 0;
+      const reader = response.body?.getReader();
+      const contentLength = Number(response.headers.get('Content-Length')) || 0;
 
-      const reader = response.body!.getReader();
+      if (!reader) {
+        throw new Error('No se pudo iniciar la descarga del modelo');
+      }
+
+      let receivedLength = 0;
       const chunks: Uint8Array[] = [];
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+
+        if (done) {
+          break;
+        }
 
         chunks.push(value);
-        loaded += value.length;
+        receivedLength += value.length;
 
-        if (onProgress && total) {
-          onProgress((loaded / total) * 100);
+        // Calcular y reportar el progreso
+        const progress = (receivedLength / contentLength) * 100;
+        if (onProgress) {
+          onProgress(progress);
         }
+
+        // Actualizar la información de descarga
+        const modelId = this.getModelIdFromUrl(url);
+        await this.updateDownloadProgress(modelId, receivedLength, contentLength);
       }
 
-      const modelData = new Uint8Array(loaded);
-      let position = 0;
-      for (const chunk of chunks) {
-        modelData.set(chunk, position);
-        position += chunk.length;
+      // Guardar el modelo en caché
+      const blob = new Blob(chunks);
+      const arrayBuffer = await blob.arrayBuffer();
+      
+      try {
+        await this.saveModel(url, arrayBuffer);
+      } catch (error) {
+        console.warn('No se pudo guardar el modelo en caché:', error);
+        // Continuar aunque falle el guardado en caché
       }
 
-      // Guardamos el modelo en IndexedDB
-      await this.saveModel(url, modelData.buffer);
-      console.log('Modelo descargado y guardado en caché:', url);
+      return arrayBuffer;
 
-      return modelData.buffer;
     } catch (error) {
-      console.error('Error en downloadModel:', url, error);
+      console.error('Error al descargar el modelo:', error);
+      // Intentar recuperar de caché como último recurso
+      const cachedModel = await this.getModel(url);
+      if (cachedModel) {
+        console.log('Recuperando modelo de caché después de error:', url);
+        if (onProgress) onProgress(100);
+        return cachedModel;
+      }
       throw error;
+    }
+  }
+
+  private async updateModelInfo(modelId: string): Promise<void> {
+    try {
+      this.modelInfo.currentModel = modelId;
+      this.modelInfo.lastUpdated = new Date().toISOString();
+    } catch (error) {
+      console.error('Error al actualizar la información del modelo:', error);
+    }
+  }
+
+  async updateDownloadProgress(modelId: string, downloaded: number, total: number): Promise<void> {
+    try {
+      if (!modelId || !this.modelInfo.models[modelId]) {
+        return;
+      }
+
+      // Convertir bytes a megabytes
+      const downloadedMB = downloaded / (1024 * 1024);
+      const totalMB = total / (1024 * 1024);
+      
+      this.modelInfo.models[modelId].downloaded = downloadedMB;
+      this.modelInfo.models[modelId].total = totalMB;
+    } catch (error) {
+      console.error('Error al actualizar el progreso de descarga:', error);
+    }
+  }
+
+  private getModelIdFromUrl(url: string): string {
+    if (!url) {
+      return 'default';
+    }
+
+    const path = url.split('/').pop()?.replace('.glb', '') || '';
+    switch (path) {
+      case 'proyecto': return 'default';
+      case 'acuario-final': return 'acuario';
+      case 'cultura': return 'cultura';
+      case 'floraOBJ': return 'invernadero';
+      case 'regGuayana': return 'guayana';
+      default: return 'default';
     }
   }
 
@@ -168,8 +274,8 @@ class ModelStorage {
         const exists = await this.hasModel(modelUrl);
         if (!exists) {
           console.log('Precargando modelo:', modelUrl);
-          const data = await this.downloadModel(modelUrl);
-          await this.saveModel(modelUrl, data);
+          const modelData = await this.downloadModel(modelUrl);
+          await this.saveModel(modelUrl, modelData);
         }
         loadedModels++;
         if (onProgress) {

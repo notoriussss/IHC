@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect, forwardRef } from 'react';
+import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { TypingText } from './TypingText';
-import { modelStorage } from '../services/modelStorage';
+import { useModelLoader } from '../hooks/useModelLoader';
 
 // Importar el sonido de hover desde ModelViewer o definirlo aquí si se necesita
 // Acceder a la variable global definida en ModelViewer
@@ -89,31 +89,7 @@ interface GuayanaModelProps {
 }
 
 const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange, onNavigationChange, onShowNews, onShowEconomy, onShowContamination, onShowTourism, onShowProjects, onShowPueblos, showMap, openModal }, ref) => {
-  const [error, setError] = useState<string | null>(null);
-  
-  // Precargar el modelo
-  useEffect(() => {
-    const preloadModel = async () => {
-      try {
-        console.log('Iniciando precarga del modelo regGuayana.glb...');
-        const hasCachedModel = await modelStorage.hasModel('/dracoFlora/regGuayana.glb');
-        console.log('Modelo en caché:', hasCachedModel ? 'Sí' : 'No');
-        
-        if (!hasCachedModel) {
-          await modelStorage.downloadModel('/dracoFlora/regGuayana.glb', (progress) => {
-            console.log(`Progreso de descarga: ${progress.toFixed(2)}%`);
-          });
-          console.log('Modelo regGuayana.glb precargado exitosamente');
-        }
-      } catch (error) {
-        console.error('Error al precargar modelo regGuayana.glb:', error);
-      }
-    };
-
-    preloadModel();
-  }, []);
-
-  const gltf = useGLTF('/dracoFlora/regGuayana.glb');
+  const { gltf, loadingProgress, error, isLoaded } = useModelLoader('/dracoFlora/regGuayana.glb');
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [targetQuaternion, setTargetQuaternion] = useState<THREE.Quaternion | null>(null);
@@ -364,7 +340,7 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
         // La cámara mantiene su posición actual
       }
     } catch (e) {
-      setError(`Error processing model: ${e instanceof Error ? e.message : 'Unknown error'}`);
+      console.error(`Error processing model: ${e instanceof Error ? e.message : 'Unknown error'}`);
     }
   }, [gltf, camera, ref]);
 
