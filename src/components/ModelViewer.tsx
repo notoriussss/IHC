@@ -1206,7 +1206,11 @@ function SpecialModelText({ show, model }: { show: boolean, model: 'acuario' | '
   );
 }
 
-function ModelViewer() {
+interface ModelViewerProps {
+  onViewChange?: (view: string) => void;
+}
+
+function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
   const [error, setError] = useState<string | null>(null);
   const [showLobbyText, setShowLobbyText] = useState(false);
   const [showUIElements, setShowUIElements] = useState(false);
