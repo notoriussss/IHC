@@ -216,12 +216,12 @@ export function Forum() {
                     }}
                 >
                     {/* Barra superior con logo - Ahora fixed */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md z-50 py-5">
-                        <div className="flex items-center px-8">
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md z-50 py-2 sm:py-3 md:py-5">
+                        <div className="flex items-center px-4 sm:px-6 md:px-8">
                             {/* Contenedor del ícono y título en la esquina superior izquierda */}
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
                                 <motion.div 
-                                    className="w-20 h-20 flex items-center justify-center"
+                                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center"
                                     variants={iconAnimation}
                                 >
                                     <img 
@@ -234,14 +234,14 @@ export function Forum() {
                                     className="flex items-center"
                                     variants={pageIndicatorAnimation}
                                 >
-                                    <h2 className="text-3xl font-bold text-white">
+                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                                         Foro
                                     </h2>
                                 </motion.div>
                             </div>
 
                             <motion.div
-                                className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                                className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hidden sm:block"
                                 onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -249,14 +249,14 @@ export function Forum() {
                                 <img
                                     src="/src/assets/logo/logo.svg"
                                     alt="Logo"
-                                    className="w-60 h-auto"
+                                    className="w-32 sm:w-40 md:w-60 h-auto"
                                 />
                             </motion.div>
 
                             {/* Botón de volver */}
                             <div className="flex-1 flex justify-end">
                                 <motion.div
-                                    className="flex items-center gap-6 cursor-pointer"
+                                    className="flex items-center gap-2 sm:gap-4 md:gap-6 cursor-pointer"
                                     onClick={() => navigate('/')}
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -264,9 +264,9 @@ export function Forum() {
                                     <img
                                         src="/src/assets/icons/back.png"
                                         alt="Volver"
-                                        className="w-12 h-12"
+                                        className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
                                     />
-                                    <span className="text-white text-xl">Volver</span>
+                                    <span className="text-white text-base sm:text-lg md:text-xl">Volver</span>
                                 </motion.div>
                             </div>
                         </div>
@@ -275,8 +275,8 @@ export function Forum() {
                     {/* Modal para nuevo post */}
                     {isNewPostModalOpen && (
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                            <div className="bg-gray-900 p-6 rounded-lg w-full max-w-2xl mx-4">
-                                <h2 className="text-2xl font-bold mb-4">Crear nuevo post</h2>
+                            <div className="bg-gray-900 p-4 sm:p-5 md:p-6 rounded-lg w-[90%] max-w-2xl mx-4">
+                                <h2 className="text-xl sm:text-2xl font-bold mb-4">Crear nuevo post</h2>
                                 <div className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium mb-2">Título</label>
@@ -293,7 +293,7 @@ export function Forum() {
                                         <textarea
                                             value={newPost.content}
                                             onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-                                            className="w-full h-48 p-2 bg-black/30 rounded text-white resize-none"
+                                            className="w-full h-32 sm:h-40 md:h-48 p-2 bg-black/30 rounded text-white resize-none"
                                             placeholder="Escribe el contenido..."
                                         />
                                     </div>
@@ -315,13 +315,13 @@ export function Forum() {
                                     <div className="flex justify-end gap-4 mt-6">
                                         <button
                                             onClick={() => setIsNewPostModalOpen(false)}
-                                            className="px-4 py-2 text-gray-400 hover:text-white"
+                                            className="px-3 sm:px-4 py-2 text-gray-400 hover:text-white text-sm sm:text-base"
                                         >
                                             Cancelar
                                         </button>
                                         <button
                                             onClick={handleCreatePost}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                                            className="px-3 sm:px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 text-sm sm:text-base"
                                             disabled={!newPost.title.trim() || !newPost.content.trim()}
                                         >
                                             Publicar
@@ -333,13 +333,13 @@ export function Forum() {
                     )}
 
                     {/* Contenido del foro */}
-                    <div className="flex flex-col items-center w-full min-h-full pt-32 pb-16">
+                    <div className="flex flex-col items-center w-full min-h-full pt-24 sm:pt-28 md:pt-32 pb-16">
                         {/* Filtros de etiquetas y botón nuevo post */}
-                        <div className="w-3/4 mb-6 flex items-center justify-between sticky top-32 bg-black/40 backdrop-blur-md p-4 rounded-lg z-40">
-                            <div className="flex flex-wrap gap-2 items-center">
+                        <div className="w-[90%] sm:w-4/5 md:w-3/4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-black/40 backdrop-blur-md p-3 sm:p-4 rounded-lg z-40 gap-3 sm:gap-0">
+                            <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
                                 <button
                                     onClick={() => setSelectedLabel(null)}
-                                    className={`px-4 py-2 rounded-full transition-colors ${
+                                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors text-sm sm:text-base ${
                                         selectedLabel === null
                                             ? 'bg-white text-black'
                                             : 'bg-black/20 text-white hover:bg-black/40'
@@ -353,7 +353,7 @@ export function Forum() {
                                         <button
                                             key={label}
                                             onClick={() => setSelectedLabel(label)}
-                                            className={`px-4 py-2 rounded-full transition-colors ${
+                                            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors text-sm sm:text-base ${
                                                 selectedLabel === label
                                                     ? 'bg-white text-black'
                                                     : 'bg-black/20 text-white hover:bg-black/40'
@@ -368,7 +368,7 @@ export function Forum() {
                             {/* Botón de nuevo post */}
                             <button
                                 onClick={() => setIsNewPostModalOpen(true)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 ml-4"
+                                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
                             >
                                 <span>✏️</span>
                                 <span>Nuevo Post</span>
@@ -376,28 +376,28 @@ export function Forum() {
                         </div>
 
                         {/* Sección principal */}
-                        <div className="w-3/4 space-y-4">
+                        <div className="w-[90%] sm:w-4/5 md:w-3/4 space-y-4">
                             {filteredPosts.map((post) => (
                                 <motion.div
                                     key={post.id}
                                     onClick={() => navigate(`/post/${post.id}`, { state: { from: 'forum' } })}
-                                    className="p-6 w-full rounded-lg shadow-md hover:shadow-lg transition-all bg-black/20 backdrop-blur-sm cursor-pointer hover:bg-black/40"
+                                    className="p-4 sm:p-5 md:p-6 w-full rounded-lg shadow-md hover:shadow-lg transition-all bg-black/20 backdrop-blur-sm cursor-pointer hover:bg-black/40"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.2 }}
                                 >
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h2 className="text-2xl font-bold">{post.title}</h2>
-                                        <span className="px-4 py-1 bg-white/10 rounded-full text-sm font-medium">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-3 sm:mb-4">
+                                        <h2 className="text-xl sm:text-2xl font-bold">{post.title}</h2>
+                                        <span className="px-3 sm:px-4 py-1 bg-white/10 rounded-full text-xs sm:text-sm font-medium">
                                             {post.label}
                                         </span>
                                     </div>
-                                    <p className="text-base text-gray-300 mb-4 line-clamp-3">{post.content}</p>
-                                    <div className="flex justify-between items-center text-sm text-gray-400">
+                                    <p className="text-sm sm:text-base text-gray-300 mb-3 sm:mb-4 line-clamp-3">{post.content}</p>
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 text-xs sm:text-sm text-gray-400">
                                         <span>
                                             Publicado por <span className="font-bold">{post.author}</span>
                                         </span>
-                                        <div className="flex items-center gap-6">
-                                            <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-4 sm:gap-6">
+                                            <div className="flex items-center gap-1 sm:gap-2">
                                                 <button
                                                     onClick={(e) => handleVote(e, post.id, 'up')}
                                                     className={`p-1 rounded transition-colors ${
@@ -420,7 +420,7 @@ export function Forum() {
                                                     ▼
                                                 </button>
                                             </div>
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-1 sm:gap-2">
                                                 <span>💬</span>
                                                 <span>{post.comments.length}</span>
                                             </div>
