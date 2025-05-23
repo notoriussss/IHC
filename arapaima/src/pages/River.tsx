@@ -11,6 +11,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import { MobileMenu } from './components/MobileMenu';
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(
@@ -21,6 +22,40 @@ ChartJS.register(
     Tooltip,
     Legend
 );
+
+const pageIndicatorAnimation = {
+    initial: {
+        x: 100,
+        opacity: 0
+    },
+    animate: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            duration: 0.5,
+            delay: 0.3,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
+const iconAnimation = {
+    initial: {
+        scale: 0,
+        opacity: 0,
+        rotate: -180
+    },
+    animate: {
+        scale: 1,
+        opacity: 1,
+        rotate: 0,
+        transition: {
+            duration: 0.5,
+            delay: 0.2,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
 
 type RiverData = {
     nombre: string;
@@ -323,14 +358,12 @@ export function River() {
                     <div className="absolute inset-0 bg-black/50" />
 
                     {/* Barra superior con ícono y título - Ahora fixed */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-md z-50 py-2 md:py-5">
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-sm z-50 py-2 md:py-5">
                         <div className="flex items-center px-4 md:px-8">
-                            <div className="flex items-center gap-2 md:gap-4">
+                            <div className="flex items-center gap-2 md:gap-3 flex-1">
                                 <motion.div 
-                                    className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
-                                    initial={{ scale: 0, rotate: -180 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ duration: 0.5 }}
+                                    className="w-12 h-12 md:w-20 md:h-20 flex items-center justify-center"
+                                    variants={iconAnimation}
                                 >
                                     <img 
                                         src="/src/assets/icons/river.png"
@@ -339,13 +372,10 @@ export function River() {
                                     />
                                 </motion.div>
                                 <motion.h2 
-                                    className="text-xl md:text-xl lg:text-3xl font-bold text-white"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.2 }}
+                                    className="text-xl md:text-3xl font-bold text-white"
+                                    variants={pageIndicatorAnimation}
                                 >
-                                    <span className="md:block">Ríos</span>
-                                    <span className="md:block"><span className="md:hidden">&nbsp;</span>de Guayana</span>
+                                    Ríos de Guayana
                                 </motion.h2>
                             </div>
 
@@ -362,21 +392,9 @@ export function River() {
                                 />
                             </motion.div>
 
-                            {/* Botón de volver */}
+                            {/* Menú móvil */}
                             <div className="flex-1 flex justify-end">
-                                <motion.div
-                                    className="flex items-center gap-2 md:gap-6 cursor-pointer"
-                                    onClick={handleNavigateBack}
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                                >
-                                    <img
-                                        src="/src/assets/icons/back.png"
-                                        alt="Volver"
-                                        className="w-8 h-8 md:w-12 md:h-12"
-                                    />
-                                    <span className="text-white text-base md:text-xl">Volver</span>
-                                </motion.div>
+                                <MobileMenu onNavigateBack={handleNavigateBack} />
                             </div>
                         </div>
                     </div>

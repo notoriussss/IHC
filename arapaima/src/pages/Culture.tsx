@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import articles from '@/data/data.json';
+import { MobileMenu } from './components/MobileMenu';
 
 const overlayTransition = {
     initial: {
@@ -195,7 +196,7 @@ export function Culture() {
                     }}
                 >
                     {/* Barra superior con ícono y título */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-2 md:py-5">
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-sm z-50 py-2 md:py-5">
                         <div className="flex items-center px-4 md:px-8">
                             <div className="flex items-center gap-2 md:gap-3 flex-1">
                                 <motion.div 
@@ -229,21 +230,9 @@ export function Culture() {
                                 />
                             </motion.div>
 
-                            {/* Botón de volver */}
+                            {/* Menú móvil */}
                             <div className="flex-1 flex justify-end">
-                                <motion.div
-                                    className="flex items-center gap-2 md:gap-6 cursor-pointer"
-                                    onClick={() => navigate('/')}
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                                >
-                                    <img
-                                        src="/src/assets/icons/back.png"
-                                        alt="Volver"
-                                        className="w-8 h-8 md:w-12 md:h-12"
-                                    />
-                                    <span className="text-white text-base md:text-xl">Volver</span>
-                                </motion.div>
+                                <MobileMenu onNavigateBack={() => navigate('/')} />
                             </div>
                         </div>
                     </div>
