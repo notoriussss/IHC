@@ -53,7 +53,6 @@ function Home() {
   const [isTextVisible, setIsTextVisible] = useState(true);
   const [previousHoveredItem, setPreviousHoveredItem] = useState<number | null>(null);
   const [shouldTransition, setShouldTransition] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const menuItems = [
     { 
@@ -252,7 +251,6 @@ function Home() {
             </p>
           </div>
 
->>>>>>> a071fd7c2ff12f01875d1b59cc30d543639219e9
           {/* Menú circular */}
           <div className="absolute w-full h-full">
             {menuItems.map((item, index) => {
