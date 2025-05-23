@@ -125,13 +125,15 @@ export function ArticleDetail() {
                                         {article.images.map((image, index) => (
                                             <div
                                                 key={index}
-                                                className="relative aspect-[4/3] md:aspect-video bg-black/20"
+                                                className="relative w-full h-auto"
                                             >
-                                                <img
-                                                    src={image}
-                                                    alt={`Imagen ${index + 1}`}
-                                                    className="w-full h-full object-contain md:object-cover"
-                                                />
+                                                <div className="relative w-full pb-[75%] md:pb-[56.25%] bg-black/20">
+                                                    <img
+                                                        src={image}
+                                                        alt={`Imagen ${index + 1}`}
+                                                        className="absolute inset-0 w-full h-full object-contain md:object-cover"
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>

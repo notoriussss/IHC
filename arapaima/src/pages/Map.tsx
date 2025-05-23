@@ -302,7 +302,7 @@ export function Map() {
 
     const [regionData] = useState<RegionsData>({
         norte: {
-            nombre: "Región Norte de Guayana",
+            nombre: "Estado Delta Amacuro",
             descripcion: "Zona caracterizada por las llanuras costeras y los márgenes del río Orinoco. Área de gran importancia industrial y minera, donde se encuentra Ciudad Guayana, el principal centro urbano e industrial de la región.",
             historia: "La región norte de Guayana ha sido testigo de importantes acontecimientos históricos. Desde la llegada de los primeros exploradores europeos en el siglo XVI, atraídos por la leyenda de El Dorado, hasta el desarrollo industrial del siglo XX con la creación de la Corporación Venezolana de Guayana (CVG) en 1960. La construcción de la represa de Guri, una de las más grandes del mundo, marcó un hito en el desarrollo hidroeléctrico de la región.",
             ph: "6.5-7.5",
@@ -321,7 +321,7 @@ export function Map() {
             }
         },
         central: {
-            nombre: "Región Central - Gran Sabana",
+            nombre: "Estado Bolívar",
             descripcion: "Planicie elevada con una altitud promedio de 1000m. Hogar de los majestuosos tepuyes, incluyendo el Monte Roraima y el Auyantepui, donde se encuentra el Salto Ángel, la caída de agua más alta del mundo.",
             historia: "La Gran Sabana, habitada ancestralmente por el pueblo Pemón, es una región de extraordinaria importancia geológica y cultural. Los tepuyes, formaciones rocosas que se elevan abruptamente sobre la sabana, tienen una antigüedad estimada de más de 2.000 millones de años. El Salto Ángel fue descubierto para el mundo occidental en 1933 por el aviador estadounidense Jimmie Angel, aunque los indígenas Pemón lo conocían como Kerepakupai Merú (Salto del punto más profundo).",
             ph: "6.8-7.8",
@@ -340,7 +340,7 @@ export function Map() {
             }
         },
         sur: {
-            nombre: "Región Sur - Amazonas",
+            nombre: "Estado Amazonas",
             descripcion: "Zona de selva tropical y parte del escudo guayanés, con formaciones geológicas que datan de más de 2000 millones de años. Área de gran biodiversidad y reservas forestales importantes.",
             historia: "La región amazónica de Guayana es una de las áreas más antiguas y biodiversas del planeta. El escudo guayanés, formado hace más de 2.000 millones de años, representa una de las formaciones geológicas más antiguas de la Tierra. Esta región ha sido hogar de diversos pueblos indígenas como los Yanomami, quienes han desarrollado un profundo conocimiento de la selva y sus recursos. Durante el siglo XX, la región ganó atención internacional por sus recursos minerales y su importancia ecológica.",
             ph: "6.2-7.2",
@@ -398,7 +398,7 @@ export function Map() {
                                     className="text-xl md:text-3xl font-bold text-white"
                                     variants={pageIndicatorAnimation}
                                 >
-                                    Ríos de Guayana
+                                    Mapa
                                 </motion.h2>
                             </div>
 
