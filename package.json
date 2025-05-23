@@ -31,7 +31,9 @@
     "start:main": "cd . && react-scripts start",
     "start:forum": "cd foro && npm start",
     "install:all": "npm install && cd foro && npm install",
-    "build": "npm run build:main && npm run build:forum",
+    "build": "concurrently \"npm run build:main\" \"npm run build:forum\"",
+    "build:main": "react-scripts build",
+    "build:forum": "cd foro && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
