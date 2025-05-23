@@ -16,12 +16,6 @@ export const AVAILABLE_MODELS = [
   '/dracoFlora/regGuayana.glb'
 ];
 
-interface DownloadProgress {
-  speed: number;
-  downloaded: number;
-  total: number;
-}
-
 class ModelStorage {
   private db: IDBPDatabase<ModelDB> | null = null;
   private readonly DB_NAME = 'flora-viewer-db';
@@ -185,19 +179,13 @@ class ModelStorage {
     }
   }
 
-  async downloadModel(
-    url: string, 
-    onProgress?: (progress: number, info: DownloadProgress) => void
-  ): Promise<ArrayBuffer> {
+  async downloadModel(url: string, onProgress?: (progress: number) => void): Promise<ArrayBuffer> {
     try {
       // Verificar si el modelo está en caché
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
         console.log(`Modelo ${url} encontrado en caché`);
-        if (onProgress) {
-          // Cuando el modelo está en caché, enviamos velocidad 0 para indicar que no hay descarga
-          onProgress(0, { speed: 0, downloaded: 0, total: 0 });
-        }
+        if (onProgress) onProgress(100);
         return cachedModel;
       }
 
@@ -212,6 +200,7 @@ class ModelStorage {
 
       console.log(`Iniciando descarga de ${url} con velocidad de conexión: ${this.connectionSpeed}`);
       
+      // Ajustar la estrategia de descarga según la velocidad
       const response = await fetch(url, {
         cache: 'no-store',
         headers: {
@@ -251,18 +240,15 @@ class ModelStorage {
         if (now - lastSpeedUpdate > 2000) {
           const timeElapsed = (now - lastSpeedUpdate) / 1000;
           const bytesReceived = receivedLength - lastBytesReceived;
-          const currentSpeed = timeElapsed > 0 ? (bytesReceived * 8) / timeElapsed : 0; // bits por segundo
+          const currentSpeed = (bytesReceived * 8) / timeElapsed; // bits por segundo
           
-          // Validar que la velocidad sea un número finito
-          if (isFinite(currentSpeed)) {
-            // Actualizar la velocidad de conexión si cambia significativamente
-            if (currentSpeed < this.SPEED_THRESHOLDS.slow && this.connectionSpeed !== 'slow') {
-              this.connectionSpeed = 'slow';
-              console.log('Conexión degradada a lenta:', (currentSpeed / 1000000).toFixed(2), 'Mbps');
-            } else if (currentSpeed > this.SPEED_THRESHOLDS.medium && this.connectionSpeed !== 'fast') {
-              this.connectionSpeed = 'fast';
-              console.log('Conexión mejorada a rápida:', (currentSpeed / 1000000).toFixed(2), 'Mbps');
-            }
+          // Actualizar la velocidad de conexión si cambia significativamente
+          if (currentSpeed < this.SPEED_THRESHOLDS.slow && this.connectionSpeed !== 'slow') {
+            this.connectionSpeed = 'slow';
+            console.log('Conexión degradada a lenta:', (currentSpeed / 1000000).toFixed(2), 'Mbps');
+          } else if (currentSpeed > this.SPEED_THRESHOLDS.medium && this.connectionSpeed !== 'fast') {
+            this.connectionSpeed = 'fast';
+            console.log('Conexión mejorada a rápida:', (currentSpeed / 1000000).toFixed(2), 'Mbps');
           }
 
           lastSpeedUpdate = now;
@@ -270,18 +256,11 @@ class ModelStorage {
         }
 
         // Calcular y reportar el progreso
-        const progress = contentLength > 0 ? Math.min(100, Math.max(0, (receivedLength / contentLength) * 100)) : 0;
+        const progress = (receivedLength / contentLength) * 100;
         
         // Ajustar la frecuencia de actualización del progreso según la velocidad
         if (onProgress && (now - lastProgressUpdate > this.getProgressUpdateInterval())) {
-          const speed = now - lastSpeedUpdate > 0 ? 
-            (receivedLength - lastBytesReceived) / ((now - lastSpeedUpdate) / 1000) : 0;
-          
-          onProgress(progress, {
-            speed: isFinite(speed) ? speed : 0,
-            downloaded: receivedLength,
-            total: contentLength
-          });
+          onProgress(progress);
           lastProgressUpdate = now;
         }
       }
@@ -305,10 +284,7 @@ class ModelStorage {
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
         console.log(`Recuperando modelo ${url} de caché después de error`);
-        if (onProgress) {
-          // Cuando el modelo está en caché, enviamos velocidad 0 para indicar que no hay descarga
-          onProgress(0, { speed: 0, downloaded: 0, total: 0 });
-        }
+        if (onProgress) onProgress(100);
         return cachedModel;
       }
       throw error;

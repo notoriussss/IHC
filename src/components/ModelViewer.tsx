@@ -1259,12 +1259,8 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
   const [activeText, setActiveText] = useState<string | null>(null);
   const [preloadProgress, setPreloadProgress] = useState(0);
   const [isPreloading, setIsPreloading] = useState(true);
-  const [transitionProgress, setTransitionProgress] = useState(0);
-  const [transitionSpeed, setTransitionSpeed] = useState(0);
-  const [transitionDownloaded, setTransitionDownloaded] = useState(0);
-  const [transitionTotal, setTransitionTotal] = useState(0);
 
-  const { progress: threeProgress } = useProgress();
+  const { progress } = useProgress();
 
   // Modificar el efecto para cargar solo el modelo actual
   useEffect(() => {
@@ -1312,7 +1308,7 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
   };
 
   useEffect(() => {
-    if (threeProgress === 100) {
+    if (progress === 100) {
       // Verificamos que el modelo esté cargado
       const checkModelLoaded = setInterval(() => {
         if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function') {
@@ -1360,7 +1356,7 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
         }
       }, 100);
     }
-  }, [threeProgress, currentModel]);
+  }, [progress, currentModel]);
 
   // Efecto para manejar la visibilidad de los textos basado en la vista actual
   useEffect(() => {
@@ -1928,7 +1924,7 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
     setShowUIElements(false);
     setShowLobbyText(false);
     setActiveText(null);
-    setCurrentView('default');
+    setCurrentView('default'); // Forzar la vista a default al cambiar de modelo
     
     // Resetear todos los estados de texto al cambiar de modelo
     setShowNewsText(false);
@@ -1952,83 +1948,75 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
         title: ''
       });
     }
-
-    // Obtener la URL del nuevo modelo
-    const modelUrl = getModelUrl(newModel);
     
-    // Descargar el modelo y actualizar el progreso
-    modelStorage.downloadModel(modelUrl, (progress, info) => {
-      setTransitionProgress(progress);
-      setTransitionSpeed(info.speed);
-      setTransitionDownloaded(info.downloaded);
-      setTransitionTotal(info.total);
-    }).then(() => {
-      // Primero cambiamos el modelo
-      setCurrentModel(newModel);
-      
-      // Esperamos a que el modelo esté cargado
-      const checkModelLoaded = setInterval(() => {
-        if (newModel === 'acuario' && acuarioRef.current) {
-          clearInterval(checkModelLoaded);
-          acuarioRef.current.goToNext();
+    // Primero cambiamos el modelo
+    setCurrentModel(newModel);
+    
+    // Esperamos a que el modelo esté cargado
+    const checkModelLoaded = setInterval(() => {
+      if (newModel === 'acuario' && acuarioRef.current) {
+        clearInterval(checkModelLoaded);
+        acuarioRef.current.goToNext();
+        
+        // Esperamos a que la cámara esté en posición
+        setTimeout(() => {
+          setIsTransitioning(false);
+          setShowUIElements(true);
+          setShowLobbyText(true);
           
+          // Ocultamos el texto de lobby después de 2 segundos
           setTimeout(() => {
-            setIsTransitioning(false);
-            setShowUIElements(true);
-            setShowLobbyText(true);
-            
-            setTimeout(() => {
-              setShowLobbyText(false);
-            }, 2000);
-          }, 1000);
-        } else if (newModel === 'invernadero' && invernaderoRef.current) {
-          clearInterval(checkModelLoaded);
-          invernaderoRef.current.moveToDefault();
+            setShowLobbyText(false);
+          }, 2000);
+        }, 1000);
+      } else if (newModel === 'invernadero' && invernaderoRef.current) {
+        clearInterval(checkModelLoaded);
+        
+        // Movemos la cámara a la posición default
+        invernaderoRef.current.moveToDefault();
+        
+        // Esperamos a que la cámara esté en posición
+        setTimeout(() => {
+          setIsTransitioning(false);
+          setShowUIElements(true);
+          setShowLobbyText(true);
           
+          // Ocultamos el texto de lobby después de 2 segundos
           setTimeout(() => {
-            setIsTransitioning(false);
-            setShowUIElements(true);
-            setShowLobbyText(true);
-            
-            setTimeout(() => {
-              setShowLobbyText(false);
-            }, 2000);
-          }, 1000);
-        } else if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function' && newModel !== 'invernadero' && newModel !== 'acuario') {
-          clearInterval(checkModelLoaded);
-          (modelRef.current as any).moveToDefault();
+            setShowLobbyText(false);
+          }, 2000);
+        }, 1000);
+      } else if (modelRef.current && typeof (modelRef.current as any).moveToDefault === 'function' && newModel !== 'invernadero' && newModel !== 'acuario') {
+        clearInterval(checkModelLoaded);
+        
+        // Movemos la cámara a la posición default
+        (modelRef.current as any).moveToDefault();
+        
+        // Esperamos a que la cámara esté en posición
+        setTimeout(() => {
+          // Forzamos una interacción inicial para posicionar los botones sin mostrar el mapa
+          setShowMap(true);
           
+          // Cerramos el mapa inmediatamente
           setTimeout(() => {
-            setShowMap(true);
+            setShowMap(false);
             
+            // Después de que el mapa se cierre, mostramos la UI y el texto
             setTimeout(() => {
-              setShowMap(false);
+              setIsTransitioning(false);
+              setShowUIElements(true);
+              setShowLobbyText(true);
               
+              // Ocultamos el texto de lobby después de 2 segundos
               setTimeout(() => {
-                setIsTransitioning(false);
-                setShowUIElements(true);
-                setShowLobbyText(true);
-                
-                setTimeout(() => {
-                  setShowLobbyText(false);
-                }, 2000);
-              }, 100);
+                setShowLobbyText(false);
+              }, 2000);
             }, 100);
-          }, 1000);
-        }
-      }, 100);
-    }).catch(error => {
-      console.error('Error al cargar el modelo:', error);
-      setIsTransitioning(false);
-    });
+          }, 100);
+        }, 1000);
+      }
+    }, 100);
   };
-
-  // Actualizar el progreso de transición cuando cambia el progreso de Three.js
-  useEffect(() => {
-    if (isTransitioning && transitionSpeed === 0) {
-      setTransitionProgress(threeProgress);
-    }
-  }, [threeProgress, isTransitioning, transitionSpeed]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000000', position: 'relative' }}>
@@ -2604,7 +2592,7 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
               fontSize: '20px',
               opacity: 0.8
             }}>
-              {Math.min(100, Math.max(0, transitionProgress)).toFixed(0)}%
+              Cargando...
             </div>
             <div style={{
               width: '200px',
@@ -2624,40 +2612,10 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
                   transformOrigin: '0%',
                 }}
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: Math.min(1, Math.max(0, transitionProgress / 100)) }}
-                transition={{ duration: 0.3 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
               />
             </div>
-            {transitionSpeed > 0 ? (
-              <div style={{
-                fontSize: '16px',
-                opacity: 0.6,
-                marginTop: '10px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '5px'
-              }}>
-                <div>
-                  {isFinite(transitionSpeed) ? 
-                    `${(transitionSpeed / (1024 * 1024)).toFixed(2)} MB/s` : 
-                    'Calculando...'}
-                </div>
-                <div>
-                  {isFinite(transitionDownloaded) && isFinite(transitionTotal) ? 
-                    `${(transitionDownloaded / (1024 * 1024)).toFixed(2)} MB / ${(transitionTotal / (1024 * 1024)).toFixed(2)} MB` : 
-                    'Calculando...'}
-                </div>
-              </div>
-            ) : (
-              <div style={{
-                fontSize: '16px',
-                opacity: 0.6,
-                marginTop: '10px'
-              }}>
-                {transitionProgress < 100 ? 'Cargando modelo...' : 'Modelo cargado'}
-              </div>
-            )}
           </motion.div>
         </div>
       )}
