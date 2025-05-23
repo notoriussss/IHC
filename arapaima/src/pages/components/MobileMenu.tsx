@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface MobileMenuProps {
@@ -9,6 +9,25 @@ interface MobileMenuProps {
 export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const menuRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (isOpen && 
+                menuRef.current && 
+                buttonRef.current && 
+                !menuRef.current.contains(event.target as Node) && 
+                !buttonRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
 
     const menuVariants = {
         closed: {
@@ -42,8 +61,12 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
         <>
             {/* Botón del menú hamburguesa */}
             <motion.button
+                ref={buttonRef}
                 className="relative z-[100] flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm md:hidden"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(!isOpen);
+                }}
                 variants={buttonVariants}
                 animate={isOpen ? "open" : "closed"}
                 whileHover={{ scale: 1.1 }}
@@ -58,47 +81,31 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
                 </div>
             </motion.button>
 
-            {/* Portal para el menú desplegable */}
+            {/* Menú desplegable */}
             <AnimatePresence>
                 {isOpen && (
-                    <div className="md:hidden">
-                        {/* Overlay con más desenfoque */}
+                    <>
+                        {/* Overlay */}
                         <motion.div
-                            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+                            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90]"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            style={{ 
-                                position: 'fixed',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                zIndex: 90
-                            }}
                         />
 
-                        {/* Menú con opacidad ajustada y más desenfoque */}
+                        {/* Menú */}
                         <motion.div
-                            className="fixed right-0 w-64 bg-black/[0.98] backdrop-blur-md border-l border-white/10 shadow-[-8px_0_15px_-3px_rgba(0,0,0,0.4)]"
+                            ref={menuRef}
+                            className="fixed top-0 right-0 w-64 h-full bg-black/[0.98] backdrop-blur-md border-l border-white/10 shadow-[-8px_0_15px_-3px_rgba(0,0,0,0.4)] z-[95]"
                             variants={menuVariants}
                             initial="closed"
                             animate="open"
                             exit="closed"
-                            style={{ 
-                                position: 'fixed',
-                                top: 0,
-                                height: '100%',
-                                zIndex: 100,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                padding: '1.5rem'
-                            }}
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="flex flex-col items-center gap-8">
-                                {/* Logo en la parte superior con fondo */}
+                            <div className="flex flex-col gap-4 p-6">
+                                {/* Logo */}
                                 <motion.div
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -112,6 +119,7 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
                                     />
                                 </motion.div>
 
+                                {/* Botón Volver */}
                                 <motion.button
                                     className="flex items-center gap-3 text-white text-lg bg-black/95 hover:bg-black/80 rounded-lg p-3 transition-all duration-200 w-full"
                                     onClick={() => {
@@ -129,6 +137,7 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
                                     Volver
                                 </motion.button>
 
+                                {/* Botón Inicio */}
                                 <motion.button
                                     className="flex items-center gap-3 text-white text-lg bg-black/95 hover:bg-black/80 rounded-lg p-3 transition-all duration-200 w-full"
                                     onClick={() => {
@@ -147,7 +156,7 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
                                 </motion.button>
                             </div>
                         </motion.div>
-                    </div>
+                    </>
                 )}
             </AnimatePresence>
         </>
