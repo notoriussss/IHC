@@ -12,7 +12,7 @@ export const AVAILABLE_MODELS = [
   '/dracoFlora/proyecto.glb',
   '/dracoFlora/acuario-final.glb',
   '/dracoFlora/culturaComprimido.glb',
-  '/dracoFlora/floraOBJ.glb',
+  '/dracoFlora/floraOBJcomprimido2.glb',
   '/dracoFlora/regGuayana.glb'
 ];
 

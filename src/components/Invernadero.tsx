@@ -47,7 +47,7 @@ interface InvernaderoProps {
 
 const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange = () => {}, showMap = false }, ref) => {
   const [error, setError] = useState<string | null>(null);
-  const { gltf, loadingProgress, error: modelError, isLoaded } = useModelLoader('/dracoFlora/floraOBJ.glb');
+  const { gltf, loadingProgress, error: modelError, isLoaded } = useModelLoader('/dracoFlora/floraOBJcomprimido2.glb');
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [targetQuaternion, setTargetQuaternion] = useState<THREE.Quaternion | null>(null);
