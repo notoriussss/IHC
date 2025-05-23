@@ -28,11 +28,11 @@
   },
   "scripts": {
     "start": "concurrently \"npm run start:main\" \"npm run start:forum\"",
-    "start:main": "cd . && react-scripts start",
+    "start:main": "cd . && NODE_OPTIONS='--max-old-space-size=512' react-scripts start",
     "start:forum": "cd foro && npm start",
     "install:all": "npm install && cd foro && npm install && npm install --save-dev vite @vitejs/plugin-react && npm install axios @types/axios --save",
     "build": "CI=false concurrently \"npm run build:main\" \"npm run build:forum\"",
-    "build:main": "CI=false react-scripts build",
+    "build:main": "CI=false NODE_OPTIONS='--max-old-space-size=512' react-scripts build",
     "build:forum": "cd foro && npm install && npm install axios @types/axios --save && npm install @types/axios --save-dev && chmod +x ./node_modules/.bin/vite && CI=false npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
