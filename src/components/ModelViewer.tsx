@@ -2207,7 +2207,7 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
           />
 
           {/* Botones del mapa y explorar */}
-          <div style={{
+          <div className="botones" style={{
             position: 'fixed',
             top: '87.5vh',
             left: '48.5vw',
@@ -2649,7 +2649,8 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
       )}
 
       <style>
-        {`          @keyframes fadeIn {
+        {`
+          @keyframes fadeIn {
             from {
               opacity: 0;
               transform: translate(-50%, -30%);
@@ -2657,6 +2658,13 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
             to {
               opacity: 1;
               transform: translate(-50%, -50%);
+            }
+          }
+
+          @media screen and (max-width: 900px) {
+            .botones {
+              top: 5.5vh !important;
+              left: 50vw !important;
             }
           }
         `}
