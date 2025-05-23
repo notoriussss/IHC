@@ -1,9 +1,9 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm run install:all && cd foro && npm install axios @types/axios"
+buildCommand = "npm run install:all && cd foro && npm install axios @types/axios --save && npm install @types/axios --save-dev"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "CI=false npm start"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "on-failure"
