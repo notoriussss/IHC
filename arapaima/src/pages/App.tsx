@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import { Border } from '@/components/ui'; // Por los momentos solo importo el Border
 import { Aquarium, Library, Culture, Forum, ArticleDetail, PostDetail } from '@/pages'; // Importamos PostDetail
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
@@ -46,15 +45,34 @@ const KUAIMARE_TEXT_VARIATIONS = [
 function Home() {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Estado para la posición relativa del mouse respecto al centro de la pantalla
-  const [kuaiPos, setKuaiPos] = useState({ x: 0, y: 0 });
-
-  // Estado para el texto tipo máquina de escribir
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [displayedText, setDisplayedText] = useState('');
   const [textIndex, setTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
   const [currentImage, setCurrentImage] = useState(1);
+  const [rotation, setRotation] = useState(0);
+
+  const menuItems = [
+    { path: '/forum', icon: '/src/assets/icons/forum-icon.png', label: 'FORO', angle: 45 },
+    { path: '/culture', icon: '/src/assets/icons/culture-icon.png', label: 'CULTURA', angle: 135 },
+    { path: '/library', icon: '/src/assets/icons/library-icon.png', label: 'BIBLIOTECA', angle: 225 },
+    { path: '/aqua', icon: '/src/assets/icons/fish-icon.png', label: 'ACUARIO', angle: 315 }
+  ];
+
+  const handleItemHover = (index: number | null) => {
+    setHoveredItem(index);
+    if (index !== null && index >= 0) {
+      const targetAngle = menuItems[index].angle;
+      let newRotation = targetAngle;
+      const currentRotation = rotation % 360;
+      const diff = ((targetAngle - currentRotation + 540) % 360) - 180;
+      newRotation = currentRotation + diff;
+      setRotation(newRotation);
+      handleCornerHover(index);
+    } else {
+      handleCornerHover(-1);
+    }
+  };
 
   // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
@@ -100,29 +118,11 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const offsetX = e.clientX - centerX;
-      const offsetY = e.clientY - centerY;
-      const maxMove = 40;
-      const limitedX = Math.max(-maxMove, Math.min(maxMove, offsetX / 10));
-      const limitedY = Math.max(-maxMove, Math.min(maxMove, offsetY / 10));
-      setKuaiPos({ x: limitedX, y: limitedY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
         ref={containerRef}
-        className="relative w-full h-screen overflow-hidden"
+        className="relative w-full h-screen overflow-hidden flex items-center justify-center"
         style={{
           backgroundImage: "url('/src/assets/background/background-desktop.png')",
           backgroundSize: 'cover',
@@ -134,111 +134,158 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
-
         {/* Logo en la parte superior */}
         <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
-            <img
-                src="/src/assets/logo/logo.svg"
-                alt="Logo"
-                className="w-80 h-auto"
-                style={{ userSelect: 'none' }}
-            />
-        </div>
-
-        {/* Contenido centrado */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-            <motion.img
-                src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
-                alt="Kuai Mare"
-                className="w-125 h-auto mb-8"
-                style={{ userSelect: 'none' }}
-                animate={{
-                  x: kuaiPos.x,
-                  y: kuaiPos.y,
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 40,
-                  damping: 15,
-                  mass: 0.8,
-                }}
-            />
-            <div
-                className="w-[1030px] h-60 text-center justify-start text-white text-3xl font-normal pointer-events-auto cursor-pointer relative z-20"
-                onClick={handleTextClick}
-            >
-                <p>
-                  {displayedText}
-                  <span className="animate-pulse">{displayedText.length < currentText.length ? '▋' : ''}</span>
-                </p>
-            </div>
-        </div>
-
-        {/* Imágenes debajo de las esquinas */}
-        <div className="absolute top-0 left-0 z-0">
           <img
-            src="/src/assets/background/sun.svg"
-            alt="Top Left Image"
-            className="w-200 h-200"
+            src="/src/assets/logo/logo.svg"
+            alt="Logo"
+            className="w-80 h-auto"
+            style={{ userSelect: 'none' }}
           />
+        </div>
+
+        {/* Contenedor principal del medallón */}
+        <div className="relative w-[700px] h-[700px] flex items-center justify-center">
+          {/* Círculo Warao decorativo */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.img
+              src="/src/assets/icons/circle-warao.png"
+              alt="Círculo Warao"
+              className="w-[650px] h-[650px] absolute"
+              style={{
+                filter: 'brightness(2) contrast(1.2) invert(0.9) sepia(0.5) saturate(120%) hue-rotate(70deg)',
+                opacity: 0.4,
+                mixBlendMode: 'screen'
+              }}
+              animate={{
+                rotate: rotation
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 60,
+                damping: 15
+              }}
+            />
+          </div>
+
+          {/* Medallón base */}
+          <div
+            className="absolute w-[600px] h-[600px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(0,20,0,0.9) 0%, rgba(0,10,0,0.7) 100%)',
+              border: '3px solid rgba(0,255,100,0.15)',
+              boxShadow: 'inset 0 0 50px rgba(0,50,0,0.5), 0 0 30px rgba(0,50,0,0.5)'
+            }}
+          />
+
+          {/* Texto descriptivo */}
+          <div 
+            className="absolute w-[400px] text-center text-white text-lg font-normal z-20 transition-opacity duration-300"
+            style={{
+              opacity: hoveredItem !== null ? 1 : 0,
+              textShadow: '0 0 10px rgba(0,255,100,0.3)'
+            }}
+          >
+            <p className="text-sm leading-tight">
+              {displayedText}
+              <span className="animate-pulse">
+                {displayedText.length < currentText.length ? '▋' : ''}
+              </span>
+            </p>
+          </div>
+
+          {/* Kuai Mare en el centro */}
+          <div className="absolute w-32 h-32 z-20">
+            <img
+              src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
+              alt="Kuai Mare"
+              className="w-full h-full"
+              style={{ 
+                userSelect: 'none',
+                filter: 'drop-shadow(0 0 10px rgba(0,255,100,0.3))'
+              }}
+            />
+          </div>
+
+          {/* Menú circular */}
+          <div className="absolute w-full h-full">
+            {menuItems.map((item, index) => {
+              const angleRad = (item.angle * Math.PI) / 180;
+              const radius = 250;
+              const x = Math.cos(angleRad) * radius;
+              const y = Math.sin(angleRad) * radius;
+
+              return (
+                <motion.div
+                  key={item.path}
+                  className="absolute z-30"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(calc(${x}px - 50%), calc(${y}px - 50%))`,
+                  }}
+                >
+                  <div
+                    className="w-24 h-24 rounded-full flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-200"
+                    style={{
+                      background: hoveredItem === index 
+                        ? 'radial-gradient(circle, rgba(200,255,220,0.95) 0%, rgba(150,255,180,0.85) 100%)'
+                        : 'radial-gradient(circle, rgba(0,40,0,0.8) 0%, rgba(0,20,0,0.6) 100%)',
+                      border: hoveredItem === index 
+                        ? '2px solid rgba(100,255,150,1)' 
+                        : '2px solid rgba(0,255,100,0.2)',
+                      transform: hoveredItem === index ? 'scale(1.1)' : 'scale(1)',
+                      boxShadow: hoveredItem === index
+                        ? '0 0 20px rgba(0,255,100,0.3)'
+                        : '0 0 10px rgba(0,50,0,0.5)'
+                    }}
+                    onMouseEnter={() => handleItemHover(index)}
+                    onMouseLeave={() => handleItemHover(null)}
+                    onClick={() => navigate(item.path)}
+                  >
+                    <img
+                      src={item.icon}
+                      alt={item.label}
+                      className="w-10 h-10 transition-all duration-200"
+                      style={{
+                        filter: hoveredItem === index 
+                          ? 'brightness(0) saturate(100%)'
+                          : 'brightness(0) invert(1) sepia(0.5) saturate(200%) hue-rotate(70deg)'
+                      }}
+                    />
+                    <span 
+                      className="text-xs font-bold transition-all duration-200"
+                      style={{
+                        color: hoveredItem === index ? '#003810' : '#00ff80',
+                        textShadow: hoveredItem === index 
+                          ? 'none'
+                          : '0 0 10px rgba(0,255,100,0.5)'
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Background images */}
+        <div className="absolute top-0 left-0 z-0">
+          <img src="/src/assets/background/sun.svg" alt="Top Left Image" className="w-200 h-200" />
         </div>
         <div className="absolute top-0 right-0 z-0">
-          <img
-            src="/src/assets/background/leaf.svg"
-            alt="Top Right Image"
-            className="w-110 h-110"
-          />
+          <img src="/src/assets/background/leaf.svg" alt="Top Right Image" className="w-110 h-110" />
         </div>
         <div className="absolute top-0 right-0 z-0 mix-blend-saturation">
-          <img
-            src="/src/assets/background/leaf-background.svg"
-            alt="Top Right Background Image"
-            className="w-150 h-150"
-          />
+          <img src="/src/assets/background/leaf-background.svg" alt="Top Right Background Image" className="w-150 h-150" />
         </div>
         <div className="absolute bottom-0 left-0 z-0">
-          <img
-            src="/src/assets/background/fire.svg"
-            alt="Bottom Left Image"
-            className="w-300 h-300"
-          />
+          <img src="/src/assets/background/fire.svg" alt="Bottom Left Image" className="w-300 h-300" />
         </div>
         <div className="absolute bottom-0 right-0 z-0">
-            <img
-              src="/src/assets/background/water.svg"
-              alt="Bottom Right Image"
-              className="w-225 h-125"
-            />
-        </div>
-
-        {/* Esquinas decorativas con navegación */}
-        <div 
-          className="absolute top-0 left-0 z-30" 
-          onClick={() => navigate('/forum')}
-          onMouseEnter={() => handleCornerHover(0)}
-        >
-          <Border src="/src/assets/icons/border_top_left.svg" alt="Top Left Border" />
-        </div>
-        <div 
-          className="absolute top-0 right-0 z-30" 
-          onClick={() => navigate('/culture')}
-          onMouseEnter={() => handleCornerHover(1)}
-        >
-          <Border src="/src/assets/icons/border_top_right.svg" alt="Top Right Border" />
-        </div>
-        <div 
-          className="absolute bottom-0 left-0 z-30" 
-          onClick={() => navigate('/library')}
-          onMouseEnter={() => handleCornerHover(2)}
-        >
-          <Border src="/src/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
-        </div>
-        <div 
-          className="absolute bottom-0 right-0 z-30" 
-          onClick={() => navigate('/aqua')}
-          onMouseEnter={() => handleCornerHover(3)}
-        >
-          <Border src="/src/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
+          <img src="/src/assets/background/water.svg" alt="Bottom Right Image" className="w-225 h-125" />
         </div>
       </motion.div>
     </AnimatePresence>
