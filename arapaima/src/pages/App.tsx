@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import { Aquarium, Library, Culture, Forum, ArticleDetail, PostDetail } from '@/pages'; // Importamos PostDetail
+import { Border } from '@/components/ui';
+import { Aquarium, Library, Culture, Forum, ArticleDetail, PostDetail } from '@/pages';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import '/src/css/App.css';
@@ -42,7 +43,8 @@ const KUAIMARE_TEXT_VARIATIONS = [
     "Kuai-Mare fluye donde el agua canta. Conoce los secretos de los ríos, las lagunas y los caños que dan vida a la Guayana. A través de su mirada ancestral, entenderás la conexión sagrada entre el mundo líquido y los seres que lo habitan.",
 ];
 
-function Home() {
+// Componente para la versión móvil/tablet
+function MobileHome() {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
@@ -60,8 +62,8 @@ function Home() {
       icon: '/src/assets/icons/forum-icon.png', 
       label: 'FORO', 
       angle: 45,
-      bgColor: 'rgba(0, 0, 0, 0.3)',  // Transparente oscuro por defecto
-      hoverBgColor: 'rgba(255, 183, 0, 0.75)',  // #FFB700
+      bgColor: 'rgba(0, 0, 0, 0.3)',
+      hoverBgColor: 'rgba(255, 183, 0, 0.75)',
       borderColor: 'rgba(255, 183, 0, 0.3)'
     },
     { 
@@ -70,7 +72,7 @@ function Home() {
       label: 'CULTURA', 
       angle: 135,
       bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(59, 161, 0, 0.75)',  // #3BA100
+      hoverBgColor: 'rgba(59, 161, 0, 0.75)',
       borderColor: 'rgba(59, 161, 0, 0.3)'
     },
     { 
@@ -79,7 +81,7 @@ function Home() {
       label: 'BIBLIOTECA', 
       angle: 225,
       bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(77, 35, 8, 0.75)',  // #4D2308
+      hoverBgColor: 'rgba(77, 35, 8, 0.75)',
       borderColor: 'rgba(77, 35, 8, 0.3)'
     },
     { 
@@ -88,7 +90,7 @@ function Home() {
       label: 'ACUARIO', 
       angle: 315,
       bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(0, 168, 154, 0.75)',  // #00A89A
+      hoverBgColor: 'rgba(0, 168, 154, 0.75)',
       borderColor: 'rgba(0, 168, 154, 0.3)'
     }
   ];
@@ -118,7 +120,6 @@ function Home() {
     setPreviousHoveredItem(index);
   };
 
-  // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
     const newText = KUAIMARE_TEXT_VARIATIONS[index];
     if (newText !== currentText) {
@@ -128,7 +129,6 @@ function Home() {
     }
   };
 
-  // Efecto para mostrar el texto caracter por caracter
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     
@@ -144,12 +144,10 @@ function Home() {
     };
   }, [textIndex, currentText]);
 
-  // Efecto para establecer el texto inicial
   useEffect(() => {
     setCurrentText(KUAIMARE_TEXT);
   }, []);
 
-  // Permitir que al hacer click se muestre todo el texto de una vez
   const handleTextClick = () => {
     if (textIndex < currentText.length) {
       setDisplayedText(currentText);
@@ -173,18 +171,8 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
-        {/* Logo - solo visible en desktop */}
-        <div className="absolute top-5 left-5 z-20 hidden md:block">
-          <img
-            src="/src/assets/logo/logo.svg"
-            alt="Logo"
-            className="w-60 h-auto"
-            style={{ userSelect: 'none' }}
-          />
-        </div>
-
         {/* Logo centrado para móviles */}
-        <div className="md:hidden flex justify-center items-center mb-4 mt-6">
+        <div className="flex justify-center items-center mb-4 mt-6">
           <img
             src="/src/assets/logo/logo.svg"
             alt="Logo"
@@ -194,13 +182,13 @@ function Home() {
         </div>
 
         {/* Contenedor principal del medallón */}
-        <div className="relative md:w-[900px] md:h-[900px] w-[400px] h-[400px] flex items-center justify-center md:mt-0 -mt-10">
+        <div className="relative w-[400px] h-[400px] flex items-center justify-center -mt-10">
           {/* Kuai Mare decorativo de fondo */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img
               src="/src/assets/chatbot/kuai-mare-1.svg"
               alt="Kuai Mare Background"
-              className="md:w-[1200px] md:h-[1200px] w-[500px] h-[500px] absolute"
+              className="w-[500px] h-[500px] absolute"
               style={{ 
                 opacity: 0.15,
                 filter: 'brightness(0.8) sepia(0.5) hue-rotate(70deg) saturate(120%)',
@@ -215,7 +203,7 @@ function Home() {
             <motion.img
               src="/src/assets/icons/circle-warao.png"
               alt="Círculo Warao"
-              className="md:w-[800px] md:h-[800px] w-[350px] h-[350px] absolute"
+              className="w-[350px] h-[350px] absolute"
               style={{
                 filter: 'brightness(2) contrast(1.2) sepia(0.5) saturate(120%) hue-rotate(70deg)',
                 opacity: 0.8,
@@ -234,7 +222,7 @@ function Home() {
 
           {/* Medallón base */}
           <div
-            className="absolute md:w-[800px] md:h-[800px] w-[350px] h-[350px] rounded-full"
+            className="absolute w-[350px] h-[350px] rounded-full"
             style={{
               background: 'radial-gradient(circle, rgba(0,20,0,0.9) 0%, rgba(0,10,0,0.7) 100%)',
               border: '3px solid rgba(0,255,100,0.15)',
@@ -244,7 +232,7 @@ function Home() {
 
           {/* Texto descriptivo */}
           <div 
-            className="absolute md:w-[450px] w-[200px] text-center text-white md:text-xl text-xs font-normal z-30 transition-all duration-300 cursor-pointer"
+            className="absolute w-[200px] text-center text-white text-xs font-normal z-30 transition-all duration-300 cursor-pointer"
             style={{
               opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
               filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
@@ -252,7 +240,7 @@ function Home() {
             }}
             onClick={handleTextClick}
           >
-            <p className="md:text-lg text-[11px] leading-tight md:leading-relaxed mx-auto">
+            <p className="text-[11px] leading-tight mx-auto">
               {displayedText}
               <span className="animate-pulse">
                 {displayedText.length < currentText.length ? '▋' : ''}
@@ -264,7 +252,7 @@ function Home() {
           <div className="absolute w-full h-full">
             {menuItems.map((item, index) => {
               const angleRad = (item.angle * Math.PI) / 180;
-              const radius = window.innerWidth > 768 ? 350 : 170;
+              const radius = 170;
               const x = Math.cos(angleRad) * radius;
               const y = Math.sin(angleRad) * radius;
 
@@ -279,7 +267,7 @@ function Home() {
                   }}
                 >
                   <div
-                    className="md:w-32 md:h-32 w-20 h-20 rounded-full flex flex-col items-center justify-center md:gap-3 gap-2 cursor-pointer transition-all duration-300"
+                    className="w-20 h-20 rounded-full flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300"
                     style={{
                       background: hoveredItem === index 
                         ? item.hoverBgColor
@@ -299,13 +287,13 @@ function Home() {
                     <img
                       src={item.icon}
                       alt={item.label}
-                      className="md:w-14 md:h-14 w-8 h-8 transition-all duration-200"
+                      className="w-8 h-8 transition-all duration-200"
                       style={{
                         filter: 'brightness(0) invert(1)'
                       }}
                     />
                     <span 
-                      className="md:text-sm text-[10px] font-bold transition-all duration-200"
+                      className="text-[10px] font-bold transition-all duration-200"
                       style={{
                         color: '#ffffff',
                         textShadow: hoveredItem === index 
@@ -324,6 +312,216 @@ function Home() {
       </motion.div>
     </AnimatePresence>
   );
+}
+
+// Componente para la versión desktop
+function DesktopHome() {
+  const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [kuaiPos, setKuaiPos] = useState({ x: 0, y: 0 });
+  const [displayedText, setDisplayedText] = useState('');
+  const [textIndex, setTextIndex] = useState(0);
+  const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
+  const [currentImage, setCurrentImage] = useState(1);
+
+  const handleCornerHover = (index: number) => {
+    const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
+    if (newText !== currentText) {
+      setCurrentText(newText);
+      setDisplayedText('');
+      setTextIndex(0);
+      setCurrentImage(1);
+    }
+  };
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    if (textIndex < currentText.length) {
+      timeoutId = setTimeout(() => {
+        setDisplayedText(currentText.substring(0, textIndex + 1));
+        setTextIndex((prev) => prev + 1);
+        if (textIndex % 4 === 0) {
+          if (textIndex < currentText.length - 4) {
+            setCurrentImage((prev) => prev === 1 ? 2 : 1);
+          } else {
+            setCurrentImage(1);
+          }
+        }
+      }, 22);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [textIndex, currentText]);
+
+  const handleTextClick = () => {
+    if (textIndex < currentText.length) {
+      setDisplayedText(currentText);
+      setTextIndex(currentText.length);
+      setCurrentImage(1);
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const offsetX = e.clientX - centerX;
+      const offsetY = e.clientY - centerY;
+      const maxMove = 40;
+      const limitedX = Math.max(-maxMove, Math.min(maxMove, offsetX / 10));
+      const limitedY = Math.max(-maxMove, Math.min(maxMove, offsetY / 10));
+      setKuaiPos({ x: limitedX, y: limitedY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        ref={containerRef}
+        className="relative w-full h-screen overflow-hidden"
+        style={{
+          backgroundImage: "url('/src/assets/background/background-desktop.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          userSelect: 'none',
+        }}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={homeVariants}
+      >
+        {/* Logo en la parte superior */}
+        <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
+            <img
+                src="/src/assets/logo/logo.svg"
+                alt="Logo"
+                className="w-80 h-auto"
+                style={{ userSelect: 'none' }}
+            />
+        </div>
+
+        {/* Contenido centrado */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+            <motion.img
+                src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
+                alt="Kuai Mare"
+                className="w-125 h-auto mb-8"
+                style={{ userSelect: 'none' }}
+                animate={{
+                  x: kuaiPos.x,
+                  y: kuaiPos.y,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 40,
+                  damping: 15,
+                  mass: 0.8,
+                }}
+            />
+            <div
+                className="w-[1030px] h-60 text-center justify-start text-white text-3xl font-normal pointer-events-auto cursor-pointer relative z-20"
+                onClick={handleTextClick}
+            >
+                <p>
+                  {displayedText}
+                  <span className="animate-pulse">{displayedText.length < currentText.length ? '▋' : ''}</span>
+                </p>
+            </div>
+        </div>
+
+        {/* Imágenes debajo de las esquinas */}
+        <div className="absolute top-0 left-0 z-0">
+          <img
+            src="/src/assets/background/sun.svg"
+            alt="Top Left Image"
+            className="w-200 h-200"
+          />
+        </div>
+        <div className="absolute top-0 right-0 z-0">
+          <img
+            src="/src/assets/background/leaf.svg"
+            alt="Top Right Image"
+            className="w-110 h-110"
+          />
+        </div>
+        <div className="absolute top-0 right-0 z-0 mix-blend-saturation">
+          <img
+            src="/src/assets/background/leaf-background.svg"
+            alt="Top Right Background Image"
+            className="w-150 h-150"
+          />
+        </div>
+        <div className="absolute bottom-0 left-0 z-0">
+          <img
+            src="/src/assets/background/fire.svg"
+            alt="Bottom Left Image"
+            className="w-300 h-300"
+          />
+        </div>
+        <div className="absolute bottom-0 right-0 z-0">
+            <img
+              src="/src/assets/background/water.svg"
+              alt="Bottom Right Image"
+              className="w-225 h-125"
+            />
+        </div>
+
+        {/* Esquinas decorativas con navegación */}
+        <div 
+          className="absolute top-0 left-0 z-30" 
+          onClick={() => navigate('/forum')}
+          onMouseEnter={() => handleCornerHover(0)}
+        >
+          <Border src="/src/assets/icons/border_top_left.svg" alt="Top Left Border" />
+        </div>
+        <div 
+          className="absolute top-0 right-0 z-30" 
+          onClick={() => navigate('/culture')}
+          onMouseEnter={() => handleCornerHover(1)}
+        >
+          <Border src="/src/assets/icons/border_top_right.svg" alt="Top Right Border" />
+        </div>
+        <div 
+          className="absolute bottom-0 left-0 z-30" 
+          onClick={() => navigate('/library')}
+          onMouseEnter={() => handleCornerHover(2)}
+        >
+          <Border src="/src/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
+        </div>
+        <div 
+          className="absolute bottom-0 right-0 z-30" 
+          onClick={() => navigate('/aqua')}
+          onMouseEnter={() => handleCornerHover(3)}
+        >
+          <Border src="/src/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// Componente Home que decide qué versión mostrar
+function Home() {
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return isDesktop ? <DesktopHome /> : <MobileHome />;
 }
 
 export default function App() {
