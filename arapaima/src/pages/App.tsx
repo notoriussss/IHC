@@ -59,38 +59,38 @@ function MobileHome() {
   const menuItems = [
     { 
       path: '/forum', 
-      icon: '/src/assets/icons/forum-icon.png', 
+      icon: '/src/assets/icons/forum-icon.png',
       label: 'FORO', 
       angle: 45,
-      bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(255, 183, 0, 0.75)',
+      bgColor: 'rgba(255, 183, 0, 0.75)',
+      hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(255, 183, 0, 0.3)'
     },
     { 
       path: '/culture', 
-      icon: '/src/assets/icons/culture-icon.png', 
+      icon: '/src/assets/icons/culture-icon.png',
       label: 'CULTURA', 
       angle: 135,
-      bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(59, 161, 0, 0.75)',
+      bgColor: 'rgba(59, 161, 0, 0.75)',
+      hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(59, 161, 0, 0.3)'
     },
     { 
       path: '/library', 
-      icon: '/src/assets/icons/library-icon.png', 
+      icon: '/src/assets/icons/library-icon.png',
       label: 'BIBLIOTECA', 
       angle: 225,
-      bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(77, 35, 8, 0.75)',
+      bgColor: 'rgba(77, 35, 8, 0.75)',
+      hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(77, 35, 8, 0.3)'
     },
     { 
       path: '/aqua', 
-      icon: '/src/assets/icons/fish-icon.png', 
+      icon: '/src/assets/icons/fish-icon.png',
       label: 'AGUA', 
       angle: 315,
-      bgColor: 'rgba(0, 0, 0, 0.3)',
-      hoverBgColor: 'rgba(0, 168, 154, 0.75)',
+      bgColor: 'rgba(0, 168, 154, 0.75)',
+      hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(0, 168, 154, 0.3)'
     }
   ];
@@ -172,7 +172,7 @@ function MobileHome() {
         variants={homeVariants}
       >
         {/* Logo centrado para móviles */}
-        <div className="flex justify-center items-center mb-4 mt-6">
+        <div className="flex justify-center items-center mt-4 mb-16">
           <img
             src="/src/assets/logo/logo.svg"
             alt="Logo"
@@ -182,7 +182,7 @@ function MobileHome() {
         </div>
 
         {/* Contenedor principal del medallón */}
-        <div className="relative w-[400px] h-[400px] flex items-center justify-center -mt-10">
+        <div className="relative w-[400px] h-[400px] flex items-center justify-center mt-8">
           {/* Kuai Mare decorativo de fondo */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img
@@ -273,12 +273,12 @@ function MobileHome() {
                         ? item.hoverBgColor
                         : item.bgColor,
                       border: hoveredItem === index 
-                        ? `2px solid ${item.borderColor}`
-                        : '2px solid rgba(255, 255, 255, 0.1)',
+                        ? '2px solid rgba(0, 0, 0, 0.1)'
+                        : `2px solid ${item.borderColor}`,
                       transform: hoveredItem === index ? 'scale(1.1)' : 'scale(1)',
                       boxShadow: hoveredItem === index
-                        ? `0 0 20px ${item.borderColor}`
-                        : '0 0 10px rgba(0,0,0,0.3)'
+                        ? '0 0 10px rgba(0,0,0,0.1)'
+                        : `0 0 20px ${item.borderColor}`
                     }}
                     onMouseEnter={() => handleItemHover(index)}
                     onMouseLeave={() => handleItemHover(null)}
@@ -289,15 +289,17 @@ function MobileHome() {
                       alt={item.label}
                       className="w-8 h-8 transition-all duration-200"
                       style={{
-                        filter: 'brightness(0) invert(1)'
+                        filter: hoveredItem === index 
+                          ? 'brightness(0)'
+                          : 'brightness(0) invert(1)'
                       }}
                     />
                     <span 
                       className="text-[10px] font-bold transition-all duration-200"
                       style={{
-                        color: '#ffffff',
+                        color: hoveredItem === index ? '#000000' : '#ffffff',
                         textShadow: hoveredItem === index 
-                          ? '0 0 10px rgba(0,0,0,0.3)'
+                          ? 'none'
                           : '0 0 10px rgba(0,0,0,0.5)'
                       }}
                     >
