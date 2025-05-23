@@ -171,11 +171,11 @@ export function Library() {
                     }}
                 >
                     {/* Barra superior con ícono y título */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-5">
-                        <div className="flex items-center px-8">
-                            <div className="flex items-center gap-3 flex-1">
+                    <div className="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-sm z-50 py-2 sm:py-2.5 md:py-5">
+                        <div className="flex items-center px-4 sm:px-5 md:px-8">
+                            <div className="flex items-center gap-2 sm:gap-2.5 flex-1">
                                 <motion.div 
-                                    className="w-20 h-20 flex items-center justify-center"
+                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 flex items-center justify-center"
                                     variants={iconAnimation}
                                 >
                                     <img 
@@ -185,7 +185,7 @@ export function Library() {
                                     />
                                 </motion.div>
                                 <motion.h2 
-                                    className="text-3xl font-bold text-white"
+                                    className="text-xl sm:text-xl md:text-3xl font-bold text-white"
                                     variants={pageIndicatorAnimation}
                                 >
                                     Biblioteca
@@ -193,7 +193,7 @@ export function Library() {
                             </div>
 
                             <motion.div
-                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer hidden sm:block"
                                 onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -201,14 +201,14 @@ export function Library() {
                                 <img
                                     src="/src/assets/logo/logo.svg"
                                     alt="Logo"
-                                    className="w-60 h-auto"
+                                    className="w-32 sm:w-36 md:w-60 h-auto"
                                 />
                             </motion.div>
 
                             {/* Botón de volver */}
                             <div className="flex-1 flex justify-end">
                                 <motion.div
-                                    className="flex items-center gap-6 cursor-pointer"
+                                    className="flex items-center gap-3 sm:gap-3 md:gap-6 cursor-pointer"
                                     onClick={() => navigate('/')}
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -216,9 +216,9 @@ export function Library() {
                                     <img
                                         src="/src/assets/icons/back.png"
                                         alt="Volver"
-                                        className="w-12 h-12"
+                                        className="w-8 h-8 sm:w-9 sm:h-9 md:w-12 md:h-12"
                                     />
-                                    <span className="text-white text-xl">Volver</span>
+                                    <span className="text-white text-base sm:text-base md:text-xl">Volver</span>
                                 </motion.div>
                             </div>
                         </div>
@@ -226,15 +226,15 @@ export function Library() {
 
                     {/* Contenido de la biblioteca */}
                     <div className="flex-1 w-full overflow-y-auto custom-scrollbar-blue">
-                        <div className="flex flex-col items-center justify-center min-h-full pt-36 pb-8 px-8">
+                        <div className="flex flex-col items-center justify-center min-h-full pt-24 sm:pt-24 md:pt-36 pb-8 px-4 sm:px-5 md:px-8">
                             {/* Máscara superior central con sinopsis */}
-                            <div className="flex items-center justify-center gap-8 my-8">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4 md:gap-8 my-4 sm:my-4 md:my-8">
                                 {/* Máscara superior central */}
                                 <motion.div
-                                    className="relative w-[500px] h-[500px]"
+                                    className="relative w-[300px] h-[300px] sm:w-[280px] sm:h-[280px] md:w-[500px] md:h-[500px]"
                                     layout
                                     initial={{ x: 0, rotate: 0 }}
-                                    animate={{ x: -100, rotate: -10 }}
+                                    animate={{ x: 0, rotate: 0 }}
                                     transition={{ duration: 0.5 }}
                                     key={centerBook.title}
                                 >
@@ -260,15 +260,15 @@ export function Library() {
                                 </motion.div>
 
                                 {/* Contenedor de la sinopsis */}
-                                <div className="w-[350px] text-left bg-black/20 backdrop-blur-sm p-6 rounded-xl">
-                                    <h2 className="text-2xl font-bold mb-4">{centerBook.title}</h2>
-                                    <p className="text-lg leading-relaxed mb-4">
+                                <div className="w-full sm:w-[280px] md:w-[350px] text-left bg-black/20 backdrop-blur-sm p-4 sm:p-4 md:p-6 rounded-xl">
+                                    <h2 className="text-xl sm:text-xl md:text-2xl font-bold mb-2 sm:mb-2 md:mb-4">{centerBook.title}</h2>
+                                    <p className="text-base sm:text-sm md:text-lg leading-relaxed mb-4">
                                         {centerBook.content || 'Sinopsis no disponible.'}
                                     </p>
                                     <motion.a
                                         href={centerBook.url}
                                         onClick={(e) => handleLinkClick(e, centerBook.url)}
-                                        className="inline-block bg-white/10 px-6 py-3 rounded-lg text-white text-lg font-bold hover:bg-white/20 transition-colors"
+                                        className="inline-block bg-white/10 px-4 sm:px-4 md:px-6 py-2 sm:py-2 md:py-3 rounded-lg text-white text-base sm:text-sm md:text-lg font-bold hover:bg-white/20 transition-colors"
                                         whileHover={{ scale: 1.05 }}
                                         transition={{ duration: 0.2 }}
                                     >
@@ -278,13 +278,13 @@ export function Library() {
                             </div>
 
                             {/* Contenedor principal para la librería */}
-                            <div className="flex items-center justify-center gap-16 bg-black/20 backdrop-blur-sm p-8 rounded-xl">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-4 md:gap-16 bg-black/20 backdrop-blur-sm p-4 sm:p-4 md:p-8 rounded-xl w-full">
                                 {/* Contenedor izquierdo */}
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-2 gap-4 sm:gap-3 md:gap-8">
                                     {leftBooks.map((book, index) => (
                                         <motion.div
                                             key={index}
-                                            className="relative w-[180px] h-[220px] cursor-pointer"
+                                            className="relative w-[120px] h-[160px] sm:w-[110px] sm:h-[140px] md:w-[180px] md:h-[220px] cursor-pointer"
                                             onClick={() => setCenterBook(book)}
                                             whileHover={{ scale: 1.05 }}
                                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -314,7 +314,7 @@ export function Library() {
 
                                 {/* Elemento central inferior */}
                                 <motion.div
-                                    className="relative w-[300px] h-[500px] cursor-pointer"
+                                    className="relative w-[200px] h-[300px] sm:w-[180px] sm:h-[280px] md:w-[300px] md:h-[500px] cursor-pointer"
                                     onClick={() => setCenterBook(bottomCenterBook)}
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -341,11 +341,11 @@ export function Library() {
                                 </motion.div>
 
                                 {/* Contenedor derecho */}
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-2 gap-4 sm:gap-3 md:gap-8">
                                     {rightBooks.map((book, index) => (
                                         <motion.div
                                             key={index}
-                                            className="relative w-[180px] h-[220px] cursor-pointer"
+                                            className="relative w-[120px] h-[160px] sm:w-[110px] sm:h-[140px] md:w-[180px] md:h-[220px] cursor-pointer"
                                             onClick={() => setCenterBook(book)}
                                             whileHover={{ scale: 1.05 }}
                                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -394,16 +394,16 @@ export function Library() {
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-md p-8 rounded-xl z-50 w-[400px]"
+                                    className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-md p-4 sm:p-4 md:p-8 rounded-xl z-50 w-[90%] max-w-[400px]"
                                 >
-                                    <h3 className="text-2xl font-bold text-white mb-4">¿Deseas salir de la página?</h3>
-                                    <p className="text-white/80 mb-6">
+                                    <h3 className="text-xl sm:text-xl md:text-2xl font-bold text-white mb-4">¿Deseas salir de la página?</h3>
+                                    <p className="text-white/80 mb-6 text-sm sm:text-sm md:text-base">
                                         Estás a punto de navegar a un sitio externo. ¿Deseas continuar?
                                     </p>
                                     <div className="flex gap-4 justify-end">
                                         <motion.button
                                             onClick={handleCancel}
-                                            className="px-6 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+                                            className="px-4 sm:px-4 md:px-6 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm sm:text-sm md:text-base"
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                         >
@@ -411,7 +411,7 @@ export function Library() {
                                         </motion.button>
                                         <motion.button
                                             onClick={handleConfirm}
-                                            className="px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                                            className="px-4 sm:px-4 md:px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors text-sm sm:text-sm md:text-base"
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                         >
