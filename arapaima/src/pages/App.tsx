@@ -64,7 +64,8 @@ function MobileHome() {
       angle: 45,
       bgColor: 'rgba(255, 183, 0, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: 'rgba(255, 183, 0, 0.3)'
+      borderColor: 'rgba(255, 183, 0, 0.3)',
+      textColor: 'rgb(255, 183, 0)'
     },
     { 
       path: '/culture', 
@@ -73,7 +74,8 @@ function MobileHome() {
       angle: 135,
       bgColor: 'rgba(59, 161, 0, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: 'rgba(59, 161, 0, 0.3)'
+      borderColor: 'rgba(59, 161, 0, 0.3)',
+      textColor: 'rgb(59, 161, 0)'
     },
     { 
       path: '/library', 
@@ -82,7 +84,8 @@ function MobileHome() {
       angle: 225,
       bgColor: 'rgba(77, 35, 8, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: 'rgba(77, 35, 8, 0.3)'
+      borderColor: 'rgba(77, 35, 8, 0.3)',
+      textColor: 'rgb(77, 35, 8)'
     },
     { 
       path: '/aqua', 
@@ -91,7 +94,8 @@ function MobileHome() {
       angle: 315,
       bgColor: 'rgba(0, 168, 154, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: 'rgba(0, 168, 154, 0.3)'
+      borderColor: 'rgba(0, 168, 154, 0.3)',
+      textColor: 'rgb(0, 168, 154)'
     }
   ];
 
@@ -205,7 +209,14 @@ function MobileHome() {
               alt="Círculo Warao"
               className="w-[350px] h-[350px] absolute"
               style={{
-                filter: 'brightness(2) contrast(1.2) sepia(0.5) saturate(120%) hue-rotate(70deg)',
+                filter: hoveredItem !== null
+                  ? `brightness(2) contrast(1.2) sepia(1) saturate(200%) hue-rotate(${
+                      menuItems[hoveredItem].textColor === 'rgb(255, 183, 0)' ? '0deg' : // naranja
+                      menuItems[hoveredItem].textColor === 'rgb(59, 161, 0)' ? '70deg' : // verde
+                      menuItems[hoveredItem].textColor === 'rgb(77, 35, 8)' ? '320deg' : // marrón
+                      '160deg' // turquesa
+                    })`
+                  : 'brightness(2) contrast(1.2) sepia(0.5) saturate(120%) hue-rotate(70deg)',
                 opacity: 0.8,
                 mixBlendMode: 'screen'
               }}
@@ -290,14 +301,19 @@ function MobileHome() {
                       className="w-8 h-8 transition-all duration-200"
                       style={{
                         filter: hoveredItem === index 
-                          ? 'brightness(0)'
+                          ? `brightness(0) saturate(100%) ${
+                              item.textColor === 'rgb(255, 183, 0)' ? 'invert(72%) sepia(75%) saturate(1128%) hue-rotate(360deg) brightness(103%) contrast(106%)' : // naranja
+                              item.textColor === 'rgb(59, 161, 0)' ? 'invert(58%) sepia(69%) saturate(1217%) hue-rotate(71deg) brightness(92%) contrast(106%)' : // verde
+                              item.textColor === 'rgb(77, 35, 8)' ? 'invert(15%) sepia(51%) saturate(1011%) hue-rotate(357deg) brightness(91%) contrast(95%)' : // marrón
+                              'invert(45%) sepia(96%) saturate(401%) hue-rotate(143deg) brightness(97%) contrast(101%)' // turquesa
+                            }`
                           : 'brightness(0) invert(1)'
                       }}
                     />
                     <span 
                       className="text-[10px] font-bold transition-all duration-200"
                       style={{
-                        color: hoveredItem === index ? '#000000' : '#ffffff',
+                        color: hoveredItem === index ? item.textColor : '#ffffff',
                         textShadow: hoveredItem === index 
                           ? 'none'
                           : '0 0 10px rgba(0,0,0,0.5)'
