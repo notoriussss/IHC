@@ -186,13 +186,13 @@ function MobileHome() {
         </div>
 
         {/* Contenedor principal del medallón */}
-        <div className="relative w-[400px] h-[400px] flex items-center justify-center mt-8">
+        <div className="relative w-[400px] h-[400px] md:w-[700px] md:h-[700px] lg:w-[400px] lg:h-[400px] flex items-center justify-center mt-[-20px] md:mt-[-40px] lg:mt-[-20px]">
           {/* Kuai Mare decorativo de fondo */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img
               src="/src/assets/chatbot/kuai-mare-1.svg"
               alt="Kuai Mare Background"
-              className="w-[500px] h-[500px] absolute"
+              className="w-[500px] h-[500px] md:w-[800px] md:h-[800px] lg:w-[500px] lg:h-[500px] absolute"
               style={{ 
                 opacity: 0.15,
                 filter: 'brightness(0.8) sepia(0.5) hue-rotate(70deg) saturate(120%)',
@@ -207,7 +207,7 @@ function MobileHome() {
             <motion.img
               src="/src/assets/icons/circle-warao.png"
               alt="Círculo Warao"
-              className="w-[350px] h-[350px] absolute"
+              className="w-[350px] h-[350px] md:w-[650px] md:h-[650px] lg:w-[350px] lg:h-[350px] absolute"
               style={{
                 filter: hoveredItem !== null
                   ? `brightness(2) contrast(1.2) sepia(1) saturate(200%) hue-rotate(${
@@ -233,7 +233,7 @@ function MobileHome() {
 
           {/* Medallón base */}
           <div
-            className="absolute w-[350px] h-[350px] rounded-full"
+            className="absolute w-[350px] h-[350px] md:w-[650px] md:h-[650px] lg:w-[350px] lg:h-[350px] rounded-full"
             style={{
               background: 'radial-gradient(circle, rgba(0,20,0,0.9) 0%, rgba(0,10,0,0.7) 100%)',
               border: '3px solid rgba(0,255,100,0.15)',
@@ -243,15 +243,19 @@ function MobileHome() {
 
           {/* Texto descriptivo */}
           <div 
-            className="absolute w-[200px] text-center text-white text-xs font-normal z-30 transition-all duration-300 cursor-pointer"
+            className="absolute w-[200px] md:w-[300px] lg:w-[200px] text-center text-white text-xs md:text-lg lg:text-xs font-normal z-30 transition-all duration-300 cursor-pointer"
             style={{
               opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
               filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
-              textShadow: '0 0 10px rgba(0,255,100,0.3)'
+              textShadow: '0 0 10px rgba(0,255,100,0.3)',
+              minHeight: '120px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
             onClick={handleTextClick}
           >
-            <p className="text-[11px] leading-tight mx-auto">
+            <p className="text-[11px] md:text-[19px] lg:text-[11px] leading-tight mx-auto">
               {displayedText}
               <span className="animate-pulse">
                 {displayedText.length < currentText.length ? '▋' : ''}
@@ -263,7 +267,7 @@ function MobileHome() {
           <div className="absolute w-full h-full">
             {menuItems.map((item, index) => {
               const angleRad = (item.angle * Math.PI) / 180;
-              const radius = 170;
+              const radius = window.innerWidth >= 768 && window.innerWidth < 1024 ? 300 : 170;
               const x = Math.cos(angleRad) * radius;
               const y = Math.sin(angleRad) * radius;
 
@@ -278,7 +282,7 @@ function MobileHome() {
                   }}
                 >
                   <div
-                    className="w-20 h-20 rounded-full flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300"
+                    className="w-20 h-20 md:w-32 md:h-32 lg:w-20 lg:h-20 rounded-full flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300"
                     style={{
                       background: hoveredItem === index 
                         ? item.hoverBgColor
@@ -298,7 +302,7 @@ function MobileHome() {
                     <img
                       src={item.icon}
                       alt={item.label}
-                      className="w-8 h-8 transition-all duration-200"
+                      className="w-8 h-8 md:w-14 md:h-14 lg:w-8 lg:h-8 transition-all duration-200"
                       style={{
                         filter: hoveredItem === index 
                           ? `brightness(0) saturate(100%) ${
@@ -311,7 +315,7 @@ function MobileHome() {
                       }}
                     />
                     <span 
-                      className="text-[10px] font-bold transition-all duration-200"
+                      className="text-[10px] md:text-[16px] lg:text-[10px] font-bold transition-all duration-200"
                       style={{
                         color: hoveredItem === index ? item.textColor : '#ffffff',
                         textShadow: hoveredItem === index 
