@@ -221,9 +221,22 @@ export function Aquarium() {
                                 />
                             </motion.div>
 
-                            {/* Menú móvil */}
+                            {/* Botón de volver para desktop y menú móvil */}
                             <div className="flex-1 flex justify-end">
-                                <MobileMenu onNavigateBack={handleNavigateBack} />
+                                <motion.div
+                                    className="hidden md:flex items-center gap-2 cursor-pointer group"
+                                    onClick={handleNavigateBack}
+                                >
+                                    <motion.img
+                                        src="/src/assets/icons/arrow-left.svg"
+                                        alt="Volver"
+                                        className="w-8 h-8 transition-transform group-hover:-translate-x-1"
+                                    />
+                                    <span className="text-white text-xl">Volver</span>
+                                </motion.div>
+                                <div className="md:hidden">
+                                    <MobileMenu onNavigateBack={handleNavigateBack} />
+                                </div>
                             </div>
                         </div>
                     </div>

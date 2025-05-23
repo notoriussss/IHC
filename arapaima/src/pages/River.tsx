@@ -371,12 +371,15 @@ export function River() {
                                         className="w-full h-full object-contain"
                                     />
                                 </motion.div>
-                                <motion.h2 
-                                    className="text-xl md:text-3xl font-bold text-white"
+                                <motion.div
+                                    className="flex flex-col"
                                     variants={pageIndicatorAnimation}
                                 >
-                                    Ríos de Guayana
-                                </motion.h2>
+                                    <h2 className="text-xl md:text-3xl font-bold text-white md:leading-tight">
+                                        <span className="md:block">Ríos de</span>
+                                        <span className="md:block">Guayana</span>
+                                    </h2>
+                                </motion.div>
                             </div>
 
                             <motion.div
@@ -392,9 +395,22 @@ export function River() {
                                 />
                             </motion.div>
 
-                            {/* Menú móvil */}
+                            {/* Botón de volver para desktop y menú móvil */}
                             <div className="flex-1 flex justify-end">
-                                <MobileMenu onNavigateBack={handleNavigateBack} />
+                                <motion.div
+                                    className="hidden md:flex items-center gap-2 cursor-pointer group"
+                                    onClick={handleNavigateBack}
+                                >
+                                    <motion.img
+                                        src="/src/assets/icons/arrow-left.svg"
+                                        alt="Volver"
+                                        className="w-8 h-8 transition-transform group-hover:-translate-x-1"
+                                    />
+                                    <span className="text-white text-xl">Volver</span>
+                                </motion.div>
+                                <div className="md:hidden">
+                                    <MobileMenu onNavigateBack={handleNavigateBack} />
+                                </div>
                             </div>
                         </div>
                     </div>
