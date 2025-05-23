@@ -11,7 +11,7 @@ interface ModelDB extends DBSchema {
 export const AVAILABLE_MODELS = [
   '/dracoFlora/proyecto.glb',
   '/dracoFlora/acuario-final.glb',
-  '/dracoFlora/cultura.glb',
+  '/dracoFlora/culturaComprimido.glb',
   '/dracoFlora/floraOBJ.glb',
   '/dracoFlora/regGuayana.glb'
 ];

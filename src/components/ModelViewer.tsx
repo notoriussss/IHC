@@ -1301,7 +1301,7 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
       case 'default': return '/dracoFlora/proyecto.glb';
       case 'guayana': return '/dracoFlora/regGuayana.glb';
       case 'invernadero': return '/dracoFlora/floraOBJ.glb';
-      case 'cultura': return '/dracoFlora/cultura.glb';
+      case 'cultura': return '/dracoFlora/culturaComprimido.glb';
       case 'acuario': return '/dracoFlora/acuario-final.glb';
       default: return '/dracoFlora/proyecto.glb';
     }

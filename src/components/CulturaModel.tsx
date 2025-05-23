@@ -103,7 +103,7 @@ const CulturaModel = forwardRef<THREE.Group, {
   onNavigationChange,
   openModal
 }, ref) => {
-  const { gltf, loadingProgress, error, isLoaded } = useModelLoader('/dracoFlora/cultura.glb');
+  const { gltf, loadingProgress, error, isLoaded } = useModelLoader('/dracoFlora/culturaComprimido.glb');
   const [showCinemaElements, setShowCinemaElements] = useState(true);
   const [showSportsElements, setShowSportsElements] = useState(true);
   const { camera } = useThree();
