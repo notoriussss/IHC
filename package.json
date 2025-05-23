@@ -28,11 +28,12 @@
     "serve": "^14.2.1"
   },
   "scripts": {
-    "preinstall": "npm install -g serve",
+    "clean": "rm -rf node_modules package-lock.json",
+    "clean:all": "npm run clean && cd foro && rm -rf node_modules package-lock.json",
+    "install:all": "npm install && cd foro && npm install && npm install --save-dev vite @vitejs/plugin-react && npm install axios @types/axios --save",
     "start": "concurrently \"npm run start:main\" \"npm run start:forum\"",
     "start:main": "serve -s build -l 3000",
     "start:forum": "cd foro && npm run start:prod",
-    "install:all": "npm install && cd foro && npm install && npm install --save-dev vite @vitejs/plugin-react && npm install axios @types/axios --save",
     "build": "CI=false concurrently \"npm run build:main\" \"npm run build:forum\"",
     "build:main": "CI=false react-scripts build",
     "build:forum": "cd foro && npm install && npm install axios @types/axios --save && npm install @types/axios --save-dev && npm run build",
