@@ -579,7 +579,29 @@ const Model = forwardRef<THREE.Group, {
 
 function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boolean, preloadProgress: number }) {
   const { progress } = useProgress();
-  const totalProgress = isPreloading ? (preloadProgress + progress) / 2 : progress;
+  const [modelProgress, setModelProgress] = useState<number>(0);
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+
+  // Calculate total progress based on different stages
+  const totalProgress = isPreloading 
+    ? (preloadProgress + progress + modelProgress) / 3 
+    : (progress + modelProgress) / 2;
+
+  // Update model progress when Three.js reports progress
+  useEffect(() => {
+    setModelProgress(progress);
+  }, [progress]);
+
+  // Update download status
+  useEffect(() => {
+    if (isPreloading && preloadProgress < 100) {
+      setIsDownloading(true);
+      setDownloadProgress(preloadProgress);
+    } else {
+      setIsDownloading(false);
+    }
+  }, [isPreloading, preloadProgress]);
 
   return totalProgress < 100 ? (
     <div style={{
@@ -628,10 +650,12 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
       >
         <div style={{
           fontSize: '20px',
-          opacity: 0.8
+          opacity: 0.8,
+          marginBottom: '10px'
         }}>
           {totalProgress.toFixed(0)}%
         </div>
+
         <div style={{
           width: '200px',
           height: '2px',
@@ -654,15 +678,6 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
             transition={{ duration: 0.3 }}
           />
         </div>
-        {isPreloading && (
-          <div style={{
-            fontSize: '16px',
-            opacity: 0.6,
-            marginTop: '10px'
-          }}>
-            Precargando modelos...
-          </div>
-        )}
       </motion.div>
     </div>
   ) : null;
@@ -2590,10 +2605,14 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
           >
             <div style={{
               fontSize: '20px',
-              opacity: 0.8
+              opacity: 0.8,
+              marginBottom: '10px'
             }}>
-              Cargando...
+              {isPreloading 
+                ? ((preloadProgress + progress) / 2).toFixed(0)
+                : progress.toFixed(0)}%
             </div>
+
             <div style={{
               width: '200px',
               height: '2px',
@@ -2612,8 +2631,12 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
                   transformOrigin: '0%',
                 }}
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
+                animate={{ 
+                  scaleX: isPreloading 
+                    ? (preloadProgress + progress) / 200
+                    : progress / 100
+                }}
+                transition={{ duration: 0.3 }}
               />
             </div>
           </motion.div>
