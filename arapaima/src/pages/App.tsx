@@ -49,17 +49,48 @@ function Home() {
   const [displayedText, setDisplayedText] = useState('');
   const [textIndex, setTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
-  const [currentImage, setCurrentImage] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [isTextVisible, setIsTextVisible] = useState(true);
   const [previousHoveredItem, setPreviousHoveredItem] = useState<number | null>(null);
   const [shouldTransition, setShouldTransition] = useState(false);
 
   const menuItems = [
-    { path: '/forum', icon: '/src/assets/icons/forum-icon.png', label: 'FORO', angle: 45 },
-    { path: '/culture', icon: '/src/assets/icons/culture-icon.png', label: 'CULTURA', angle: 135 },
-    { path: '/library', icon: '/src/assets/icons/library-icon.png', label: 'BIBLIOTECA', angle: 225 },
-    { path: '/aqua', icon: '/src/assets/icons/fish-icon.png', label: 'ACUARIO', angle: 315 }
+    { 
+      path: '/forum', 
+      icon: '/src/assets/icons/forum-icon.png', 
+      label: 'FORO', 
+      angle: 45,
+      bgColor: 'rgba(255, 166, 0, 0.95)',
+      hoverBgColor: 'rgba(255, 166, 0, 0.85)',
+      borderColor: 'rgba(255, 166, 0, 1)'
+    },
+    { 
+      path: '/culture', 
+      icon: '/src/assets/icons/culture-icon.png', 
+      label: 'CULTURA', 
+      angle: 135,
+      bgColor: 'rgba(220, 20, 60, 0.95)',
+      hoverBgColor: 'rgba(220, 20, 60, 0.85)',
+      borderColor: 'rgba(220, 20, 60, 1)'
+    },
+    { 
+      path: '/library', 
+      icon: '/src/assets/icons/library-icon.png', 
+      label: 'BIBLIOTECA', 
+      angle: 225,
+      bgColor: 'rgba(75, 0, 130, 0.95)',
+      hoverBgColor: 'rgba(75, 0, 130, 0.85)',
+      borderColor: 'rgba(75, 0, 130, 1)'
+    },
+    { 
+      path: '/aqua', 
+      icon: '/src/assets/icons/fish-icon.png', 
+      label: 'ACUARIO', 
+      angle: 315,
+      bgColor: 'rgba(0, 128, 128, 0.95)',
+      hoverBgColor: 'rgba(0, 128, 128, 0.85)',
+      borderColor: 'rgba(0, 128, 128, 1)'
+    }
   ];
 
   const handleItemHover = (index: number | null) => {
@@ -94,11 +125,10 @@ function Home() {
       setCurrentText(newText);
       setDisplayedText('');
       setTextIndex(0);
-      setCurrentImage(1);
     }
   };
 
-  // Efecto para mostrar el texto caracter por caracter y alternar la imagen
+  // Efecto para mostrar el texto caracter por caracter
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     
@@ -106,14 +136,6 @@ function Home() {
       timeoutId = setTimeout(() => {
         setDisplayedText(currentText.substring(0, textIndex + 1));
         setTextIndex((prev) => prev + 1);
-        // Cambia la imagen cada 5 caracteres, pero asegura que termine en 1
-        if (textIndex % 4 === 0) {
-          if (textIndex < currentText.length - 4) {
-            setCurrentImage((prev) => prev === 1 ? 2 : 1);
-          } else {
-            setCurrentImage(1);
-          }
-        }
       }, 22);
     }
 
@@ -132,7 +154,6 @@ function Home() {
     if (textIndex < currentText.length) {
       setDisplayedText(currentText);
       setTextIndex(currentText.length);
-      setCurrentImage(1);
     }
   };
 
@@ -152,24 +173,39 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
-        {/* Logo en la parte superior */}
-        <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
+        {/* Logo en la esquina superior izquierda */}
+        <div className="absolute top-5 left-5 z-20">
           <img
             src="/src/assets/logo/logo.svg"
             alt="Logo"
-            className="w-80 h-auto"
+            className="w-60 h-auto"
             style={{ userSelect: 'none' }}
           />
         </div>
 
         {/* Contenedor principal del medallón */}
-        <div className="relative w-[700px] h-[700px] flex items-center justify-center">
+        <div className="relative w-[900px] h-[900px] flex items-center justify-center">
+          {/* Kuai Mare decorativo de fondo */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img
+              src="/src/assets/chatbot/kuai-mare-1.svg"
+              alt="Kuai Mare Background"
+              className="w-[1200px] h-[1200px] absolute"
+              style={{ 
+                opacity: 0.15,
+                filter: 'brightness(0.8) sepia(0.5) hue-rotate(70deg) saturate(120%)',
+                transform: 'scale(1.2)',
+                userSelect: 'none'
+              }}
+            />
+          </div>
+
           {/* Círculo Warao decorativo */}
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.img
               src="/src/assets/icons/circle-warao.png"
               alt="Círculo Warao"
-              className="w-[600px] h-[600px] absolute"
+              className="w-[800px] h-[800px] absolute"
               style={{
                 filter: 'brightness(2) contrast(1.2) sepia(0.5) saturate(120%) hue-rotate(70deg)',
                 opacity: 0.8,
@@ -188,7 +224,7 @@ function Home() {
 
           {/* Medallón base */}
           <div
-            className="absolute w-[600px] h-[600px] rounded-full"
+            className="absolute w-[800px] h-[800px] rounded-full"
             style={{
               background: 'radial-gradient(circle, rgba(0,20,0,0.9) 0%, rgba(0,10,0,0.7) 100%)',
               border: '3px solid rgba(0,255,100,0.15)',
@@ -198,7 +234,7 @@ function Home() {
 
           {/* Texto descriptivo */}
           <div 
-            className="absolute w-[400px] text-center text-white text-lg font-normal z-30 transition-all duration-300 cursor-pointer"
+            className="absolute w-[450px] text-center text-white text-xl font-normal z-30 transition-all duration-300 cursor-pointer"
             style={{
               opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
               filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
@@ -206,7 +242,7 @@ function Home() {
             }}
             onClick={handleTextClick}
           >
-            <p className="text-sm leading-tight">
+            <p className="text-lg leading-relaxed mx-auto">
               {displayedText}
               <span className="animate-pulse">
                 {displayedText.length < currentText.length ? '▋' : ''}
@@ -214,24 +250,11 @@ function Home() {
             </p>
           </div>
 
-          {/* Kuai Mare en el centro */}
-          <div className="absolute w-32 h-32 z-20">
-            <img
-              src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
-              alt="Kuai Mare"
-              className="w-full h-full"
-              style={{ 
-                userSelect: 'none',
-                filter: 'drop-shadow(0 0 10px rgba(0,255,100,0.3))'
-              }}
-            />
-          </div>
-
           {/* Menú circular */}
           <div className="absolute w-full h-full">
             {menuItems.map((item, index) => {
               const angleRad = (item.angle * Math.PI) / 180;
-              const radius = 250;
+              const radius = 350;
               const x = Math.cos(angleRad) * radius;
               const y = Math.sin(angleRad) * radius;
 
@@ -246,18 +269,18 @@ function Home() {
                   }}
                 >
                   <div
-                    className="w-24 h-24 rounded-full flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-200"
+                    className="w-32 h-32 rounded-full flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200"
                     style={{
                       background: hoveredItem === index 
-                        ? 'radial-gradient(circle, rgba(200,255,220,0.95) 0%, rgba(150,255,180,0.85) 100%)'
-                        : 'radial-gradient(circle, rgba(0,40,0,0.8) 0%, rgba(0,20,0,0.6) 100%)',
+                        ? item.hoverBgColor
+                        : item.bgColor,
                       border: hoveredItem === index 
-                        ? '2px solid rgba(100,255,150,1)' 
-                        : '2px solid rgba(0,255,100,0.2)',
+                        ? `2px solid ${item.borderColor}`
+                        : `2px solid ${item.borderColor}40`,
                       transform: hoveredItem === index ? 'scale(1.1)' : 'scale(1)',
                       boxShadow: hoveredItem === index
-                        ? '0 0 20px rgba(0,255,100,0.3)'
-                        : '0 0 10px rgba(0,50,0,0.5)'
+                        ? `0 0 20px ${item.borderColor}40`
+                        : '0 0 10px rgba(0,0,0,0.5)'
                     }}
                     onMouseEnter={() => handleItemHover(index)}
                     onMouseLeave={() => handleItemHover(null)}
@@ -266,7 +289,7 @@ function Home() {
                     <img
                       src={item.icon}
                       alt={item.label}
-                      className="w-10 h-10 transition-all duration-200"
+                      className="w-14 h-14 transition-all duration-200"
                       style={{
                         filter: hoveredItem === index 
                           ? 'brightness(0) saturate(100%)'
@@ -274,7 +297,7 @@ function Home() {
                       }}
                     />
                     <span 
-                      className="text-xs font-bold transition-all duration-200"
+                      className="text-sm font-bold transition-all duration-200"
                       style={{
                         color: hoveredItem === index ? '#003810' : '#00ff80',
                         textShadow: hoveredItem === index 
@@ -289,23 +312,6 @@ function Home() {
               );
             })}
           </div>
-        </div>
-
-        {/* Background images */}
-        <div className="absolute top-0 left-0 z-0">
-          <img src="/src/assets/background/sun.svg" alt="Top Left Image" className="w-200 h-200" />
-        </div>
-        <div className="absolute top-0 right-0 z-0">
-          <img src="/src/assets/background/leaf.svg" alt="Top Right Image" className="w-110 h-110" />
-        </div>
-        <div className="absolute top-0 right-0 z-0 mix-blend-saturation">
-          <img src="/src/assets/background/leaf-background.svg" alt="Top Right Background Image" className="w-150 h-150" />
-        </div>
-        <div className="absolute bottom-0 left-0 z-0">
-          <img src="/src/assets/background/fire.svg" alt="Bottom Left Image" className="w-300 h-300" />
-        </div>
-        <div className="absolute bottom-0 right-0 z-0">
-          <img src="/src/assets/background/water.svg" alt="Bottom Right Image" className="w-225 h-125" />
         </div>
       </motion.div>
     </AnimatePresence>
