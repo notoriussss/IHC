@@ -30,7 +30,7 @@
     "start": "concurrently \"npm run start:main\" \"npm run start:forum\"",
     "start:main": "cd . && react-scripts start",
     "start:forum": "cd foro && npm start",
-    "install:all": "npm install && cd foro && npm install && npm install axios @types/axios",
+    "install:all": "npm install && cd foro && npm install && npm install --save-dev vite @vitejs/plugin-react",
     "build": "concurrently \"npm run build:main\" \"npm run build:forum\"",
     "build:main": "react-scripts build",
     "build:forum": "cd foro && npm run build",
