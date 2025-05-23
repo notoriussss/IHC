@@ -51,6 +51,9 @@ function Home() {
   const [currentText, setCurrentText] = useState(KUAIMARE_TEXT);
   const [currentImage, setCurrentImage] = useState(1);
   const [rotation, setRotation] = useState(0);
+  const [isTextVisible, setIsTextVisible] = useState(true);
+  const [previousHoveredItem, setPreviousHoveredItem] = useState<number | null>(null);
+  const [shouldTransition, setShouldTransition] = useState(false);
 
   const menuItems = [
     { path: '/forum', icon: '/src/assets/icons/forum-icon.png', label: 'FORO', angle: 45 },
@@ -60,23 +63,33 @@ function Home() {
   ];
 
   const handleItemHover = (index: number | null) => {
-    setHoveredItem(index);
-    if (index !== null && index >= 0) {
-      const targetAngle = menuItems[index].angle;
-      let newRotation = targetAngle;
-      const currentRotation = rotation % 360;
-      const diff = ((targetAngle - currentRotation + 540) % 360) - 180;
-      newRotation = currentRotation + diff;
-      setRotation(newRotation);
-      handleCornerHover(index);
+    if (index !== previousHoveredItem && index !== null) {
+      setShouldTransition(true);
+      setIsTextVisible(false);
+      setTimeout(() => {
+        setHoveredItem(index);
+        const targetAngle = menuItems[index].angle;
+        let newRotation = targetAngle;
+        const currentRotation = rotation % 360;
+        const diff = ((targetAngle - currentRotation + 540) % 360) - 180;
+        newRotation = currentRotation + diff;
+        setRotation(newRotation);
+        handleCornerHover(index);
+        setIsTextVisible(true);
+        setShouldTransition(false);
+      }, 300);
     } else {
-      handleCornerHover(-1);
+      setHoveredItem(index);
+      if (index !== null) {
+        handleCornerHover(index);
+      }
     }
+    setPreviousHoveredItem(index);
   };
 
   // Función para manejar el hover en las esquinas
   const handleCornerHover = (index: number) => {
-    const newText = index === -1 ? KUAIMARE_TEXT : KUAIMARE_TEXT_VARIATIONS[index];
+    const newText = KUAIMARE_TEXT_VARIATIONS[index];
     if (newText !== currentText) {
       setCurrentText(newText);
       setDisplayedText('');
@@ -108,6 +121,11 @@ function Home() {
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [textIndex, currentText]);
+
+  // Efecto para establecer el texto inicial
+  useEffect(() => {
+    setCurrentText(KUAIMARE_TEXT);
+  }, []);
 
   // Permitir que al hacer click se muestre todo el texto de una vez
   const handleTextClick = () => {
@@ -151,10 +169,10 @@ function Home() {
             <motion.img
               src="/src/assets/icons/circle-warao.png"
               alt="Círculo Warao"
-              className="w-[650px] h-[650px] absolute"
+              className="w-[600px] h-[600px] absolute"
               style={{
-                filter: 'brightness(2) contrast(1.2) invert(0.9) sepia(0.5) saturate(120%) hue-rotate(70deg)',
-                opacity: 0.4,
+                filter: 'brightness(2) contrast(1.2) sepia(0.5) saturate(120%) hue-rotate(70deg)',
+                opacity: 0.8,
                 mixBlendMode: 'screen'
               }}
               animate={{
@@ -180,11 +198,13 @@ function Home() {
 
           {/* Texto descriptivo */}
           <div 
-            className="absolute w-[400px] text-center text-white text-lg font-normal z-20 transition-opacity duration-300"
+            className="absolute w-[400px] text-center text-white text-lg font-normal z-30 transition-all duration-300 cursor-pointer"
             style={{
-              opacity: hoveredItem !== null ? 1 : 0,
+              opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
+              filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
               textShadow: '0 0 10px rgba(0,255,100,0.3)'
             }}
+            onClick={handleTextClick}
           >
             <p className="text-sm leading-tight">
               {displayedText}
