@@ -60,10 +60,7 @@ const PostDetailPage: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      await createComment(post.id, {
-        content: newComment,
-        author: user.username
-      });
+      await createComment(post.id, newComment, user.username);
       const updatedPost = await getPostById(post.id);
       setPost(updatedPost);
       setNewComment('');

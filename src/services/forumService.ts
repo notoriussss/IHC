@@ -134,20 +134,3 @@ export const addComment = async (comment: { postId: number; content: string; aut
 
   return response.json();
 };
-
-export const getUserFavoritePosts = async (userId: string): Promise<Post[]> => {
-  const posts = await getAllPosts();
-  return posts.filter(post => post.favorite);
-};
-
-export const toggleFavorite = async (postId: number): Promise<void> => {
-  const posts = await getAllPosts();
-  const postIndex = posts.findIndex(post => post.id === postId);
-  
-  if (postIndex === -1) return;
-  
-  const post = posts[postIndex];
-  post.favorite = !post.favorite;
-  
-  localStorage.setItem('forum_posts', JSON.stringify(posts));
-}; 
