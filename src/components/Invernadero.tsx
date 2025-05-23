@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect, forwardRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, Html, OrbitControls } from '@react-three/drei';
+import { Html, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import PlantCarousel from './PlantCarousel';
+import { useModelLoader } from '../hooks/useModelLoader';
 
 export interface InvernaderoRef extends THREE.Group {
   moveToDefault: () => void;
@@ -46,7 +47,7 @@ interface InvernaderoProps {
 
 const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange = () => {}, showMap = false }, ref) => {
   const [error, setError] = useState<string | null>(null);
-  const gltf = useGLTF('/dracoFlora/floraOBJ.glb');
+  const { gltf, loadingProgress, error: modelError, isLoaded } = useModelLoader('/dracoFlora/floraOBJ.glb');
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [targetQuaternion, setTargetQuaternion] = useState<THREE.Quaternion | null>(null);
@@ -205,7 +206,8 @@ const Invernadero = forwardRef<THREE.Group, InvernaderoProps>(({ onViewChange = 
     }
   }, [isInitialMovementComplete, isCarouselReady, ref]);
 
-  if (error) {
+  if (error || modelError) {
+    console.error('Error loading model:', error || modelError);
     return null;
   }
 

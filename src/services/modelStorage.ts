@@ -16,12 +16,25 @@ export const AVAILABLE_MODELS = [
   '/dracoFlora/regGuayana.glb'
 ];
 
+interface DownloadProgress {
+  speed: number;
+  downloaded: number;
+  total: number;
+}
+
 class ModelStorage {
   private db: IDBPDatabase<ModelDB> | null = null;
   private readonly DB_NAME = 'flora-viewer-db';
   private readonly STORE_NAME = 'models';
   private readonly VERSION = 1;
   private initPromise: Promise<IDBPDatabase<ModelDB>> | null = null;
+  private connectionSpeed: 'slow' | 'medium' | 'fast' = 'medium';
+  private readonly SPEED_THRESHOLDS = {
+    slow: 1000000, // 1 Mbps
+    medium: 5000000 // 5 Mbps
+  };
+  private lastSpeedTest: number = 0;
+  private readonly SPEED_TEST_INTERVAL = 300000; // 5 minutos
   public modelInfo: {
     currentModel: string;
     lastUpdated: string;
@@ -134,18 +147,71 @@ class ModelStorage {
     }
   }
 
-  async downloadModel(url: string, onProgress?: (progress: number) => void): Promise<ArrayBuffer> {
+  private async measureConnectionSpeed(url: string, fileSize: number): Promise<void> {
+    try {
+      const startTime = performance.now();
+      const response = await fetch(url, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      const endTime = performance.now();
+      
+      if (!response.ok) {
+        throw new Error('Speed test failed');
+      }
+
+      const duration = (endTime - startTime) / 1000; // Convertir a segundos
+      const speedBps = (fileSize * 8) / duration; // Velocidad en bits por segundo
+
+      // Determinar la velocidad de conexión
+      if (speedBps < this.SPEED_THRESHOLDS.slow) {
+        this.connectionSpeed = 'slow';
+        console.log('Conexión lenta detectada:', (speedBps / 1000000).toFixed(2), 'Mbps');
+      } else if (speedBps < this.SPEED_THRESHOLDS.medium) {
+        this.connectionSpeed = 'medium';
+        console.log('Conexión media detectada:', (speedBps / 1000000).toFixed(2), 'Mbps');
+      } else {
+        this.connectionSpeed = 'fast';
+        console.log('Conexión rápida detectada:', (speedBps / 1000000).toFixed(2), 'Mbps');
+      }
+
+      this.lastSpeedTest = Date.now();
+    } catch (error) {
+      console.warn('No se pudo medir la velocidad de conexión:', error);
+      // No cambiamos la velocidad actual si falla la medición
+    }
+  }
+
+  async downloadModel(
+    url: string, 
+    onProgress?: (progress: number, info: DownloadProgress) => void
+  ): Promise<ArrayBuffer> {
     try {
       // Verificar si el modelo está en caché
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
         console.log(`Modelo ${url} encontrado en caché`);
-        if (onProgress) onProgress(100);
+        if (onProgress) {
+          // Cuando el modelo está en caché, enviamos velocidad 0 para indicar que no hay descarga
+          onProgress(0, { speed: 0, downloaded: 0, total: 0 });
+        }
         return cachedModel;
       }
 
-      console.log(`Iniciando descarga de ${url}`);
-      // Si no está en caché, descargar el modelo
+      // Obtener el tamaño del archivo antes de descargar
+      const headResponse = await fetch(url, { method: 'HEAD' });
+      const contentLength = Number(headResponse.headers.get('Content-Length')) || 0;
+
+      // Medir la velocidad solo si han pasado 5 minutos desde la última medición
+      if (Date.now() - this.lastSpeedTest > this.SPEED_TEST_INTERVAL) {
+        await this.measureConnectionSpeed(url, contentLength);
+      }
+
+      console.log(`Iniciando descarga de ${url} con velocidad de conexión: ${this.connectionSpeed}`);
+      
       const response = await fetch(url, {
         cache: 'no-store',
         headers: {
@@ -159,14 +225,16 @@ class ModelStorage {
       }
 
       const reader = response.body?.getReader();
-      const contentLength = Number(response.headers.get('Content-Length')) || 0;
-
       if (!reader) {
         throw new Error('No se pudo iniciar la descarga del modelo');
       }
 
       let receivedLength = 0;
       const chunks: Uint8Array[] = [];
+      let lastProgressUpdate = 0;
+      let downloadStartTime = performance.now();
+      let lastSpeedUpdate = downloadStartTime;
+      let lastBytesReceived = 0;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -178,10 +246,43 @@ class ModelStorage {
         chunks.push(value);
         receivedLength += value.length;
 
+        // Calcular velocidad actual cada 2 segundos
+        const now = performance.now();
+        if (now - lastSpeedUpdate > 2000) {
+          const timeElapsed = (now - lastSpeedUpdate) / 1000;
+          const bytesReceived = receivedLength - lastBytesReceived;
+          const currentSpeed = timeElapsed > 0 ? (bytesReceived * 8) / timeElapsed : 0; // bits por segundo
+          
+          // Validar que la velocidad sea un número finito
+          if (isFinite(currentSpeed)) {
+            // Actualizar la velocidad de conexión si cambia significativamente
+            if (currentSpeed < this.SPEED_THRESHOLDS.slow && this.connectionSpeed !== 'slow') {
+              this.connectionSpeed = 'slow';
+              console.log('Conexión degradada a lenta:', (currentSpeed / 1000000).toFixed(2), 'Mbps');
+            } else if (currentSpeed > this.SPEED_THRESHOLDS.medium && this.connectionSpeed !== 'fast') {
+              this.connectionSpeed = 'fast';
+              console.log('Conexión mejorada a rápida:', (currentSpeed / 1000000).toFixed(2), 'Mbps');
+            }
+          }
+
+          lastSpeedUpdate = now;
+          lastBytesReceived = receivedLength;
+        }
+
         // Calcular y reportar el progreso
-        const progress = (receivedLength / contentLength) * 100;
-        if (onProgress) {
-          onProgress(progress);
+        const progress = contentLength > 0 ? Math.min(100, Math.max(0, (receivedLength / contentLength) * 100)) : 0;
+        
+        // Ajustar la frecuencia de actualización del progreso según la velocidad
+        if (onProgress && (now - lastProgressUpdate > this.getProgressUpdateInterval())) {
+          const speed = now - lastSpeedUpdate > 0 ? 
+            (receivedLength - lastBytesReceived) / ((now - lastSpeedUpdate) / 1000) : 0;
+          
+          onProgress(progress, {
+            speed: isFinite(speed) ? speed : 0,
+            downloaded: receivedLength,
+            total: contentLength
+          });
+          lastProgressUpdate = now;
         }
       }
 
@@ -204,10 +305,27 @@ class ModelStorage {
       const cachedModel = await this.getModel(url);
       if (cachedModel) {
         console.log(`Recuperando modelo ${url} de caché después de error`);
-        if (onProgress) onProgress(100);
+        if (onProgress) {
+          // Cuando el modelo está en caché, enviamos velocidad 0 para indicar que no hay descarga
+          onProgress(0, { speed: 0, downloaded: 0, total: 0 });
+        }
         return cachedModel;
       }
       throw error;
+    }
+  }
+
+  private getProgressUpdateInterval(): number {
+    // Ajustar la frecuencia de actualización según la velocidad
+    switch (this.connectionSpeed) {
+      case 'slow':
+        return 2000; // Actualizar cada 2 segundos en conexiones lentas
+      case 'medium':
+        return 1000; // Actualizar cada segundo en conexiones medias
+      case 'fast':
+        return 500; // Actualizar cada medio segundo en conexiones rápidas
+      default:
+        return 1000;
     }
   }
 
