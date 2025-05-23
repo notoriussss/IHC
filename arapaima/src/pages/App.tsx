@@ -161,7 +161,7 @@ function Home() {
     <AnimatePresence mode="wait">
       <motion.div
         ref={containerRef}
-        className="relative w-full h-screen overflow-hidden flex items-center justify-center"
+        className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center"
         style={{
           backgroundImage: "url('/src/assets/background/background-desktop.png')",
           backgroundSize: 'cover',
@@ -173,8 +173,8 @@ function Home() {
         exit="exit"
         variants={homeVariants}
       >
-        {/* Logo en la esquina superior izquierda */}
-        <div className="absolute top-5 left-5 z-20">
+        {/* Logo - solo visible en desktop */}
+        <div className="absolute top-5 left-5 z-20 hidden md:block">
           <img
             src="/src/assets/logo/logo.svg"
             alt="Logo"
@@ -183,14 +183,24 @@ function Home() {
           />
         </div>
 
+        {/* Logo centrado para móviles */}
+        <div className="md:hidden flex justify-center items-center mb-4 mt-6">
+          <img
+            src="/src/assets/logo/logo.svg"
+            alt="Logo"
+            className="w-64 h-auto"
+            style={{ userSelect: 'none' }}
+          />
+        </div>
+
         {/* Contenedor principal del medallón */}
-        <div className="relative w-[900px] h-[900px] flex items-center justify-center">
+        <div className="relative md:w-[900px] md:h-[900px] w-[400px] h-[400px] flex items-center justify-center md:mt-0 -mt-10">
           {/* Kuai Mare decorativo de fondo */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img
               src="/src/assets/chatbot/kuai-mare-1.svg"
               alt="Kuai Mare Background"
-              className="w-[1200px] h-[1200px] absolute"
+              className="md:w-[1200px] md:h-[1200px] w-[500px] h-[500px] absolute"
               style={{ 
                 opacity: 0.15,
                 filter: 'brightness(0.8) sepia(0.5) hue-rotate(70deg) saturate(120%)',
@@ -205,7 +215,7 @@ function Home() {
             <motion.img
               src="/src/assets/icons/circle-warao.png"
               alt="Círculo Warao"
-              className="w-[800px] h-[800px] absolute"
+              className="md:w-[800px] md:h-[800px] w-[350px] h-[350px] absolute"
               style={{
                 filter: 'brightness(2) contrast(1.2) sepia(0.5) saturate(120%) hue-rotate(70deg)',
                 opacity: 0.8,
@@ -224,7 +234,7 @@ function Home() {
 
           {/* Medallón base */}
           <div
-            className="absolute w-[800px] h-[800px] rounded-full"
+            className="absolute md:w-[800px] md:h-[800px] w-[350px] h-[350px] rounded-full"
             style={{
               background: 'radial-gradient(circle, rgba(0,20,0,0.9) 0%, rgba(0,10,0,0.7) 100%)',
               border: '3px solid rgba(0,255,100,0.15)',
@@ -234,16 +244,15 @@ function Home() {
 
           {/* Texto descriptivo */}
           <div 
-            className="absolute w-[450px] text-center text-white text-xl font-normal z-30 transition-all duration-300 cursor-pointer"
+            className="absolute md:w-[450px] w-[200px] text-center text-white md:text-xl text-xs font-normal z-30 transition-all duration-300 cursor-pointer"
             style={{
               opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
               filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
-              textShadow: '0 0 10px rgba(0,255,100,0.3)',
-              transform: 'translateY(40px)'
+              textShadow: '0 0 10px rgba(0,255,100,0.3)'
             }}
             onClick={handleTextClick}
           >
-            <p className="text-lg leading-relaxed mx-auto">
+            <p className="md:text-lg text-[11px] leading-tight md:leading-relaxed mx-auto">
               {displayedText}
               <span className="animate-pulse">
                 {displayedText.length < currentText.length ? '▋' : ''}
@@ -255,7 +264,7 @@ function Home() {
           <div className="absolute w-full h-full">
             {menuItems.map((item, index) => {
               const angleRad = (item.angle * Math.PI) / 180;
-              const radius = 350;
+              const radius = window.innerWidth > 768 ? 350 : 170;
               const x = Math.cos(angleRad) * radius;
               const y = Math.sin(angleRad) * radius;
 
@@ -270,7 +279,7 @@ function Home() {
                   }}
                 >
                   <div
-                    className="w-32 h-32 rounded-full flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-300"
+                    className="md:w-32 md:h-32 w-20 h-20 rounded-full flex flex-col items-center justify-center md:gap-3 gap-2 cursor-pointer transition-all duration-300"
                     style={{
                       background: hoveredItem === index 
                         ? item.hoverBgColor
@@ -290,20 +299,18 @@ function Home() {
                     <img
                       src={item.icon}
                       alt={item.label}
-                      className="w-14 h-14 transition-all duration-200"
+                      className="md:w-14 md:h-14 w-8 h-8 transition-all duration-200"
                       style={{
-                        filter: hoveredItem === index 
-                          ? 'brightness(0) saturate(100%)'
-                          : 'brightness(0) invert(1) sepia(0.5) saturate(200%) hue-rotate(70deg)'
+                        filter: 'brightness(0) invert(1)'
                       }}
                     />
                     <span 
-                      className="text-sm font-bold transition-all duration-200"
+                      className="md:text-sm text-[10px] font-bold transition-all duration-200"
                       style={{
-                        color: hoveredItem === index ? '#003810' : '#00ff80',
+                        color: '#ffffff',
                         textShadow: hoveredItem === index 
-                          ? 'none'
-                          : '0 0 10px rgba(0,255,100,0.5)'
+                          ? '0 0 10px rgba(0,0,0,0.3)'
+                          : '0 0 10px rgba(0,0,0,0.5)'
                       }}
                     >
                       {item.label}
