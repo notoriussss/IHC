@@ -54,6 +54,7 @@ function Home() {
   const [isTextVisible, setIsTextVisible] = useState(true);
   const [previousHoveredItem, setPreviousHoveredItem] = useState<number | null>(null);
   const [shouldTransition, setShouldTransition] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const menuItems = [
     { path: '/forum', icon: '/src/assets/icons/forum-icon.png', label: 'FORO', angle: 45 },
@@ -136,6 +137,21 @@ function Home() {
     }
   };
 
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const moveX = (event.clientX - centerX) / 50;
+      const moveY = (event.clientY - centerY) / 50;
+      setMousePosition({ x: moveX, y: moveY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -202,7 +218,8 @@ function Home() {
             style={{
               opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
               filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
-              textShadow: '0 0 10px rgba(0,255,100,0.3)'
+              textShadow: '0 0 10px rgba(0,255,100,0.3)',
+              transform: 'translateY(40px)'
             }}
             onClick={handleTextClick}
           >
@@ -215,7 +232,23 @@ function Home() {
           </div>
 
           {/* Kuai Mare en el centro */}
-          <div className="absolute w-32 h-32 z-20">
+          <motion.div 
+            className="absolute w-70 h-70 z-25"
+            style={{
+              bottom: '40%',
+              transform: 'translate(-50%, -50%) translateY(-120px)'
+            }}
+            animate={{
+              x: mousePosition.x,
+              y: mousePosition.y
+            }}
+            transition={{
+              type: "spring",
+              damping: 20,
+              stiffness: 100,
+              mass: 1
+            }}
+          >
             <img
               src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
               alt="Kuai Mare"
@@ -225,7 +258,7 @@ function Home() {
                 filter: 'drop-shadow(0 0 10px rgba(0,255,100,0.3))'
               }}
             />
-          </div>
+          </motion.div>
 
           {/* Menú circular */}
           <div className="absolute w-full h-full">
