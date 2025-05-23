@@ -1,0 +1,11 @@
+.auth-content {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.auth-message {
+  color: #666;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}

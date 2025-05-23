@@ -1,0 +1,247 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  width: 95%;
+  max-width: 800px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: white;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.modal-close:hover {
+  background-color: #f5f5f5;
+  color: #333;
+  transform: scale(1.1);
+}
+
+.modal-content h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  margin: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+.form-group textarea {
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.4;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0149FF;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(1, 73, 255, 0.1);
+}
+
+.category-section {
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.category-section label {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.category-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.category-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.category-option:hover {
+  background-color: #fff;
+  border-color: #0149FF;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(1, 73, 255, 0.1);
+}
+
+.category-option input[type="radio"] {
+  display: none;
+}
+
+.category-option i {
+  font-size: 1rem;
+  color: #666;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.category-option input[type="radio"]:checked + i {
+  color: #0149FF;
+}
+
+.category-option input[type="radio"]:checked + i + .category-label {
+  color: #0149FF;
+  font-weight: 600;
+}
+
+.category-label {
+  font-size: 0.85rem;
+  color: #666;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eee;
+}
+
+.submit-button {
+  background-color: #0149FF;
+  color: white;
+  border: none;
+  padding: 0.75rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-button:hover {
+  background-color: #0039cc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(1, 73, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 1.25rem;
+  }
+
+  .category-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .submit-button {
+    padding: 0.75rem 2rem;
+    min-width: 160px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .category-options {
+    grid-template-columns: 1fr;
+  }
+
+  .submit-button {
+    padding: 0.75rem 1.5rem;
+    min-width: 140px;
+    font-size: 0.9rem;
+    height: 36px;
+  }
+} 
+} 
