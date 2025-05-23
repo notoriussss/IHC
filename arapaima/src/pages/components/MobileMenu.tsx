@@ -74,7 +74,7 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
             >
                 <div className="flex items-center justify-center w-6 h-6">
                     <img
-                        src={isOpen ? "/src/assets/icons/close.png" : "/src/assets/icons/burger-menu-svgrepo-com.svg"}
+                        src="/src/assets/icons/burger-menu-svgrepo-com.svg"
                         alt={isOpen ? "Cerrar menú" : "Abrir menú"}
                         className="w-5 h-5 object-contain"
                     />
@@ -148,9 +148,9 @@ export function MobileMenu({ onNavigateBack }: MobileMenuProps) {
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     <img
-                                        src="/src/assets/logo/logo.svg"
+                                        src="/src/assets/icons/house-chimney-blank-svgrepo-com.svg"
                                         alt="Inicio"
-                                        className="w-6 h-6"
+                                        className="w-6 h-6 invert"
                                     />
                                     Inicio
                                 </motion.button>
