@@ -123,6 +123,17 @@ const overlayVariants = {
   }
 };
 
+// Add media query styles
+const mediaQueryStyles = `
+  @media screen and (max-width: 900px) {
+    .dmodal {
+      height: 350px !important;
+      width: 90% !important;
+      max-width: none !important;
+    }
+  }
+`;
+
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, htmlContent, children, style }) => {
   const [content, setContent] = useState<string>('');
 
@@ -143,54 +154,58 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, htmlContent, chil
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          variants={overlayVariants}
-          style={{...modalOverlayStyle, ...style}}
-        >
+        <>
+          <style>{mediaQueryStyles}</style>
           <motion.div
-            variants={modalVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            style={modalStyle}
+            variants={overlayVariants}
+            style={{...modalOverlayStyle, ...style}}
           >
-            <button 
-              onClick={onClose} 
-              style={closeButtonStyle}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.2)';
-                e.currentTarget.style.transform = 'scale(1.1)';
-                e.currentTarget.style.color = '#333';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.1)';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.color = '#666';
-              }}
+            <motion.div
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              style={modalStyle}
+              className="dmodal"
             >
-              ×
-            </button>
-            <div style={contentStyle}>
-              {htmlContent && htmlContent.length > 0 ? (
-                <iframe
-                  src={htmlContent}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    overflow: 'auto'
-                  }}
-                  title={title}
-                />
-              ) : (
-                children
-              )}
-            </div>
+              <button 
+                onClick={onClose} 
+                style={closeButtonStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.2)';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.color = '#333';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(0, 0, 0, 0.1)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.color = '#666';
+                }}
+              >
+                ×
+              </button>
+              <div style={contentStyle}>
+                {htmlContent && htmlContent.length > 0 ? (
+                  <iframe
+                    src={htmlContent}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      overflow: 'auto'
+                    }}
+                    title={title}
+                  />
+                ) : (
+                  children
+                )}
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
