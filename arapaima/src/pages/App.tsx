@@ -55,13 +55,14 @@ function MobileHome() {
   const [isTextVisible, setIsTextVisible] = useState(true);
   const [previousHoveredItem, setPreviousHoveredItem] = useState<number | null>(null);
   const [shouldTransition, setShouldTransition] = useState(false);
+  const [currentImage, setCurrentImage] = useState(1);
 
   const menuItems = [
     { 
       path: '/forum', 
       icon: '/src/assets/icons/forum-icon.png',
       label: 'FORO', 
-      angle: 45,
+      angle: 225,
       bgColor: 'rgba(255, 183, 0, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(255, 183, 0, 0.3)',
@@ -71,7 +72,7 @@ function MobileHome() {
       path: '/culture', 
       icon: '/src/assets/icons/culture-icon.png',
       label: 'CULTURA', 
-      angle: 135,
+      angle: 315,
       bgColor: 'rgba(59, 161, 0, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(59, 161, 0, 0.3)',
@@ -81,7 +82,7 @@ function MobileHome() {
       path: '/library', 
       icon: '/src/assets/icons/library-icon.png',
       label: 'BIBLIOTECA', 
-      angle: 225,
+      angle: 135,
       bgColor: 'rgba(77, 35, 8, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(77, 35, 8, 0.3)',
@@ -91,7 +92,7 @@ function MobileHome() {
       path: '/aqua', 
       icon: '/src/assets/icons/fish-icon.png',
       label: 'AGUA', 
-      angle: 315,
+      angle: 45,
       bgColor: 'rgba(0, 168, 154, 0.75)',
       hoverBgColor: 'rgba(255, 255, 255, 0.9)',
       borderColor: 'rgba(0, 168, 154, 0.3)',
@@ -130,6 +131,7 @@ function MobileHome() {
       setCurrentText(newText);
       setDisplayedText('');
       setTextIndex(0);
+      setCurrentImage(1);
     }
   };
 
@@ -140,7 +142,16 @@ function MobileHome() {
       timeoutId = setTimeout(() => {
         setDisplayedText(currentText.substring(0, textIndex + 1));
         setTextIndex((prev) => prev + 1);
+        if (textIndex % 4 === 0) {
+          if (textIndex < currentText.length - 4) {
+            setCurrentImage((prev) => prev === 1 ? 2 : 1);
+          } else {
+            setCurrentImage(1);
+          }
+        }
       }, 22);
+    } else {
+      setCurrentImage(1);
     }
 
     return () => {
@@ -156,6 +167,7 @@ function MobileHome() {
     if (textIndex < currentText.length) {
       setDisplayedText(currentText);
       setTextIndex(currentText.length);
+      setCurrentImage(1);
     }
   };
 
@@ -188,15 +200,15 @@ function MobileHome() {
         {/* Contenedor principal del medallón */}
         <div className="relative w-[400px] h-[400px] md:w-[700px] md:h-[700px] lg:w-[400px] lg:h-[400px] flex items-center justify-center mt-[-20px] md:mt-[-40px] lg:mt-[-20px]">
           {/* Kuai Mare decorativo de fondo */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <img
-              src="/src/assets/chatbot/kuai-mare-1.svg"
+          <div className="absolute top-[-50px] md:top-[-100px] lg:top-0 left-1/2 transform -translate-x-1/2" style={{ zIndex: 40 }}>
+            <motion.img
+              src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
               alt="Kuai Mare Background"
-              className="w-[500px] h-[500px] md:w-[800px] md:h-[800px] lg:w-[500px] lg:h-[500px] absolute"
+              className="w-[180px] h-[180px] md:w-[300px] md:h-[300px] lg:w-[200px] lg:h-[200px]"
               style={{ 
-                opacity: 0.15,
-                filter: 'brightness(0.8) sepia(0.5) hue-rotate(70deg) saturate(120%)',
-                transform: 'scale(1.2)',
+                opacity: 1,
+                filter: 'brightness(1.5) contrast(1.3) drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(0,0,0,0.5))',
+                transform: 'translateY(-100%) md:translateY(-120%) lg:translateY(-90%)',
                 userSelect: 'none'
               }}
             />
@@ -297,6 +309,8 @@ function MobileHome() {
                     }}
                     onMouseEnter={() => handleItemHover(index)}
                     onMouseLeave={() => handleItemHover(null)}
+                    onTouchStart={() => handleItemHover(index)}
+                    onTouchEnd={() => handleItemHover(null)}
                     onClick={() => navigate(item.path)}
                   >
                     <img
@@ -371,6 +385,8 @@ function DesktopHome() {
           }
         }
       }, 22);
+    } else {
+      setCurrentImage(1);
     }
 
     return () => {
