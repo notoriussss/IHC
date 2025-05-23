@@ -1,5 +1,5 @@
 [build]
-  command = "CI=false npm run install:all && CI=false npm run build"
+  command = "CI=false npm run install:all && CI=false npm start"
   publish = "build"
   base = "."
 
