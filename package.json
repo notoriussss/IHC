@@ -24,19 +24,14 @@
     "three": "^0.176.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
-    "concurrently": "^8.2.2",
-    "serve": "^14.2.1"
+    "concurrently": "^8.2.2"
   },
   "scripts": {
-    "clean": "rm -rf node_modules package-lock.json",
-    "clean:all": "npm run clean && cd foro && rm -rf node_modules package-lock.json",
-    "install:all": "npm install && cd foro && npm install && npm install --save-dev vite @vitejs/plugin-react && npm install axios @types/axios --save",
     "start": "concurrently \"npm run start:main\" \"npm run start:forum\"",
-    "start:main": "serve -s build -l 3000",
-    "start:forum": "cd foro && npm run start:prod",
-    "build": "CI=false concurrently \"npm run build:main\" \"npm run build:forum\"",
-    "build:main": "CI=false react-scripts build",
-    "build:forum": "cd foro && npm install && npm install axios @types/axios --save && npm install @types/axios --save-dev && npm run build",
+    "start:main": "cd . && react-scripts start",
+    "start:forum": "cd foro && npm start",
+    "install:all": "npm install && cd foro && npm install",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -44,10 +39,7 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ],
-    "rules": {
-      "@typescript-eslint/no-unused-vars": "off"
-    }
+    ]
   },
   "browserslist": {
     "production": [
