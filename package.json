@@ -24,16 +24,18 @@
     "three": "^0.176.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "serve": "^14.2.1"
   },
   "scripts": {
+    "preinstall": "npm install -g serve",
     "start": "concurrently \"npm run start:main\" \"npm run start:forum\"",
-    "start:main": "cd . && NODE_OPTIONS='--max-old-space-size=512' react-scripts start",
-    "start:forum": "cd foro && npm start",
+    "start:main": "serve -s build -l 3000",
+    "start:forum": "cd foro && npm run start:prod",
     "install:all": "npm install && cd foro && npm install && npm install --save-dev vite @vitejs/plugin-react && npm install axios @types/axios --save",
     "build": "CI=false concurrently \"npm run build:main\" \"npm run build:forum\"",
-    "build:main": "CI=false NODE_OPTIONS='--max-old-space-size=512' react-scripts build",
-    "build:forum": "cd foro && npm install && npm install axios @types/axios --save && npm install @types/axios --save-dev && chmod +x ./node_modules/.bin/vite && CI=false npm run build",
+    "build:main": "CI=false react-scripts build",
+    "build:forum": "cd foro && npm install && npm install axios @types/axios --save && npm install @types/axios --save-dev && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
