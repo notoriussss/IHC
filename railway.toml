@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm run install:all"
+buildCommand = "npm run install:all && cd foro && npm install axios @types/axios"
 
 [deploy]
 startCommand = "npm start"
