@@ -87,7 +87,7 @@ function MobileHome() {
     { 
       path: '/aqua', 
       icon: '/src/assets/icons/fish-icon.png', 
-      label: 'ACUARIO', 
+      label: 'AGUA', 
       angle: 315,
       bgColor: 'rgba(0, 0, 0, 0.3)',
       hoverBgColor: 'rgba(0, 168, 154, 0.75)',
