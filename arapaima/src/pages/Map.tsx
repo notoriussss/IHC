@@ -471,9 +471,9 @@ export function Map() {
                                         <motion.div
                                             key={region}
                                             className={`absolute cursor-pointer ${
-                                                region === 'norte' ? 'top-[15%] left-[65%]' :
-                                                region === 'central' ? 'top-[40%] left-[50%]' :
-                                                'top-[70%] left-[32%]'
+                                                region === 'norte' ? 'top-[15%] left-[65%] md:left-[75%]' :
+                                                region === 'central' ? 'top-[45%] left-[45%]' :
+                                                'top-[65%] left-[35%]'
                                             }`}
                                             whileHover={{ scale: 1.2 }}
                                             animate={{ 

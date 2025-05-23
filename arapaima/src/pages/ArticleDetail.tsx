@@ -112,48 +112,54 @@ export function ArticleDetail() {
                 >
                     {/* Contenido principal con scroll */}
                     <div className="relative flex-1 overflow-y-auto pt-24 md:pt-36 custom-scrollbar-blue">
-                        <div className="w-full max-w-4xl mx-auto">
+                        <div className="w-full max-w-4xl mx-auto px-4 md:px-8 pb-8">
                             <div className="bg-black/20 backdrop-blur-sm md:rounded-xl overflow-hidden">
                                 <div className="flex flex-col">
                                     {/* Título */}
-                                    <div className="px-4 md:px-8 pt-4 md:pt-8">
+                                    <div className="px-6 md:px-8 pt-6 md:pt-8">
                                         <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">{article.title}</h1>
                                     </div>
 
                                     {/* Imágenes */}
-                                    <div className="mt-4 md:mt-8">
+                                    <div className="mt-6 md:mt-8 px-4 md:px-8">
                                         {article.images.map((image, index) => (
                                             <div
                                                 key={index}
-                                                className="relative w-full h-auto"
+                                                className="relative w-full mb-6 md:mb-8 last:mb-0"
                                             >
-                                                <div className="relative w-full pb-[75%] md:pb-[56.25%] bg-black/20">
-                                                    <img
-                                                        src={image}
-                                                        alt={`Imagen ${index + 1}`}
-                                                        className="absolute inset-0 w-full h-full object-contain md:object-cover"
-                                                    />
+                                                <div className="relative w-full max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg">
+                                                    <div className="relative w-full pb-[75%] md:pb-[56.25%] bg-black/20">
+                                                        <img
+                                                            src={image}
+                                                            alt={`Imagen ${index + 1}`}
+                                                            className="absolute inset-0 w-full h-full object-contain md:object-cover"
+                                                            style={{
+                                                                objectFit: 'cover',
+                                                                objectPosition: 'center'
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
 
                                     {/* Contenido */}
-                                    <div className="px-4 md:px-8 py-4 md:py-8">
+                                    <div className="px-6 md:px-8 py-6 md:py-8">
                                         <div className="prose prose-lg md:prose-xl prose-invert max-w-none">
                                             {article.content.split('\n').map((paragraph, index) => (
-                                                <p key={index} className="text-base md:text-lg lg:text-xl leading-relaxed mb-4 last:mb-0">
+                                                <p key={index} className="text-base md:text-lg lg:text-xl leading-relaxed mb-6 last:mb-0">
                                                     {paragraph}
                                                 </p>
                                             ))}
                                         </div>
 
                                         {/* Fuente */}
-                                        <div className="mt-6 md:mt-8">
+                                        <div className="mt-8 md:mt-10">
                                             <motion.a
                                                 href={article.url}
                                                 onClick={handleLinkClick}
-                                                className="block w-full bg-white/10 px-4 py-3 md:py-4 rounded-lg text-white text-center text-sm md:text-base font-medium hover:bg-white/20 transition-colors"
+                                                className="block w-full bg-white/10 px-6 py-4 md:py-5 rounded-lg text-white text-center text-sm md:text-base font-medium hover:bg-white/20 transition-colors"
                                                 whileHover={{ scale: 1.02 }}
                                                 transition={{ duration: 0.2 }}
                                             >
