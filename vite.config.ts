@@ -10,11 +10,15 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
     rollupOptions: {
       external: ['url', 'fs', 'path']
     }
   },
   server: {
+    port: 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
