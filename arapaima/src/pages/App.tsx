@@ -53,6 +53,7 @@ function Home() {
   const [isTextVisible, setIsTextVisible] = useState(true);
   const [previousHoveredItem, setPreviousHoveredItem] = useState<number | null>(null);
   const [shouldTransition, setShouldTransition] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const menuItems = [
     { 
@@ -238,7 +239,8 @@ function Home() {
             style={{
               opacity: shouldTransition ? (isTextVisible ? 1 : 0) : 1,
               filter: shouldTransition ? (isTextVisible ? 'blur(0px)' : 'blur(4px)') : 'blur(0px)',
-              textShadow: '0 0 10px rgba(0,255,100,0.3)'
+              textShadow: '0 0 10px rgba(0,255,100,0.3)',
+              transform: 'translateY(40px)'
             }}
             onClick={handleTextClick}
           >
@@ -250,6 +252,7 @@ function Home() {
             </p>
           </div>
 
+>>>>>>> a071fd7c2ff12f01875d1b59cc30d543639219e9
           {/* Menú circular */}
           <div className="absolute w-full h-full">
             {menuItems.map((item, index) => {
