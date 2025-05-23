@@ -5,7 +5,7 @@ import { PostItem, Categories, NewDiscussionForm, PostDetailPage } from './compo
 import { useAuth } from './context';
 import { getAllPosts, createPost, initializeForumData } from './services/forumService';
 import AuthTabs from './components/auth/AuthTabs/AuthTabs';
-import { SuccessMessageProvider } from './context/SuccessMessageContext';
+import { SuccessMessageProvider, useSuccessMessage } from './context/SuccessMessageContext';
 import { Post } from './types/forum';
 
 // Inicializar los datos del foro
@@ -22,6 +22,7 @@ const categoryLabels: { [key: string]: string } = {
 
 const MainForumContent: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { showSuccessMessage } = useSuccessMessage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
@@ -102,7 +103,7 @@ const MainForumContent: React.FC = () => {
     if (!user) return;
 
     try {
-      await createPost({
+      const newPost = await createPost({
         title,
         content,
         category,
