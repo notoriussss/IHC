@@ -198,7 +198,6 @@ const Model = forwardRef<THREE.Group, {
   currentModel: string
 }>(({ url, onViewChange, showMap, onShowNews, onShowIndicadores, openModal, currentModel }, ref) => {
   const [error, setError] = useState<string | null>(null);
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const { gltf, loadingProgress: modelProgress, error: modelError, isLoaded } = useModelLoader(url);
   const { camera } = useThree();
   const [targetPosition, setTargetPosition] = useState<THREE.Vector3 | null>(null);
@@ -585,8 +584,8 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
 
   // Calculate total progress based on different stages
   const totalProgress = isPreloading 
-    ? (preloadProgress + progress + modelProgress) / 3 
-    : (progress + modelProgress) / 2;
+    ? Math.min((preloadProgress + progress + modelProgress) / 3, 100)
+    : Math.min((progress + modelProgress) / 2, 100);
 
   // Update model progress when Three.js reports progress
   useEffect(() => {
@@ -653,7 +652,9 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
           opacity: 0.8,
           marginBottom: '10px'
         }}>
-          {totalProgress.toFixed(0)}%
+          {isDownloading 
+            ? `${downloadProgress.toFixed(0)}%`
+            : `${totalProgress.toFixed(0)}%`}
         </div>
 
         <div style={{
@@ -674,7 +675,11 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
               transformOrigin: '0%',
             }}
             initial={{ scaleX: 0 }}
-            animate={{ scaleX: totalProgress / 100 }}
+            animate={{ 
+              scaleX: isDownloading 
+                ? downloadProgress / 100
+                : totalProgress / 100
+            }}
             transition={{ duration: 0.3 }}
           />
         </div>
@@ -2609,8 +2614,8 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
               marginBottom: '10px'
             }}>
               {isPreloading 
-                ? ((preloadProgress + progress) / 2).toFixed(0)
-                : progress.toFixed(0)}%
+                ? `${Math.min(preloadProgress, 100).toFixed(0)}%`
+                : `${Math.min(progress, 100).toFixed(0)}%`}
             </div>
 
             <div style={{
@@ -2633,8 +2638,8 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
                 initial={{ scaleX: 0 }}
                 animate={{ 
                   scaleX: isPreloading 
-                    ? (preloadProgress + progress) / 200
-                    : progress / 100
+                    ? Math.min(preloadProgress / 100, 1)
+                    : Math.min(progress / 100, 1)
                 }}
                 transition={{ duration: 0.3 }}
               />
