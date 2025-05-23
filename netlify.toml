@@ -1,7 +1,7 @@
 [build]
   command = "CI=false npm run install:all && CI=false npm run build"
   publish = "build"
-  environment = { NODE_VERSION = "18" }
+  base = "."
 
 [build.environment]
   NODE_VERSION = "18"
@@ -14,9 +14,9 @@
 [[headers]]
   for = "/static/media/dracoFlora/*.glb"
   [headers.values]
+    Content-Type = "model/gltf-binary"
     Access-Control-Allow-Origin = "*"
     Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "model/gltf-binary"
 
 [[headers]]
   for = "/static/media/dracoFlora/*"
