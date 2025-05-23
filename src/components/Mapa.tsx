@@ -124,7 +124,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
-                  onClick={() => window.location.href = 'http://localhost:5173/'}
+                  onClick={() => window.location.href = 'https://aqualiaforo.netlify.app'}
                   alt="Botón 5"
                 />
                 <img
