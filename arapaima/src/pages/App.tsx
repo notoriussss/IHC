@@ -60,36 +60,36 @@ function Home() {
       icon: '/src/assets/icons/forum-icon.png', 
       label: 'FORO', 
       angle: 45,
-      bgColor: 'rgba(255, 166, 0, 0.95)',
-      hoverBgColor: 'rgba(255, 166, 0, 0.85)',
-      borderColor: 'rgba(255, 166, 0, 1)'
+      bgColor: 'rgba(0, 0, 0, 0.3)',  // Transparente oscuro por defecto
+      hoverBgColor: 'rgba(255, 183, 0, 0.75)',  // #FFB700
+      borderColor: 'rgba(255, 183, 0, 0.3)'
     },
     { 
       path: '/culture', 
       icon: '/src/assets/icons/culture-icon.png', 
       label: 'CULTURA', 
       angle: 135,
-      bgColor: 'rgba(220, 20, 60, 0.95)',
-      hoverBgColor: 'rgba(220, 20, 60, 0.85)',
-      borderColor: 'rgba(220, 20, 60, 1)'
+      bgColor: 'rgba(0, 0, 0, 0.3)',
+      hoverBgColor: 'rgba(59, 161, 0, 0.75)',  // #3BA100
+      borderColor: 'rgba(59, 161, 0, 0.3)'
     },
     { 
       path: '/library', 
       icon: '/src/assets/icons/library-icon.png', 
       label: 'BIBLIOTECA', 
       angle: 225,
-      bgColor: 'rgba(75, 0, 130, 0.95)',
-      hoverBgColor: 'rgba(75, 0, 130, 0.85)',
-      borderColor: 'rgba(75, 0, 130, 1)'
+      bgColor: 'rgba(0, 0, 0, 0.3)',
+      hoverBgColor: 'rgba(77, 35, 8, 0.75)',  // #4D2308
+      borderColor: 'rgba(77, 35, 8, 0.3)'
     },
     { 
       path: '/aqua', 
       icon: '/src/assets/icons/fish-icon.png', 
       label: 'ACUARIO', 
       angle: 315,
-      bgColor: 'rgba(0, 128, 128, 0.95)',
-      hoverBgColor: 'rgba(0, 128, 128, 0.85)',
-      borderColor: 'rgba(0, 128, 128, 1)'
+      bgColor: 'rgba(0, 0, 0, 0.3)',
+      hoverBgColor: 'rgba(0, 168, 154, 0.75)',  // #00A89A
+      borderColor: 'rgba(0, 168, 154, 0.3)'
     }
   ];
 
@@ -270,18 +270,18 @@ function Home() {
                   }}
                 >
                   <div
-                    className="w-32 h-32 rounded-full flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200"
+                    className="w-32 h-32 rounded-full flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-300"
                     style={{
                       background: hoveredItem === index 
                         ? item.hoverBgColor
                         : item.bgColor,
                       border: hoveredItem === index 
                         ? `2px solid ${item.borderColor}`
-                        : `2px solid ${item.borderColor}40`,
+                        : '2px solid rgba(255, 255, 255, 0.1)',
                       transform: hoveredItem === index ? 'scale(1.1)' : 'scale(1)',
                       boxShadow: hoveredItem === index
-                        ? `0 0 20px ${item.borderColor}40`
-                        : '0 0 10px rgba(0,0,0,0.5)'
+                        ? `0 0 20px ${item.borderColor}`
+                        : '0 0 10px rgba(0,0,0,0.3)'
                     }}
                     onMouseEnter={() => handleItemHover(index)}
                     onMouseLeave={() => handleItemHover(null)}
