@@ -2,23 +2,15 @@ import { Post, Comment } from '../types/forum';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3001/api';
-const COMMENTS_STORAGE_KEY = 'forum_comments';
-
-// Función auxiliar para leer los posts
-const readPosts = async (): Promise<{ posts: Post[] }> => {
-  try {
-    const response = await axios.get(`${API_URL}/posts`);
-    return response.data;
-  } catch (error) {
-    console.error('Error reading posts:', error);
-    return { posts: [] };
-  }
-};
-
 
 export const getAllPosts = async (): Promise<Post[]> => {
-  const data = await readPosts();
-  return data.posts;
+  try {
+    const response = await axios.get(`${API_URL}/posts`);
+    return response.data.posts;
+  } catch (error) {
+    console.error('Error reading posts:', error);
+    return [];
+  }
 };
 
 export const getPostById = async (id: number): Promise<Post> => {
@@ -57,8 +49,8 @@ export const createComment = async (postId: number, content: string, author: str
 // Función para inicializar algunos datos de ejemplo
 export const initializeForumData = async () => {
   try {
-    const data = await readPosts();
-    if (data.posts.length === 0) {
+    const posts = await getAllPosts();
+    if (posts.length === 0) {
       await createPost({
         title: 'Bienvenido al Foro',
         content: 'Este es un foro de ejemplo para discutir temas relacionados con la comunidad.',
