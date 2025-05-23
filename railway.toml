@@ -1,10 +1,10 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm run install:all && cd foro && npm install axios @types/axios --save && npm install @types/axios --save-dev"
+buildCommand = "npm run install:all && cd foro && npm install axios @types/axios --save && npm install @types/axios --save-dev && chmod +x ./node_modules/.bin/vite"
 
 [deploy]
-startCommand = "CI=false npm start"
+startCommand = "CI=false NODE_OPTIONS='--max-old-space-size=512' npm start"
 healthcheckPath = "/"
-healthcheckTimeout = 100
+healthcheckTimeout = 300
 restartPolicyType = "always"
 restartPolicyMaxRetries = 10 
