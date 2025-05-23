@@ -15,36 +15,6 @@ const readPosts = async (): Promise<{ posts: Post[] }> => {
   }
 };
 
-// Función auxiliar para escribir posts
-const writePosts = async (data: { posts: Post[] }): Promise<void> => {
-  try {
-    await axios.post(`${API_URL}/posts`, data);
-  } catch (error) {
-    console.error('Error writing posts:', error);
-    throw new Error('Error al guardar los datos');
-  }
-};
-
-// Función auxiliar para leer los comentarios
-const readComments = async (): Promise<Comment[]> => {
-  try {
-    const comments = localStorage.getItem(COMMENTS_STORAGE_KEY);
-    return comments ? JSON.parse(comments) : [];
-  } catch (error) {
-    console.error('Error reading comments:', error);
-    return [];
-  }
-};
-
-// Función auxiliar para escribir comentarios
-const writeComments = async (comments: Comment[]): Promise<void> => {
-  try {
-    localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify(comments));
-  } catch (error) {
-    console.error('Error writing comments:', error);
-    throw new Error('Error al guardar los comentarios');
-  }
-};
 
 export const getAllPosts = async (): Promise<Post[]> => {
   const data = await readPosts();
@@ -135,19 +105,3 @@ export const addComment = async (comment: { postId: number; content: string; aut
   return response.json();
 };
 
-export const getUserFavoritePosts = async (userId: string): Promise<Post[]> => {
-  const posts = await getAllPosts();
-  return posts.filter(post => post.favorite);
-};
-
-export const toggleFavorite = async (postId: number): Promise<void> => {
-  const posts = await getAllPosts();
-  const postIndex = posts.findIndex(post => post.id === postId);
-  
-  if (postIndex === -1) return;
-  
-  const post = posts[postIndex];
-  post.favorite = !post.favorite;
-  
-  localStorage.setItem('forum_posts', JSON.stringify(posts));
-}; 
