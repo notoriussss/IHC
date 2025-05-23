@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
+import { MobileMenu } from './components/MobileMenu';
 
 // Tipos
 type RegionData = {
@@ -117,22 +118,22 @@ const DataPanel = ({ data }: { data: RegionData }) => {
 
     return (
         <motion.div
-            className="bg-black/80 backdrop-blur-sm rounded-lg border border-[#b38f25]/30 p-6 w-full"
+            className="bg-black/80 backdrop-blur-sm rounded-lg border border-[#b38f25]/30 p-4 md:p-6 w-full"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.3 }}
             key={data.nombre}
         >
-            <h3 className="text-3xl font-bold text-white mb-4">{data.nombre}</h3>
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">{data.nombre}</h3>
             
             {/* Tabs de navegación */}
-            <div className="flex gap-4 mb-6 flex-wrap">
+            <div className="flex flex-wrap gap-2 md:gap-4 mb-4 md:mb-6">
                 {(['info', 'historia', 'ubicaciones', 'indigenas'] as const).map((tab) => (
                     <motion.button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`px-4 py-2 rounded-lg transition-all duration-300 text-lg ${
+                        className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg transition-all duration-300 text-base md:text-lg ${
                             activeTab === tab
                                 ? 'bg-[#b38f25] text-white'
                                 : 'bg-white/10 text-white/70 hover:bg-white/20'
@@ -147,47 +148,47 @@ const DataPanel = ({ data }: { data: RegionData }) => {
                 ))}
             </div>
 
-            {/* Contenido con altura fija y scroll */}
-            <div className="h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+            {/* Contenido con altura adaptativa */}
+            <div className="h-[40vh] md:h-[500px] overflow-y-auto pr-2 md:pr-4 custom-scrollbar">
                 <AnimatePresence mode="wait">
                     {activeTab === 'info' && (
                         <motion.div
                             key="info"
                             {...tabContentAnimation}
                         >
-                            <p className="text-white/90 mb-6 text-lg leading-relaxed">{data.descripcion}</p>
-                            <div className="grid gap-4">
+                            <p className="text-white/90 mb-4 md:mb-6 text-base md:text-lg leading-relaxed">{data.descripcion}</p>
+                            <div className="grid gap-3 md:gap-4">
                                 <motion.div 
-                                    className="bg-white/10 p-4 rounded-lg"
+                                    className="bg-white/10 p-3 md:p-4 rounded-lg"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                 >
-                                    <span className="text-white/70 text-lg">pH:</span>
-                                    <span className="text-white ml-2 text-lg">{data.ph}</span>
+                                    <span className="text-white/70 text-base md:text-lg">pH:</span>
+                                    <span className="text-white ml-2 text-base md:text-lg">{data.ph}</span>
                                 </motion.div>
                                 <motion.div 
-                                    className="bg-white/10 p-4 rounded-lg"
+                                    className="bg-white/10 p-3 md:p-4 rounded-lg"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                 >
-                                    <span className="text-white/70 text-lg">Temperatura:</span>
-                                    <span className="text-white ml-2 text-lg">{data.temperatura}</span>
+                                    <span className="text-white/70 text-base md:text-lg">Temperatura:</span>
+                                    <span className="text-white ml-2 text-base md:text-lg">{data.temperatura}</span>
                                 </motion.div>
                                 <motion.div 
-                                    className="bg-white/10 p-4 rounded-lg"
+                                    className="bg-white/10 p-3 md:p-4 rounded-lg"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                 >
-                                    <span className="text-white/70 text-lg">Oxígeno Disuelto:</span>
-                                    <span className="text-white ml-2 text-lg">{data.oxigenoDisuelto}</span>
+                                    <span className="text-white/70 text-base md:text-lg">Oxígeno Disuelto:</span>
+                                    <span className="text-white ml-2 text-base md:text-lg">{data.oxigenoDisuelto}</span>
                                 </motion.div>
                                 <motion.div 
-                                    className="bg-white/10 p-4 rounded-lg"
+                                    className="bg-white/10 p-3 md:p-4 rounded-lg"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                 >
-                                    <span className="text-white/70 text-lg">Turbidez:</span>
-                                    <span className="text-white ml-2 text-lg">{data.turbidez}</span>
+                                    <span className="text-white/70 text-base md:text-lg">Turbidez:</span>
+                                    <span className="text-white ml-2 text-base md:text-lg">{data.turbidez}</span>
                                 </motion.div>
                             </div>
                         </motion.div>
@@ -198,7 +199,7 @@ const DataPanel = ({ data }: { data: RegionData }) => {
                             key="historia"
                             {...tabContentAnimation}
                         >
-                            <p className="text-white/90 text-lg leading-relaxed">{data.historia}</p>
+                            <p className="text-white/90 text-base md:text-lg leading-relaxed">{data.historia}</p>
                         </motion.div>
                     )}
 
@@ -207,18 +208,18 @@ const DataPanel = ({ data }: { data: RegionData }) => {
                             key="ubicaciones"
                             {...tabContentAnimation}
                         >
-                            <div className="space-y-4">
+                            <div className="space-y-3 md:space-y-4">
                                 {Object.entries(data.ubicacionesClave).map(([location, description], index) => (
                                     <motion.div 
                                         key={location}
-                                        className="bg-white/10 p-4 rounded-lg"
+                                        className="bg-white/10 p-3 md:p-4 rounded-lg"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 }}
                                         whileHover={{ scale: 1.02 }}
                                     >
-                                        <h4 className="text-white font-bold mb-2 text-xl">{location}</h4>
-                                        <p className="text-white/80 text-lg">{description}</p>
+                                        <h4 className="text-white font-bold mb-2 text-lg md:text-xl">{location}</h4>
+                                        <p className="text-white/80 text-base md:text-lg">{description}</p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -230,17 +231,17 @@ const DataPanel = ({ data }: { data: RegionData }) => {
                             key="indigenas"
                             {...tabContentAnimation}
                         >
-                            <div className="space-y-4">
+                            <div className="space-y-3 md:space-y-4">
                                 <motion.div 
-                                    className="bg-white/10 p-4 rounded-lg"
+                                    className="bg-white/10 p-3 md:p-4 rounded-lg"
                                     whileHover={{ scale: 1.02 }}
                                 >
-                                    <h4 className="text-white font-bold mb-2 text-xl">Grupos Principales</h4>
+                                    <h4 className="text-white font-bold mb-2 text-lg md:text-xl">Grupos Principales</h4>
                                     <div className="flex flex-wrap gap-2">
                                         {data.poblacionIndigena.grupos.map((grupo, index) => (
                                             <motion.span 
                                                 key={grupo}
-                                                className="bg-[#b38f25]/20 text-white px-4 py-2 rounded-full text-lg"
+                                                className="bg-[#b38f25]/20 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-base md:text-lg"
                                                 initial={{ opacity: 0, scale: 0.8 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 transition={{ delay: index * 0.1 }}
@@ -252,7 +253,7 @@ const DataPanel = ({ data }: { data: RegionData }) => {
                                     </div>
                                 </motion.div>
                                 <motion.p 
-                                    className="text-white/90 text-lg leading-relaxed"
+                                    className="text-white/90 text-base md:text-lg leading-relaxed"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.3 }}
@@ -380,11 +381,11 @@ export function Map() {
                     <div className="absolute inset-0 bg-black/40" />
 
                     {/* Barra superior con ícono y título - Ahora fixed */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md z-50 py-5">
-                        <div className="flex items-center px-8">
-                            <div className="flex items-center gap-3 flex-1">
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-sm z-50 py-2 md:py-5">
+                        <div className="flex items-center px-4 md:px-8">
+                            <div className="flex items-center gap-2 md:gap-3 flex-1">
                                 <motion.div 
-                                    className="w-20 h-20 flex items-center justify-center"
+                                    className="w-12 h-12 md:w-20 md:h-20 flex items-center justify-center"
                                     variants={iconAnimation}
                                 >
                                     <img 
@@ -394,7 +395,7 @@ export function Map() {
                                     />
                                 </motion.div>
                                 <motion.h2 
-                                    className="text-3xl font-bold text-white"
+                                    className="text-xl md:text-3xl font-bold text-white"
                                     variants={pageIndicatorAnimation}
                                 >
                                     Mapa
@@ -402,7 +403,7 @@ export function Map() {
                             </div>
 
                             <motion.div
-                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer"
+                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer hidden md:block"
                                 onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -410,39 +411,28 @@ export function Map() {
                                 <img
                                     src="/src/assets/logo/logo.svg"
                                     alt="Logo"
-                                    className="w-60 h-auto"
+                                    className="w-40 md:w-60 h-auto"
                                 />
                             </motion.div>
 
-                            {/* Botón de volver */}
+                            {/* Menú móvil */}
                             <div className="flex-1 flex justify-end">
-                                <motion.div
-                                    className="flex items-center gap-6 cursor-pointer"
-                                    onClick={handleNavigateBack}
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                                >
-                                    <img
-                                        src="/src/assets/icons/back.png"
-                                        alt="Volver"
-                                        className="w-12 h-12"
-                                    />
-                                    <span className="text-white text-xl">Volver</span>
-                                </motion.div>
+                                <MobileMenu onNavigateBack={handleNavigateBack} />
                             </div>
                         </div>
                     </div>
 
                     {/* Contenido principal con scroll */}
-                    <div className="relative flex-1 overflow-y-auto custom-scrollbar-blue pt-36">
-                        <div className="flex items-center justify-center h-full">
+                    <div className="relative flex-1 overflow-y-auto custom-scrollbar-blue pt-28 md:pt-36">
+                        <div className="flex flex-col md:flex-row items-center justify-center min-h-full p-4 md:p-8 gap-6 md:gap-8">
                             {/* Contenedor del mapa con título */}
                             <motion.div 
                                 ref={mapContainerRef}
-                                className="relative w-[45%] h-3/4"
+                                className="relative w-full md:w-[45%] h-[50vh] md:h-3/4"
                                 variants={mapContainerAnimation}
                                 animate={selectedRegion ? {
-                                    x: -100,
+                                    x: window.innerWidth >= 768 ? -100 : 0,
+                                    y: window.innerWidth < 768 ? -50 : 0,
                                     transition: {
                                         type: "spring",
                                         stiffness: 300,
@@ -450,16 +440,17 @@ export function Map() {
                                     }
                                 } : {
                                     x: 0,
+                                    y: 0,
                                     transition: {
                                         type: "spring",
                                         stiffness: 300,
                                         damping: 30
                                     }
                                 }}
-                                initial={{ x: 0 }}
+                                initial={{ x: 0, y: 0 }}
                             >
                                 {/* Título del mapa */}
-                                <h2 className="absolute -top-12 left-0 w-full text-center text-2xl font-bold text-white">
+                                <h2 className="absolute -top-8 md:-top-12 left-0 w-full text-center text-xl md:text-2xl font-bold text-white">
                                     Mapa de la Región Guayana
                                 </h2>
 
@@ -552,10 +543,10 @@ export function Map() {
                                 {selectedRegion ? (
                                     <motion.div
                                         key="region-info"
-                                        className="w-[500px] region-info-panel ml-8"
-                                        initial={{ opacity: 0, x: 50 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 50 }}
+                                        className="w-full md:w-[500px] region-info-panel md:ml-8"
+                                        initial={{ opacity: 0, x: window.innerWidth >= 768 ? 50 : 0, y: window.innerWidth < 768 ? 50 : 0 }}
+                                        animate={{ opacity: 1, x: 0, y: 0 }}
+                                        exit={{ opacity: 0, x: window.innerWidth >= 768 ? 50 : 0, y: window.innerWidth < 768 ? 50 : 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
                                         <DataPanel data={regionData[selectedRegion]} />
@@ -563,10 +554,10 @@ export function Map() {
                                 ) : (
                                     <motion.div
                                         key="welcome-message"
-                                        className="w-[500px] ml-8"
-                                        initial={{ opacity: 0, x: 50 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 50 }}
+                                        className="w-full md:w-[500px] md:ml-8"
+                                        initial={{ opacity: 0, x: window.innerWidth >= 768 ? 50 : 0, y: window.innerWidth < 768 ? 50 : 0 }}
+                                        animate={{ opacity: 1, x: 0, y: 0 }}
+                                        exit={{ opacity: 0, x: window.innerWidth >= 768 ? 50 : 0, y: window.innerWidth < 768 ? 50 : 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
                                         <div className="bg-black/80 backdrop-blur-sm rounded-lg border border-[#b38f25]/30 p-6">

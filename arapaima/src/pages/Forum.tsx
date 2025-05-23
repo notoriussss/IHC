@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getForumData, subscribeToForumChanges, getUserVotes, votePost, updateForumData, type ForumData } from '@/services/forumService';
+import { MobileMenu } from './components/MobileMenu';
 
 const getPageTransition = (from: string | undefined) => {
     if (from === 'post') {
@@ -188,6 +189,10 @@ export function Forum() {
         setIsNewPostModalOpen(false);
     };
 
+    const handleNavigateBack = () => {
+        navigate('/');
+    };
+
     return (
         <AnimatePresence mode="wait">
             <motion.div
@@ -216,12 +221,11 @@ export function Forum() {
                     }}
                 >
                     {/* Barra superior con logo - Ahora fixed */}
-                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-md z-50 py-2 sm:py-3 md:py-5">
-                        <div className="flex items-center px-4 sm:px-6 md:px-8">
-                            {/* Contenedor del ícono y título en la esquina superior izquierda */}
-                            <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+                    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur-sm z-50 py-2 md:py-5">
+                        <div className="flex items-center px-4 md:px-8">
+                            <div className="flex items-center gap-2 md:gap-3 flex-1">
                                 <motion.div 
-                                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center"
+                                    className="w-12 h-12 md:w-20 md:h-20 flex items-center justify-center"
                                     variants={iconAnimation}
                                 >
                                     <img 
@@ -230,18 +234,16 @@ export function Forum() {
                                         className="w-full h-full object-contain"
                                     />
                                 </motion.div>
-                                <motion.div 
-                                    className="flex items-center"
+                                <motion.h2 
+                                    className="text-xl md:text-3xl font-bold text-white"
                                     variants={pageIndicatorAnimation}
                                 >
-                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                                        Foro
-                                    </h2>
-                                </motion.div>
+                                    Foro
+                                </motion.h2>
                             </div>
 
                             <motion.div
-                                className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hidden sm:block"
+                                className="absolute left-1/2 transform -translate-x-1/2 cursor-pointer hidden md:block"
                                 onClick={() => navigate('/')}
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -249,25 +251,13 @@ export function Forum() {
                                 <img
                                     src="/src/assets/logo/logo.svg"
                                     alt="Logo"
-                                    className="w-32 sm:w-40 md:w-60 h-auto"
+                                    className="w-40 md:w-60 h-auto"
                                 />
                             </motion.div>
 
-                            {/* Botón de volver */}
+                            {/* Menú móvil */}
                             <div className="flex-1 flex justify-end">
-                                <motion.div
-                                    className="flex items-center gap-2 sm:gap-4 md:gap-6 cursor-pointer"
-                                    onClick={() => navigate('/')}
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                                >
-                                    <img
-                                        src="/src/assets/icons/back.png"
-                                        alt="Volver"
-                                        className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
-                                    />
-                                    <span className="text-white text-base sm:text-lg md:text-xl">Volver</span>
-                                </motion.div>
+                                <MobileMenu onNavigateBack={handleNavigateBack} />
                             </div>
                         </div>
                     </div>
