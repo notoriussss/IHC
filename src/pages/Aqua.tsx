@@ -192,7 +192,7 @@ export function Aqua() {
                             onHoverEnd={() => setHoverStates(prev => ({ ...prev, acuario: false }))}
                             onClick={() => handleNavigate('/aquarium')}
                             style={{
-                                backgroundImage: 'url("/src/assets/background/background-aquarium.png")',
+                                backgroundImage: 'url("/assets/background/background-aquarium.png")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 filter: `brightness(${hoverStates.acuario ? '100%' : '90%'})`,
@@ -218,7 +218,7 @@ export function Aqua() {
                             onHoverEnd={() => setHoverStates(prev => ({ ...prev, rios: false }))}
                             onClick={() => handleNavigate('/river')}
                             style={{
-                                backgroundImage: 'url("/src/assets/background/background_river.svg")',
+                                backgroundImage: 'url("/assets/background/background_river.svg")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 filter: `brightness(${hoverStates.rios ? '100%' : '90%'})`,
@@ -244,7 +244,7 @@ export function Aqua() {
                             onHoverEnd={() => setHoverStates(prev => ({ ...prev, mapa: false }))}
                             onClick={() => handleNavigate('/map')}
                             style={{
-                                backgroundImage: 'url("/src/assets/background/background-map.svg")',
+                                backgroundImage: 'url("/assets/background/background-map.svg")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 filter: `brightness(${hoverStates.mapa ? '100%' : '90%'})`,
@@ -273,7 +273,7 @@ export function Aqua() {
                             onHoverEnd={() => setHoverStates(prev => ({ ...prev, acuario: false }))}
                             onClick={() => handleNavigate('/aquarium')}
                             style={{
-                                backgroundImage: 'url("/src/assets/background/background-aquarium.png")',
+                                backgroundImage: 'url("/assets/background/background-aquarium.png")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 clipPath: "polygon(0 0, 100% 0, 100% 50%, 0 100%)",
@@ -304,7 +304,7 @@ export function Aqua() {
                             onHoverEnd={() => setHoverStates(prev => ({ ...prev, rios: false }))}
                             onClick={() => handleNavigate('/river')}
                             style={{
-                                backgroundImage: 'url("/src/assets/background/background_river.svg")',
+                                backgroundImage: 'url("/assets/background/background_river.svg")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 clipPath: "polygon(0% 0, 100% 0, 100% 100%, 0% 50%)",
@@ -335,7 +335,7 @@ export function Aqua() {
                             onHoverEnd={() => setHoverStates(prev => ({ ...prev, mapa: false }))}
                             onClick={() => handleNavigate('/map')}
                             style={{
-                                backgroundImage: 'url("/src/assets/background/background-map.svg")',
+                                backgroundImage: 'url("/assets/background/background-map.svg")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 clipPath: "polygon(50% 0%, 0 100%, 100% 100%)",

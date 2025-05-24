@@ -181,7 +181,7 @@ export function Aquarium() {
                     className="relative w-full h-full flex flex-col text-white"
                     variants={contentAnimation}
                     style={{
-                        backgroundImage: "url('/src/assets/background/background-aquarium.png')",
+                        backgroundImage: "url('/assets/background/background-aquarium.png')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
                     }}

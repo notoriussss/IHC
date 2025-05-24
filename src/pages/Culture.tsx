@@ -189,7 +189,7 @@ export function Culture() {
                     className="relative w-full h-full flex flex-col items-center justify-start text-white"
                     variants={contentAnimation}
                     style={{
-                        backgroundImage: "url('/src/assets/background/background-culture.png')",
+                        backgroundImage: "url('/assets/background/background-culture.png')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         overflow: 'hidden'
@@ -204,7 +204,7 @@ export function Culture() {
                                     variants={iconAnimation}
                                 >
                                     <img 
-                                        src="/src/assets/icons/culture.png"
+                                        src="/assets/icons/culture.png"
                                         alt="Culture Icon"
                                         className="w-full h-full object-contain"
                                     />

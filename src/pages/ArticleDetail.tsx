@@ -105,7 +105,7 @@ export function ArticleDetail() {
                 <motion.div
                     className="relative w-full h-full flex flex-col text-white"
                     style={{
-                        backgroundImage: "url('/src/assets/background/background-culture.png')",
+                        backgroundImage: "url('/assets/background/background-culture.png')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
                     }}
