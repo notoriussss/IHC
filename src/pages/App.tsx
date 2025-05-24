@@ -60,7 +60,7 @@ function MobileHome() {
   const menuItems = [
     { 
       path: '/forum', 
-      icon: '/src/assets/icons/forum-icon.png',
+      icon: '/assets/icons/forum-icon.png',
       label: 'FORO', 
       angle: 225,
       bgColor: 'rgba(255, 183, 0, 0.75)',
@@ -70,7 +70,7 @@ function MobileHome() {
     },
     { 
       path: '/culture', 
-      icon: '/src/assets/icons/culture-icon.png',
+      icon: '/assets/icons/culture-icon.png',
       label: 'CULTURA', 
       angle: 315,
       bgColor: 'rgba(59, 161, 0, 0.75)',
@@ -80,7 +80,7 @@ function MobileHome() {
     },
     { 
       path: '/library', 
-      icon: '/src/assets/icons/library-icon.png',
+      icon: '/assets/icons/library-icon.png',
       label: 'BIBLIOTECA', 
       angle: 135,
       bgColor: 'rgba(77, 35, 8, 0.75)',
@@ -90,7 +90,7 @@ function MobileHome() {
     },
     { 
       path: '/aqua', 
-      icon: '/src/assets/icons/fish-icon.png',
+      icon: '/assets/icons/fish-icon.png',
       label: 'AGUA', 
       angle: 45,
       bgColor: 'rgba(0, 168, 154, 0.75)',
@@ -177,7 +177,7 @@ function MobileHome() {
         ref={containerRef}
         className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center"
         style={{
-          backgroundImage: "url('/src/assets/background/background-desktop.png')",
+          backgroundImage: "url('/assets/background/background-desktop.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           userSelect: 'none',
@@ -190,7 +190,7 @@ function MobileHome() {
         {/* Logo centrado para móviles */}
         <div className="flex justify-center items-center mt-4 mb-16">
           <img
-            src="/src/assets/logo/logo.svg"
+            src="/assets/logo/logo.svg"
             alt="Logo"
             className="w-64 h-auto"
             style={{ userSelect: 'none' }}
@@ -202,7 +202,7 @@ function MobileHome() {
           {/* Kuai Mare decorativo de fondo */}
           <div className="absolute top-[-50px] md:top-[-100px] lg:top-0 left-1/2 transform -translate-x-1/2" style={{ zIndex: 40 }}>
             <motion.img
-              src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
+              src={`/assets/chatbot/kuai-mare-${currentImage}.svg`}
               alt="Kuai Mare Background"
               className="w-[180px] h-[180px] md:w-[300px] md:h-[300px] lg:w-[200px] lg:h-[200px]"
               style={{ 
@@ -217,7 +217,7 @@ function MobileHome() {
           {/* Círculo Warao decorativo */}
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.img
-              src="/src/assets/icons/circle-warao.png"
+              src="/assets/icons/circle-warao.png"
               alt="Círculo Warao"
               className="w-[350px] h-[350px] md:w-[650px] md:h-[650px] lg:w-[350px] lg:h-[350px] absolute"
               style={{
@@ -426,7 +426,7 @@ function DesktopHome() {
         ref={containerRef}
         className="relative w-full h-screen overflow-hidden"
         style={{
-          backgroundImage: "url('/src/assets/background/background-desktop.png')",
+          backgroundImage: "url('/assets/background/background-desktop.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           userSelect: 'none',
@@ -439,7 +439,7 @@ function DesktopHome() {
         {/* Logo en la parte superior */}
         <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-20">
             <img
-                src="/src/assets/logo/logo.svg"
+                src="/assets/logo/logo.svg"
                 alt="Logo"
                 className="w-80 h-auto"
                 style={{ userSelect: 'none' }}
@@ -449,7 +449,7 @@ function DesktopHome() {
         {/* Contenido centrado */}
         <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
             <motion.img
-                src={`/src/assets/chatbot/kuai-mare-${currentImage}.svg`}
+                src={`/assets/chatbot/kuai-mare-${currentImage}.svg`}
                 alt="Kuai Mare"
                 className="w-125 h-auto mb-8"
                 style={{ userSelect: 'none' }}
@@ -478,35 +478,35 @@ function DesktopHome() {
         {/* Imágenes debajo de las esquinas */}
         <div className="absolute top-0 left-0 z-0">
           <img
-            src="/src/assets/background/sun.svg"
+            src="/assets/background/sun.svg"
             alt="Top Left Image"
             className="w-200 h-200"
           />
         </div>
         <div className="absolute top-0 right-0 z-0">
           <img
-            src="/src/assets/background/leaf.svg"
+            src="/assets/background/leaf.svg"
             alt="Top Right Image"
             className="w-110 h-110"
           />
         </div>
         <div className="absolute top-0 right-0 z-0 mix-blend-saturation">
           <img
-            src="/src/assets/background/leaf-background.svg"
+            src="/assets/background/leaf-background.svg"
             alt="Top Right Background Image"
             className="w-150 h-150"
           />
         </div>
         <div className="absolute bottom-0 left-0 z-0">
           <img
-            src="/src/assets/background/fire.svg"
+            src="/assets/background/fire.svg"
             alt="Bottom Left Image"
             className="w-300 h-300"
           />
         </div>
         <div className="absolute bottom-0 right-0 z-0">
             <img
-              src="/src/assets/background/water.svg"
+              src="/assets/background/water.svg"
               alt="Bottom Right Image"
               className="w-225 h-125"
             />
@@ -518,28 +518,28 @@ function DesktopHome() {
           onClick={() => navigate('/forum')}
           onMouseEnter={() => handleCornerHover(0)}
         >
-          <Border src="/src/assets/icons/border_top_left.svg" alt="Top Left Border" />
+          <Border src="/assets/icons/border_top_left.svg" alt="Top Left Border" />
         </div>
         <div 
           className="absolute top-0 right-0 z-30" 
           onClick={() => navigate('/culture')}
           onMouseEnter={() => handleCornerHover(1)}
         >
-          <Border src="/src/assets/icons/border_top_right.svg" alt="Top Right Border" />
+          <Border src="/assets/icons/border_top_right.svg" alt="Top Right Border" />
         </div>
         <div 
           className="absolute bottom-0 left-0 z-30" 
           onClick={() => navigate('/library')}
           onMouseEnter={() => handleCornerHover(2)}
         >
-          <Border src="/src/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
+          <Border src="/assets/icons/border_bottom_left.svg" alt="Bottom Left Border" />
         </div>
         <div 
           className="absolute bottom-0 right-0 z-30" 
           onClick={() => navigate('/aqua')}
           onMouseEnter={() => handleCornerHover(3)}
         >
-          <Border src="/src/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
+          <Border src="/assets/icons/border_bottom_right.svg" alt="Bottom Right Border" />
         </div>
       </motion.div>
     </AnimatePresence>
