@@ -389,7 +389,7 @@ export function PostDetail() {
                 variants={pageTransition}
                 transition={{ duration: 0.5 }}
                 style={{
-                    backgroundImage: "url('/src/assets/background/background-forum.png')",
+                    backgroundImage: "url('/assets/background/background-forum.png')",
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     userSelect: 'none',
@@ -413,7 +413,7 @@ export function PostDetail() {
                 <motion.div
                     className="relative w-full h-full flex flex-col text-white"
                     style={{
-                        backgroundImage: "url('/src/assets/background/background-forum.png')",
+                        backgroundImage: "url('/assets/background/background-forum.png')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
                     }}
@@ -428,7 +428,7 @@ export function PostDetail() {
                                     variants={iconAnimation}
                                 >
                                     <img 
-                                        src="/src/assets/icons/forum.png"
+                                        src="/assets/icons/forum.png"
                                         alt="Forum Icon"
                                         className="w-full h-full object-contain"
                                     />
@@ -448,7 +448,7 @@ export function PostDetail() {
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             >
                                 <img
-                                    src="/src/assets/logo/logo.svg"
+                                    src="/assets/logo/logo.svg"
                                     alt="Logo"
                                     className="w-60 h-auto"
                                     style={{ userSelect: 'none' }}
@@ -464,7 +464,7 @@ export function PostDetail() {
                                     transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                                 >
                                     <img
-                                        src="/src/assets/icons/back.png"
+                                        src="/assets/icons/back.png"
                                         alt="Volver"
                                         className="w-12 h-12"
                                     />

@@ -195,7 +195,7 @@ export function Aquarium() {
                                     variants={iconAnimation}
                                 >
                                     <img 
-                                        src="/src/assets/icons/fish.png"
+                                        src="/assets/icons/fish.png"
                                         alt="Fish Icon"
                                         className="w-full h-full object-contain"
                                     />
@@ -215,7 +215,7 @@ export function Aquarium() {
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             >
                                 <img
-                                    src="/src/assets/logo/logo.svg"
+                                    src="/assets/logo/logo.svg"
                                     alt="Logo"
                                     className="w-40 md:w-60 h-auto"
                                 />
@@ -228,7 +228,7 @@ export function Aquarium() {
                                     onClick={handleNavigateBack}
                                 >
                                     <motion.img
-                                        src="/src/assets/icons/arrow-left.svg"
+                                        src="/assets/icons/arrow-left.svg"
                                         alt="Volver"
                                         className="w-8 h-8 transition-transform group-hover:-translate-x-1"
                                     />
@@ -329,14 +329,14 @@ export function Aquarium() {
                         transition={{ type: 'spring', stiffness: 300 }}
                     >
                         <motion.img
-                            src="/src/assets/icons/arrow-left.svg"
+                            src="/assets/icons/arrow-left.svg"
                             alt="Flecha izquierda"
                             className="w-8 h-8 md:w-12 md:h-12"
                             whileHover={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
                         />
                         <motion.img
-                            src="/src/assets/icons/arrow-left-hover.svg"
+                            src="/assets/icons/arrow-left-hover.svg"
                             alt="Flecha izquierda hover"
                             className="w-8 h-8 md:w-12 md:h-12 absolute top-2 left-2 md:top-4 md:left-4"
                             initial={{ opacity: 0 }}
@@ -352,14 +352,14 @@ export function Aquarium() {
                         transition={{ type: 'spring', stiffness: 300 }}
                     >
                         <motion.img
-                            src="/src/assets/icons/arrow-right.svg"
+                            src="/assets/icons/arrow-right.svg"
                             alt="Flecha derecha"
                             className="w-8 h-8 md:w-12 md:h-12"
                             whileHover={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
                         />
                         <motion.img
-                            src="/src/assets/icons/arrow-right-hover.svg"
+                            src="/assets/icons/arrow-right-hover.svg"
                             alt="Flecha derecha hover"
                             className="w-8 h-8 md:w-12 md:h-12 absolute top-2 left-2 md:top-4 md:left-4"
                             initial={{ opacity: 0 }}

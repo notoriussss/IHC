@@ -372,7 +372,7 @@ export function Map() {
                 <motion.div
                     className="relative w-full h-full flex flex-col"
                     style={{
-                        backgroundImage: "url('/src/assets/background/background-map.svg')",
+                        backgroundImage: "url('/assets/background/background-map.svg')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
                     }}
@@ -389,7 +389,7 @@ export function Map() {
                                     variants={iconAnimation}
                                 >
                                     <img 
-                                        src="/src/assets/icons/map.png"
+                                        src="/assets/icons/map.png"
                                         alt="Map Icon"
                                         className="w-full h-full object-contain"
                                     />
@@ -410,7 +410,7 @@ export function Map() {
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             >
                                 <img
-                                    src="/src/assets/logo/logo.svg"
+                                    src="/assets/logo/logo.svg"
                                     alt="Logo"
                                     className="w-40 md:w-60 h-auto"
                                 />
@@ -423,7 +423,7 @@ export function Map() {
                                     onClick={handleNavigateBack}
                                 >
                                     <motion.img
-                                        src="/src/assets/icons/arrow-left.svg"
+                                        src="/assets/icons/arrow-left.svg"
                                         alt="Volver"
                                         className="w-8 h-8 transition-transform group-hover:-translate-x-1"
                                     />
@@ -475,7 +475,7 @@ export function Map() {
                                 {/* Contenedor del mapa */}
                                 <div className="relative w-full h-full bg-black/50 backdrop-blur-sm rounded-lg p-4 border border-[#b38f25]/10">
                                     <img 
-                                        src="/src/assets/icons/guayana.svg"
+                                        src="/assets/icons/guayana.svg"
                                         alt="Mapa de la Guayana"
                                         className="w-full h-full object-contain"
                                     />
@@ -513,7 +513,7 @@ export function Map() {
                                                 />
                                             )}
                                             <motion.img 
-                                                src={selectedRegion === region ? "/src/assets/icons/location-fijated.png" : "/src/assets/icons/location.svg"}
+                                                src={selectedRegion === region ? "/assets/icons/location-fijated.png" : "/assets/icons/location.svg"}
                                                 alt={`Región ${region}`}
                                                 className={`w-8 h-8 transition-all duration-300 ${
                                                     selectedRegion === region 
@@ -592,7 +592,7 @@ export function Map() {
                                             </ul>
                                             <div className="flex items-center gap-2 text-[#b38f25]">
                                                 <img 
-                                                    src="/src/assets/icons/location.svg"
+                                                    src="/assets/icons/location.svg"
                                                     alt="Marcador"
                                                     className="w-6 h-6 animate-bounce"
                                                 />

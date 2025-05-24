@@ -153,7 +153,7 @@ export function Aqua() {
                         <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 bg-black bg-opacity-80 rounded-full flex items-center justify-center shadow-2xl">
                             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-transparent rounded-full opacity-50" />
                             <img
-                                src="/src/assets/logo/logo.svg"
+                                src="/assets/logo/logo.svg"
                                 alt="Logo Arapaima"
                                 className="w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40"
                                 style={{ filter: 'brightness(1)', transition: 'filter 0.3s ease' }}
@@ -177,7 +177,7 @@ export function Aqua() {
                         >
                             <div className="h-full flex items-center justify-center">
                                 <img
-                                    src="/src/assets/logo/logo.svg"
+                                    src="/assets/logo/logo.svg"
                                     alt="Logo Arapaima"
                                     className="w-32 h-32"
                                     style={{ filter: 'brightness(1)', transition: 'filter 0.3s ease' }}
@@ -201,7 +201,7 @@ export function Aqua() {
                         >
                             <div className="h-full flex items-center justify-center gap-4">
                                 <img
-                                    src={hoverStates.acuario ? "/src/assets/icons/fish_black.png" : "/src/assets/icons/fish.png"}
+                                    src={hoverStates.acuario ? "/assets/icons/fish_black.png" : "/assets/icons/fish.png"}
                                     alt="Icono Acuario"
                                     className="w-12 h-12"
                                 />
@@ -227,7 +227,7 @@ export function Aqua() {
                         >
                             <div className="h-full flex items-center justify-center gap-4">
                                 <img
-                                    src={hoverStates.rios ? "/src/assets/icons/river_black.png" : "/src/assets/icons/river.png"}
+                                    src={hoverStates.rios ? "/assets/icons/river_black.png" : "/assets/icons/river.png"}
                                     alt="Icono Rios"
                                     className="w-12 h-12"
                                 />
@@ -253,7 +253,7 @@ export function Aqua() {
                         >
                             <div className="h-full flex items-center justify-center gap-4">
                                 <img
-                                    src={hoverStates.mapa ? "/src/assets/icons/map_black.png" : "/src/assets/icons/map.png"}
+                                    src={hoverStates.mapa ? "/assets/icons/map_black.png" : "/assets/icons/map.png"}
                                     alt="Icono Mapa"
                                     className="w-12 h-12"
                                 />
@@ -283,7 +283,7 @@ export function Aqua() {
                         >
                             <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 translate-y-[-25%] md:translate-y-[-15%] lg:translate-y-0">
                                 <motion.img
-                                    src={hoverStates.acuario ? "/src/assets/icons/fish_black.png" : "/src/assets/icons/fish.png"}
+                                    src={hoverStates.acuario ? "/assets/icons/fish_black.png" : "/assets/icons/fish.png"}
                                     alt="Icono Acuario"
                                     className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all duration-500 ${hoverStates.acuario ? 'filter-none scale-110' : 'brightness-0 invert'}`}
                                     style={{ transformOrigin: 'center' }}
@@ -314,7 +314,7 @@ export function Aqua() {
                         >
                             <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 translate-y-[-25%] md:translate-y-[-15%] lg:translate-y-0">
                                 <motion.img
-                                    src={hoverStates.rios ? "/src/assets/icons/river_black.png" : "/src/assets/icons/river.png"}
+                                    src={hoverStates.rios ? "/assets/icons/river_black.png" : "/assets/icons/river.png"}
                                     alt="Icono Rios"
                                     className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all duration-500 ${hoverStates.rios ? 'filter-none scale-110' : 'brightness-0 invert'}`}
                                     style={{ transformOrigin: 'center' }}
@@ -345,7 +345,7 @@ export function Aqua() {
                         >
                             <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
                                 <motion.img
-                                    src={hoverStates.mapa ? "/src/assets/icons/map_black.png" : "/src/assets/icons/map.png"}
+                                    src={hoverStates.mapa ? "/assets/icons/map_black.png" : "/assets/icons/map.png"}
                                     alt="Icono Mapa"
                                     className={`w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all duration-500 ${hoverStates.mapa ? 'filter-none scale-110' : 'brightness-0 invert'}`}
                                     style={{ transformOrigin: 'center' }}
