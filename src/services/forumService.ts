@@ -1,136 +1,186 @@
 import { Post, Comment } from '../types/forum';
-import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api';
+const POSTS_STORAGE_KEY = 'forum_posts';
 const COMMENTS_STORAGE_KEY = 'forum_comments';
 
-// Función auxiliar para leer los posts
-const readPosts = async (): Promise<{ posts: Post[] }> => {
-  try {
-    const response = await axios.get(`${API_URL}/posts`);
-    return response.data;
-  } catch (error) {
-    console.error('Error reading posts:', error);
-    return { posts: [] };
+// Inicializar el localStorage con los datos del JSON si no existen
+const initializeData = () => {
+  // Inicializar posts
+  const storedPosts = localStorage.getItem(POSTS_STORAGE_KEY);
+  if (!storedPosts) {
+    fetch('/data/posts.json')
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(data.posts));
+      })
+      .catch(error => {
+        console.error('Error al cargar posts iniciales:', error);
+        localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify([]));
+      });
+  }
+
+  // Inicializar comentarios
+  const storedComments = localStorage.getItem(COMMENTS_STORAGE_KEY);
+  if (!storedComments) {
+    fetch('/data/coments.json')
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify(data.comments));
+      })
+      .catch(error => {
+        console.error('Error al cargar comentarios iniciales:', error);
+        localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify([]));
+      });
   }
 };
 
-// Función auxiliar para escribir posts
-const writePosts = async (data: { posts: Post[] }): Promise<void> => {
+// Inicializar al cargar el módulo
+initializeData();
+
+// Funciones auxiliares para posts
+const getPosts = (): Post[] => {
+  const posts = localStorage.getItem(POSTS_STORAGE_KEY);
+  return posts ? JSON.parse(posts) : [];
+};
+
+const savePosts = (posts: Post[]): boolean => {
   try {
-    await axios.post(`${API_URL}/posts`, data);
+    localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(posts));
+    return true;
   } catch (error) {
-    console.error('Error writing posts:', error);
-    throw new Error('Error al guardar los datos');
+    console.error('Error al guardar posts:', error);
+    return false;
   }
 };
 
-// Función auxiliar para leer los comentarios
-const readComments = async (): Promise<Comment[]> => {
+// Funciones auxiliares para comentarios
+const getComments = (postId: number): Comment[] => {
   try {
-    const comments = localStorage.getItem(COMMENTS_STORAGE_KEY);
-    return comments ? JSON.parse(comments) : [];
+    const posts = getPosts();
+    const post = posts.find(p => p.id === postId);
+    console.log('Obteniendo comentarios del post:', {
+      postId,
+      post,
+      comments: post?.comments || []
+    });
+    return post?.comments || [];
   } catch (error) {
-    console.error('Error reading comments:', error);
+    console.error('Error al obtener comentarios:', error);
     return [];
   }
 };
 
-// Función auxiliar para escribir comentarios
-const writeComments = async (comments: Comment[]): Promise<void> => {
+const saveComments = (postId: number, comments: Comment[]): boolean => {
   try {
-    localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify(comments));
+    const posts = getPosts();
+    const postIndex = posts.findIndex(p => p.id === postId);
+    
+    if (postIndex === -1) {
+      console.error('Post no encontrado para guardar comentarios');
+      return false;
+    }
+
+    console.log('Guardando comentarios en el post:', {
+      postId,
+      comments
+    });
+
+    posts[postIndex].comments = comments;
+    return savePosts(posts);
   } catch (error) {
-    console.error('Error writing comments:', error);
-    throw new Error('Error al guardar los comentarios');
+    console.error('Error al guardar comentarios:', error);
+    return false;
   }
 };
 
+// Funciones exportadas
 export const getAllPosts = async (): Promise<Post[]> => {
-  const data = await readPosts();
-  return data.posts;
+  const posts = getPosts();
+  // Asegurarnos de que todos los posts tengan un array de comentarios
+  return posts.map(post => ({
+    ...post,
+    comments: post.comments || []
+  }));
 };
 
-export const getPostById = async (id: number): Promise<Post> => {
-  try {
-    const response = await axios.get(`${API_URL}/posts/${id}`);
-    return response.data;
-  } catch (error) {
-    throw new Error('Post no encontrado');
+export const getPostById = async (id: number): Promise<Post | null> => {
+  const posts = getPosts();
+  const post = posts.find(post => post.id === id);
+  if (post) {
+    // Asegurarnos de que el post siempre tenga un array de comentarios
+    if (!post.comments) {
+      post.comments = [];
+    }
+    return post;
   }
+  return null;
 };
 
 export const createPost = async (postData: Omit<Post, 'id' | 'date' | 'comments'>): Promise<Post> => {
-  try {
-    const response = await axios.post(`${API_URL}/posts`, postData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating post:', error);
-    throw new Error('Error al crear el post');
-  }
+  const posts = getPosts();
+  const newPost: Post = {
+    id: posts.length > 0 ? Math.max(...posts.map(p => p.id)) + 1 : 1,
+    ...postData,
+    date: new Date().toISOString(),
+    comments: []
+  };
+  
+  posts.push(newPost);
+  savePosts(posts);
+  return newPost;
 };
 
-export const createComment = async (postId: number, content: string, author: string): Promise<Comment> => {
+export const createComment = async (commentData: Omit<Comment, 'id' | 'date'>): Promise<Comment> => {
   try {
-    const response = await axios.post(`${API_URL}/comments`, {
-      postId,
-      content,
-      author
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error creating comment:', error);
-    throw new Error('Error al crear el comentario');
-  }
-};
-
-// Función para inicializar algunos datos de ejemplo
-export const initializeForumData = async () => {
-  try {
-    const data = await readPosts();
-    if (data.posts.length === 0) {
-      await createPost({
-        title: 'Bienvenido al Foro',
-        content: 'Este es un foro de ejemplo para discutir temas relacionados con la comunidad.',
-        author: 'Admin',
-        category: 'general'
-      });
+    console.log('Creando nuevo comentario:', commentData);
+    const posts = getPosts();
+    const postIndex = posts.findIndex(p => p.id === commentData.postId);
+    
+    if (postIndex === -1) {
+      throw new Error('Post no encontrado');
     }
+
+    // Asegurarnos de que el post tenga un array de comentarios
+    if (!posts[postIndex].comments) {
+      posts[postIndex].comments = [];
+    }
+
+    // Generar nuevo ID para el comentario
+    const currentComments = posts[postIndex].comments;
+    const newId = currentComments.length > 0 ? Math.max(...currentComments.map(c => c.id)) + 1 : 1;
+    
+    const newComment: Comment = {
+      id: newId,
+      ...commentData,
+      date: new Date().toISOString()
+    };
+
+    console.log('Nuevo comentario creado:', newComment);
+
+    // Agregar comentario al post
+    posts[postIndex].comments.push(newComment);
+    const saved = savePosts(posts);
+    
+    if (!saved) {
+      throw new Error('Error al guardar el comentario');
+    }
+
+    console.log('Comentario guardado exitosamente');
+    return newComment;
   } catch (error) {
-    console.error('Error initializing forum data:', error);
+    console.error('Error en createComment:', error);
+    throw error;
   }
 };
 
-export const getComments = async (postId: number): Promise<Comment[]> => {
+export const getCommentsByPostId = async (postId: number): Promise<Comment[]> => {
   try {
-    const response = await axios.get(`${API_URL}/posts/${postId}`);
-    return response.data.comments || [];
+    console.log('Obteniendo comentarios para el post:', postId);
+    const comments = getComments(postId);
+    console.log('Comentarios encontrados:', comments);
+    return comments;
   } catch (error) {
-    console.error('Error getting comments:', error);
+    console.error('Error al obtener comentarios del post:', error);
     return [];
   }
-};
-
-export const getPost = async (postId: number): Promise<Post> => {
-  const response = await fetch(`${API_URL}/posts/${postId}`);
-  if (!response.ok) {
-    throw new Error('Error al obtener el post');
-  }
-  return response.json();
-};
-
-export const addComment = async (comment: { postId: number; content: string; author: string }): Promise<Comment> => {
-  const response = await fetch(`${API_URL}/posts/${comment.postId}/comments`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ content: comment.content, author: comment.author }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Error al agregar el comentario');
-  }
-
-  return response.json();
 };

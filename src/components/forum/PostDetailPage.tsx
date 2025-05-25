@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context';
-import { getPostById, createComment } from '../../services/forumService';
+import { getPostById, createComment, getCommentsByPostId } from '../../services/forumService';
 import { useSuccessMessage } from '../../context/SuccessMessageContext';
 import AuthTabs from '../auth/AuthTabs/AuthTabs';
 import './PostDetailPage.css';
@@ -11,6 +11,7 @@ interface Comment {
   content: string;
   author: string;
   date: string;
+  postId: number;
 }
 
 interface Post {
@@ -20,8 +21,26 @@ interface Post {
   author: string;
   date: string;
   category: string;
-  comments: Comment[];
 }
+
+const getCategoryIcon = (category: string): string => {
+  const icons: { [key: string]: string } = {
+    'general': 'fa-globe',
+    'pueblos': 'fa-home',
+    'contaminacion': 'fa-smog',
+    'economia': 'fa-chart-line',
+    'proyectos': 'fa-project-diagram',
+    'turismo': 'fa-umbrella-beach'
+  };
+  return icons[category.toLowerCase()] || 'fa-folder';
+};
+
+const capitalizeFirstLetter = (str: string): string => {
+  if (str.toLowerCase() === 'pueblos') {
+    return 'Nuestros Pueblos';
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
 
 const PostDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +48,7 @@ const PostDetailPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
   const { showSuccessMessage } = useSuccessMessage();
   const [post, setPost] = useState<Post | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,21 +57,23 @@ const PostDetailPage: React.FC = () => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchData = async () => {
       try {
         if (!id) return;
-        const data = await getPostById(parseInt(id));
-        setPost(data);
+        const postData = await getPostById(parseInt(id));
+        const commentsData = await getCommentsByPostId(parseInt(id));
+        setPost(postData);
+        setComments(commentsData);
         setError(null);
       } catch (err) {
-        console.error('Error fetching post:', err);
+        console.error('Error fetching data:', err);
         setError('Error al cargar el post. Por favor, intente más tarde.');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPost();
+    fetchData();
   }, [id]);
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
@@ -60,9 +82,12 @@ const PostDetailPage: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      await createComment(post.id, newComment, user.username);
-      const updatedPost = await getPostById(post.id);
-      setPost(updatedPost);
+      const comment = await createComment({
+        postId: post.id,
+        content: newComment,
+        author: user.username
+      });
+      setComments(prev => [...prev, comment]);
       setNewComment('');
       showSuccessMessage('Comentario publicado con éxito');
     } catch (error) {
@@ -89,7 +114,7 @@ const PostDetailPage: React.FC = () => {
         </button>
         <div className="post-category">
           <i className={`fas ${getCategoryIcon(post.category)}`}></i>
-          {post.category}
+          {capitalizeFirstLetter(post.category)}
         </div>
       </div>
 
@@ -111,7 +136,7 @@ const PostDetailPage: React.FC = () => {
       </article>
 
       <section className="comments-section">
-        <h2>Comentarios ({post.comments.length})</h2>
+        <h2>Comentarios ({comments?.length ?? 0})</h2>
         
         {isAuthenticated ? (
           <form className="comment-form" onSubmit={handleCommentSubmit}>
@@ -141,10 +166,10 @@ const PostDetailPage: React.FC = () => {
         )}
 
         <div className="comments-list">
-          {post.comments.length === 0 ? (
+          {!comments || comments.length === 0 ? (
             <p className="no-comments">No hay comentarios aún. ¡Sé el primero en comentar!</p>
           ) : (
-            post.comments.map((comment) => (
+            comments.map((comment) => (
               <div key={comment.id} className="comment">
                 <div className="comment-header">
                   <span className="comment-author">
@@ -182,18 +207,6 @@ const PostDetailPage: React.FC = () => {
       )}
     </div>
   );
-};
-
-const getCategoryIcon = (category: string): string => {
-  const icons: { [key: string]: string } = {
-    'general': 'fa-comments',
-    'pueblos': 'fa-home',
-    'contaminacion': 'fa-leaf',
-    'economia': 'fa-chart-line',
-    'proyectos': 'fa-project-diagram',
-    'turismo': 'fa-umbrella-beach'
-  };
-  return icons[category.toLowerCase()] || 'fa-tag';
 };
 
 export default PostDetailPage;

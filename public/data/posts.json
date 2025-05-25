@@ -5,15 +5,15 @@
       "title": "Bienvenido al Foro",
       "content": "Este es un foro de ejemplo para discutir temas relacionados con la comunidad.",
       "author": "Admin",
-      "date": "2024-03-20T12:00:00.000Z",
-      "category": "Ejemplo",
+      "category": "general",
+      "date": "2025-05-25T18:29:02.252Z",
       "comments": [
         {
           "id": 1,
           "postId": 1,
           "content": "Gracias!",
           "author": "hermano",
-          "date": "2025-05-25T18:24:10.428Z"
+          "date": "2025-05-25T18:29:47.814Z"
         }
       ]
     }

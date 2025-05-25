@@ -7,6 +7,25 @@ interface PostItemProps {
   post: Post;
 }
 
+const getCategoryIcon = (category: string): string => {
+  const icons: { [key: string]: string } = {
+    'general': 'fa-globe',
+    'pueblos': 'fa-home',
+    'contaminacion': 'fa-smog',
+    'economia': 'fa-chart-line',
+    'proyectos': 'fa-project-diagram',
+    'turismo': 'fa-umbrella-beach'
+  };
+  return icons[category.toLowerCase()] || 'fa-folder';
+};
+
+const capitalizeFirstLetter = (str: string): string => {
+  if (str.toLowerCase() === 'pueblos') {
+    return 'Nuestros Pueblos';
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 const PostItem: React.FC<PostItemProps> = ({ post }) => {
   return (
     <div className="post-item">
@@ -16,7 +35,8 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
             <h3 className="post-title">{post.title}</h3>
             {post.category && (
               <span className={`post-category category-${post.category.toLowerCase()}`}>
-                {post.category}
+                <i className={`fas ${getCategoryIcon(post.category)}`}></i>
+                {capitalizeFirstLetter(post.category)}
               </span>
             )}
           </div>

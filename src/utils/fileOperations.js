@@ -5,10 +5,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // File paths
-const DATA_DIR = path.join(__dirname, '..', 'data');
-const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const DATA_DIR = path.join(process.cwd(), 'public', 'data');
+const USERS_FILE = path.join(DATA_DIR, 'usuarios.json');
 const POSTS_FILE = path.join(DATA_DIR, 'posts.json');
-const COMMENTS_FILE = path.join(DATA_DIR, 'comments.json');
+const COMMENTS_FILE = path.join(DATA_DIR, 'coments.json');
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });

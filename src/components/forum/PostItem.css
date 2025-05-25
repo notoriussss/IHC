@@ -54,6 +54,13 @@
   font-size: 0.85em;
   font-weight: 500;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post-category i {
+  font-size: 1em;
 }
 
 .post-meta {
