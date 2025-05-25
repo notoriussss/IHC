@@ -7,7 +7,7 @@ import { NewDiscussionForm } from './components/forum/NewDiscussionForm';
 import { useAuth } from './context';
 import { getAllPosts, createPost } from './services/forumService';
 import AuthTabs from './components/auth/AuthTabs/AuthTabs';
-import { SuccessMessageProvider, useSuccessMessage } from './context/SuccessMessageContext';
+import { SuccessMessageProvider } from './context/SuccessMessageContext';
 import { Post } from './types/forum';
 
 const categoryLabels: { [key: string]: string } = {
