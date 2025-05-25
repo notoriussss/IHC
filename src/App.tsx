@@ -102,7 +102,7 @@ const MainForumContent: React.FC = () => {
     if (!user) return;
 
     try {
-      const newPost = await createPost({
+      await createPost({
         title,
         content,
         category,
