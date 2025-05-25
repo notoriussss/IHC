@@ -70,29 +70,6 @@ const getComments = (postId: number): Comment[] => {
   }
 };
 
-const saveComments = (postId: number, comments: Comment[]): boolean => {
-  try {
-    const posts = getPosts();
-    const postIndex = posts.findIndex(p => p.id === postId);
-    
-    if (postIndex === -1) {
-      console.error('Post no encontrado para guardar comentarios');
-      return false;
-    }
-
-    console.log('Guardando comentarios en el post:', {
-      postId,
-      comments
-    });
-
-    posts[postIndex].comments = comments;
-    return savePosts(posts);
-  } catch (error) {
-    console.error('Error al guardar comentarios:', error);
-    return false;
-  }
-};
-
 // Funciones exportadas
 export const getAllPosts = async (): Promise<Post[]> => {
   const posts = getPosts();
