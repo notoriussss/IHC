@@ -1,7 +1,8 @@
 [build]
-  command = "tsc --noEmitOnError false && vite build"
+  command = "CI=false npm run build"
   publish = "dist"
   node_version = "18.18.0"
 
 [build.environment]
-  NODE_VERSION = "18.18.0" 
+  NODE_VERSION = "18.18.0"
+  CI = "false" 
