@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { PostItem, PostDetailPage } from './components/forum';
-import { Categories } from './components/categories';
-import { NewDiscussionForm } from './components/forum/NewDiscussionForm';
+import { PostItem, Categories, NewDiscussionForm, PostDetailPage } from './components';
 import { useAuth } from './context';
-import { getAllPosts, createPost } from './services/forumService';
+import { getAllPosts, createPost, initializeForumData } from './services/forumService';
 import AuthTabs from './components/auth/AuthTabs/AuthTabs';
-import { SuccessMessageProvider } from './context/SuccessMessageContext';
+import { SuccessMessageProvider, useSuccessMessage } from './context/SuccessMessageContext';
 import { Post } from './types/forum';
+
+// Inicializar los datos del foro
+initializeForumData();
 
 const categoryLabels: { [key: string]: string } = {
   'general': 'General',
@@ -21,6 +22,7 @@ const categoryLabels: { [key: string]: string } = {
 
 const MainForumContent: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { showSuccessMessage } = useSuccessMessage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
@@ -101,7 +103,7 @@ const MainForumContent: React.FC = () => {
     if (!user) return;
 
     try {
-      await createPost({
+      const newPost = await createPost({
         title,
         content,
         category,
@@ -126,24 +128,13 @@ const MainForumContent: React.FC = () => {
     <>
       <div className="header">
         <div className="header-left">
-          {isAuthenticated && user ? (
-            <div className="user-profile">
-              <div 
-                className="user-avatar" 
-                style={{ backgroundColor: avatarColor }}
-              >
-                {getUserInitial()}
-              </div>
-              <div className="user-menu">
-                <span className="username">{user.username}</span>
-                <button className="logout-button" onClick={logout}>
-                  Cerrar sesión
-                </button>
-              </div>
-            </div>
-          ) : (
-            <i className="fas fa-user-circle" onClick={() => setShowAuthModal(true)}></i>
-          )}
+
+          <button 
+            className="back-to-museum-btn"
+            onClick={() => window.location.href = 'https://aqualia.netlify.app'}
+          >
+            ← Regresar al museo
+          </button>
         </div>
         <div className="header-center">
           <input 
@@ -154,6 +145,25 @@ const MainForumContent: React.FC = () => {
           />
         </div>
         <div className="header-right">
+          {isAuthenticated && user ? (
+              <div className="user-profile">
+                <div 
+                  className="user-avatar" 
+                  style={{ backgroundColor: avatarColor }}
+                >
+                  {getUserInitial()}
+                </div>
+                <div className="user-menu">
+                  <span className="username">{user.username}</span>
+                  <button className="logout-button" onClick={logout}>
+                    Cerrar sesión
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <i className="fas fa-user-circle" onClick={() => setShowAuthModal(true)}></i>
+            )}
+
         </div>
       </div>
       
