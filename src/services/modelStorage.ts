@@ -141,24 +141,28 @@ class ModelStorage {
     }
   }
 
-  private async measureConnectionSpeed(url: string, fileSize: number): Promise<void> {
+  private async measureConnectionSpeed(): Promise<void> {
     try {
+      // Usar un archivo pequeño para la prueba de velocidad
+      const testUrl = '/logo-museo.png'; // Un archivo pequeño que sabemos que existe
       const startTime = performance.now();
-      const response = await fetch(url, {
+      const response = await fetch(testUrl, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache'
         }
       });
-      const endTime = performance.now();
       
       if (!response.ok) {
         throw new Error('Speed test failed');
       }
 
+      const data = await response.arrayBuffer();
+      const endTime = performance.now();
+      
       const duration = (endTime - startTime) / 1000; // Convertir a segundos
-      const speedBps = (fileSize * 8) / duration; // Velocidad en bits por segundo
+      const speedBps = (data.byteLength * 8) / duration; // Velocidad en bits por segundo
 
       // Determinar la velocidad de conexión
       if (speedBps < this.SPEED_THRESHOLDS.slow) {
@@ -189,13 +193,9 @@ class ModelStorage {
         return cachedModel;
       }
 
-      // Obtener el tamaño del archivo antes de descargar
-      const headResponse = await fetch(url, { method: 'HEAD' });
-      const contentLength = Number(headResponse.headers.get('Content-Length')) || 0;
-
       // Medir la velocidad solo si han pasado 5 minutos desde la última medición
       if (Date.now() - this.lastSpeedTest > this.SPEED_TEST_INTERVAL) {
-        await this.measureConnectionSpeed(url, contentLength);
+        await this.measureConnectionSpeed();
       }
 
       console.log(`Iniciando descarga de ${url} con velocidad de conexión: ${this.connectionSpeed}`);
@@ -213,6 +213,7 @@ class ModelStorage {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      const contentLength = Number(response.headers.get('Content-Length')) || 0;
       const reader = response.body?.getReader();
       if (!reader) {
         throw new Error('No se pudo iniciar la descarga del modelo');
