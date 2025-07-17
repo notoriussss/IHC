@@ -39,7 +39,12 @@ useGLTF.preload = (path: string) => {
   return new Promise(async (resolve, reject) => {
     try {
       // Usar modelStorage para obtener o descargar el modelo
-      const modelData = await modelStorage.downloadModel(path);
+      const modelData = await modelStorage.downloadModel(path, (progress) => {
+        // Emitir evento de progreso global
+        window.dispatchEvent(new CustomEvent('model-load-progress', { 
+          detail: { url: path, progress } 
+        }));
+      });
       const loader = createConfiguredLoader();
       loader.parse(modelData, '', resolve, reject);
     } catch (error) {
@@ -57,6 +62,20 @@ export const useModelLoader = (url: string) => {
 
   // Cargar el modelo usando useGLTF
   const gltf = useGLTF(url);
+
+  // Escuchar eventos de progreso de carga
+  useEffect(() => {
+    const handleProgress = (event: CustomEvent) => {
+      if (event.detail.url === url) {
+        setLoadingProgress(event.detail.progress);
+      }
+    };
+
+    window.addEventListener('model-load-progress', handleProgress as EventListener);
+    return () => {
+      window.removeEventListener('model-load-progress', handleProgress as EventListener);
+    };
+  }, [url]);
 
   useEffect(() => {
     if (gltf) {
@@ -93,22 +112,6 @@ export const useModelLoader = (url: string) => {
       }
     }
   }, [gltf, url]);
-
-  // Precargar el modelo usando modelStorage
-  useEffect(() => {
-    const preloadModel = async () => {
-      try {
-        await modelStorage.downloadModel(url, (progress) => {
-          setLoadingProgress(progress);
-        });
-      } catch (error) {
-        console.error(`Error al precargar modelo ${url}:`, error);
-        setError(error instanceof Error ? error.message : 'Error desconocido');
-      }
-    };
-
-    preloadModel();
-  }, [url]);
 
   return {
     gltf: processedGltf || gltf,
