@@ -184,9 +184,11 @@ class ModelStorage {
   }
 
   async downloadModel(url: string, onProgress?: (progress: number) => void): Promise<ArrayBuffer> {
+    let cachedModel: ArrayBuffer | null = null;
+    
     try {
-      // Verificar si el modelo está en caché
-      const cachedModel = await this.getModel(url);
+      // Verificar si el modelo está en caché una sola vez al inicio
+      cachedModel = await this.getModel(url);
       if (cachedModel) {
         console.log(`Modelo ${url} encontrado en caché`);
         if (onProgress) onProgress(100);
@@ -281,10 +283,9 @@ class ModelStorage {
 
     } catch (error) {
       console.error(`Error al descargar el modelo ${url}:`, error);
-      // Intentar recuperar de caché como último recurso
-      const cachedModel = await this.getModel(url);
+      // Si ya tenemos el modelo en caché (verificado al inicio), lo usamos
       if (cachedModel) {
-        console.log(`Recuperando modelo ${url} de caché después de error`);
+        console.log(`Usando modelo ${url} de caché después de error de descarga`);
         if (onProgress) onProgress(100);
         return cachedModel;
       }
