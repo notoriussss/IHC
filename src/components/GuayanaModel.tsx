@@ -97,6 +97,13 @@ const GuayanaModel = forwardRef<THREE.Group, GuayanaModelProps>(({ onViewChange,
   const [currentQuaternion, setCurrentQuaternion] = useState<THREE.Quaternion | null>(null);
   const [currentView, setCurrentView] = useState('default');
 
+  // Update loading progress
+  useEffect(() => {
+    if (ref && 'current' in ref) {
+      (ref.current as any).loadingProgress = loadingProgress;
+    }
+  }, [loadingProgress, ref]);
+
   useFrame(() => {
     if (targetPosition && targetQuaternion && currentPosition && currentQuaternion && camera instanceof THREE.PerspectiveCamera) {
       // Interpolar posición
