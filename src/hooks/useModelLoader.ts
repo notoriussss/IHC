@@ -15,6 +15,15 @@ interface ProcessedGLTF extends Omit<GLTF, 'scene'> {
   scene: SceneOrGroup;
 }
 
+// Función para verificar si un objeto es un GLTF válido
+function isValidGLTF(gltf: GLTF | null): gltf is GLTF {
+  return gltf !== null && 
+         gltf !== undefined && 
+         'scene' in gltf && 
+         gltf.scene !== null && 
+         gltf.scene !== undefined;
+}
+
 // Configurar los loaders
 const createConfiguredLoader = () => {
   // Create a renderer for KTX2 support detection
@@ -94,6 +103,19 @@ export const useModelLoader = (url: string) => {
     });
   };
 
+  // Función para crear un ProcessedGLTF a partir de un GLTF
+  const createProcessedGLTF = (gltf: GLTF, clonedScene: SceneOrGroup): ProcessedGLTF => {
+    return {
+      ...gltf,
+      scene: clonedScene,
+      animations: gltf.animations || [],
+      cameras: gltf.cameras || [],
+      asset: gltf.asset || {},
+      parser: gltf.parser,
+      userData: gltf.userData || {}
+    };
+  };
+
   // Efecto para cargar el modelo
   useEffect(() => {
     let isMounted = true;
@@ -113,8 +135,17 @@ export const useModelLoader = (url: string) => {
           loader.parse(modelData, '', 
             // onLoad callback
             (gltf: GLTF) => {
-              if (!isMounted || !gltf || !gltf.scene) {
+              if (!isMounted) {
                 resolve();
+                return;
+              }
+
+              // Verificar que el GLTF sea válido
+              if (!isValidGLTF(gltf)) {
+                const error = new Error('GLTF inválido o escena faltante');
+                console.error(`Error al procesar modelo ${url}:`, error);
+                setError(error.message);
+                reject(error);
                 return;
               }
 
@@ -127,16 +158,8 @@ export const useModelLoader = (url: string) => {
                 // Procesar materiales
                 processMaterials(clonedScene);
 
-                // Asegurarnos de que el objeto cumpla con la interfaz ProcessedGLTF
-                const processedGltf: ProcessedGLTF = {
-                  ...gltf,
-                  scene: clonedScene,
-                  animations: gltf.animations || [],
-                  cameras: gltf.cameras || [],
-                  asset: gltf.asset || {},
-                  parser: gltf.parser,
-                  userData: gltf.userData || {}
-                };
+                // Crear el objeto ProcessedGLTF
+                const processedGltf = createProcessedGLTF(gltf, clonedScene);
 
                 setProcessedGltf(processedGltf);
                 console.log(`Modelo procesado exitosamente en Three.js: ${url}`);
