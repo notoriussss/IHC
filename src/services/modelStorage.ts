@@ -202,16 +202,7 @@ class ModelStorage {
 
       console.log(`Iniciando descarga de ${url} con velocidad de conexión: ${this.connectionSpeed}`);
       
-      // Primero hacemos una petición HEAD para obtener el Content-Length
-      const headResponse = await fetch(url, {
-        method: 'HEAD',
-        cache: 'no-cache'
-      });
-      
-      const contentLength = Number(headResponse.headers.get('Content-Length')) || 0;
-      console.log(`Tamaño del modelo ${url}: ${contentLength} bytes`);
-
-      // Ahora hacemos la petición GET real
+      // Usar el caché del navegador para evitar descargas duplicadas
       const response = await fetch(url, {
         cache: 'force-cache'
       });
@@ -220,6 +211,7 @@ class ModelStorage {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      const contentLength = Number(response.headers.get('Content-Length')) || 0;
       const reader = response.body?.getReader();
       if (!reader) {
         throw new Error('No se pudo iniciar la descarga del modelo');
@@ -262,31 +254,37 @@ class ModelStorage {
           lastBytesReceived = receivedLength;
         }
 
-        // Actualizar progreso
-        if (contentLength > 0) {
-          const progress = (receivedLength / contentLength) * 100;
-          if (onProgress) onProgress(Math.min(progress, 100));
-        } else {
-          // Si no tenemos contentLength, usamos un progreso indeterminado
-          if (onProgress) onProgress(Math.min((receivedLength / 1000000) * 10, 99)); // Asumimos 1MB = 10%
+        // Calcular y reportar el progreso
+        const progress = (receivedLength / contentLength) * 100;
+        
+        // Ajustar la frecuencia de actualización del progreso según la velocidad
+        if (onProgress && (now - lastProgressUpdate > this.getProgressUpdateInterval())) {
+          onProgress(progress);
+          lastProgressUpdate = now;
         }
       }
 
-      // Combinar los chunks en un solo ArrayBuffer
-      const allChunks = new Uint8Array(receivedLength);
-      let position = 0;
-      for (const chunk of chunks) {
-        allChunks.set(chunk, position);
-        position += chunk.length;
+      // Guardar el modelo en caché
+      const blob = new Blob(chunks);
+      const arrayBuffer = await blob.arrayBuffer();
+      
+      try {
+        await this.saveModel(url, arrayBuffer);
+        console.log(`Modelo ${url} guardado en caché`);
+      } catch (error) {
+        console.warn(`No se pudo guardar el modelo ${url} en caché:`, error);
       }
 
-      const modelData = allChunks.buffer;
-      await this.saveModel(url, modelData);
+      return arrayBuffer;
 
-      if (onProgress) onProgress(100);
-      return modelData;
     } catch (error) {
-      console.error(`Error al descargar modelo ${url}:`, error);
+      console.error(`Error al descargar el modelo ${url}:`, error);
+      // Si ya tenemos el modelo en caché (verificado al inicio), lo usamos
+      if (cachedModel) {
+        console.log(`Usando modelo ${url} de caché después de error de descarga`);
+        if (onProgress) onProgress(100);
+        return cachedModel;
+      }
       throw error;
     }
   }
