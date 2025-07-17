@@ -1,6 +1,7 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import Modal from './Modal';
 import { motion, AnimatePresence } from 'framer-motion';
+import { saveIcon, getIcon } from '../utils/indexedDB';
 
 interface MapaProps {
   isOpen: boolean;
@@ -97,6 +98,66 @@ const buttonStyle: CSSProperties = {
 };
 
 const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Click, onButton3Click, onButton2Click, onButton4Click, style }) => {
+  const [iconUrls, setIconUrls] = useState<{ [key: string]: string }>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  const loadIcon = async (iconId: string, iconPath: string) => {
+    try {
+      // Intentar obtener el icono de IndexedDB
+      const cachedIcon = await getIcon(iconId);
+      
+      if (cachedIcon) {
+        // Si existe en caché, crear URL del blob
+        setIconUrls(prev => ({
+          ...prev,
+          [iconId]: URL.createObjectURL(cachedIcon)
+        }));
+      } else {
+        // Si no existe, descargarlo y guardarlo
+        const response = await fetch(iconPath);
+        const blob = await response.blob();
+        await saveIcon(iconId, blob);
+        setIconUrls(prev => ({
+          ...prev,
+          [iconId]: URL.createObjectURL(blob)
+        }));
+      }
+    } catch (error) {
+      console.error(`Error loading icon ${iconId}:`, error);
+      // En caso de error, usar la ruta directa
+      setIconUrls(prev => ({
+        ...prev,
+        [iconId]: iconPath
+      }));
+    }
+  };
+
+  useEffect(() => {
+    const loadIcons = async () => {
+      setIsLoading(true);
+      const iconPaths = [
+        { id: 'bt0', path: '/iconos/bt0.svg' },
+        { id: 'bt1', path: '/iconos/bt1.svg' },
+        { id: 'bt2', path: '/iconos/bt2.svg' },
+        { id: 'bt3', path: '/iconos/bt3.svg' },
+        { id: 'bt4', path: '/iconos/bt4.svg' },
+        { id: 'bt5', path: '/iconos/bt5.svg' }
+      ];
+
+      await Promise.all(iconPaths.map(icon => loadIcon(icon.id, icon.path)));
+      setIsLoading(false);
+    };
+
+    if (isOpen) {
+      loadIcons();
+    }
+
+    // Limpiar URLs al desmontar
+    return () => {
+      Object.values(iconUrls).forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [isOpen]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -105,7 +166,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
       style={style}
     >
       <AnimatePresence mode="wait">
-        {isOpen && (
+        {isOpen && !isLoading && (
           <motion.div
             key="mapa-content"
             initial={{ opacity: 0, y: 100 }}
@@ -120,7 +181,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
             <div style={imageContainerStyle}>
               <div style={rowStyle}>
                 <img
-                  src="/iconos/bt5.svg"
+                  src={iconUrls['bt5'] || '/iconos/bt5.svg'}
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
@@ -128,7 +189,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
                   alt="Botón 5"
                 />
                 <img
-                  src="/iconos/bt4.svg"
+                  src={iconUrls['bt4'] || '/iconos/bt4.svg'}
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
@@ -136,7 +197,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
                   alt="Botón 4"
                 />
                 <img
-                  src="/iconos/bt3.svg"
+                  src={iconUrls['bt3'] || '/iconos/bt3.svg'}
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
@@ -146,7 +207,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
               </div>
               <div style={rowStyle}>
                 <img
-                  src="/iconos/bt2.svg"
+                  src={iconUrls['bt2'] || '/iconos/bt2.svg'}
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
@@ -154,7 +215,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
                   alt="Botón 2"
                 />
                 <img
-                  src="/iconos/bt1.svg"
+                  src={iconUrls['bt1'] || '/iconos/bt1.svg'}
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
@@ -162,7 +223,7 @@ const Mapa: React.FC<MapaProps> = ({ isOpen, onClose, onButtonClick, onButton0Cl
                   alt="Botón 1"
                 />
                 <img
-                  src="/iconos/bt0.svg"
+                  src={iconUrls['bt0'] || '/iconos/bt0.svg'}
                   style={{ ...imageStyle, filter: 'brightness(1)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(0.5)')}
                   onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
