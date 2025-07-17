@@ -2,7 +2,37 @@ import { useState, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { modelStorage } from '../services/modelStorage';
 import * as THREE from 'three';
-import { createConfiguredLoader } from '../utils/loaderConfig';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader';
+
+// Configurar los loaders
+const createConfiguredLoader = () => {
+  // Create a renderer for KTX2 support detection
+  const renderer = new THREE.WebGLRenderer({ 
+    antialias: true,
+    alpha: true 
+  });
+
+  // Configure KTX2Loader
+  const ktx2Loader = new KTX2Loader();
+  ktx2Loader.setTranscoderPath('/draco/');
+  ktx2Loader.detectSupport(renderer);
+
+  // Configure DRACOLoader
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('/draco/');
+
+  // Configure GLTFLoader
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.setDRACOLoader(dracoLoader);
+  gltfLoader.setKTX2Loader(ktx2Loader);
+
+  // Clean up renderer
+  renderer.dispose();
+
+  return gltfLoader;
+};
 
 // Configure useGLTF to use our configured loader and cached data
 useGLTF.preload = (path: string) => {
