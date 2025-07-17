@@ -38,17 +38,10 @@ const createConfiguredLoader = () => {
 useGLTF.preload = (path: string) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Intentar obtener el modelo de la caché
-      const cachedModel = await modelStorage.getModel(path);
-      if (cachedModel) {
-        // Si está en caché, usar el loader configurado para cargarlo desde el ArrayBuffer
-        const loader = createConfiguredLoader();
-        loader.parse(cachedModel, '', resolve, reject);
-      } else {
-        // Si no está en caché, usar el loader configurado para descargarlo
-        const loader = createConfiguredLoader();
-        loader.load(path, resolve, undefined, reject);
-      }
+      // Usar modelStorage para obtener o descargar el modelo
+      const modelData = await modelStorage.downloadModel(path);
+      const loader = createConfiguredLoader();
+      loader.parse(modelData, '', resolve, reject);
     } catch (error) {
       console.error('Error loading model:', error);
       reject(error);
@@ -101,22 +94,13 @@ export const useModelLoader = (url: string) => {
     }
   }, [gltf, url]);
 
-  // Precargar el modelo usando modelStorage si no está en caché
+  // Precargar el modelo usando modelStorage
   useEffect(() => {
     const preloadModel = async () => {
       try {
-        // Verificar si el modelo ya está en caché
-        const cachedModel = await modelStorage.getModel(url);
-        if (!cachedModel) {
-          console.log(`Iniciando descarga del modelo: ${url}`);
-          const response = await fetch(url);
-          const arrayBuffer = await response.arrayBuffer();
-          await modelStorage.saveModel(url, arrayBuffer);
-          console.log(`Modelo ${url} guardado en caché`);
-        } else {
-          console.log(`Modelo ${url} encontrado en caché`);
-        }
-        setLoadingProgress(100);
+        await modelStorage.downloadModel(url, (progress) => {
+          setLoadingProgress(progress);
+        });
       } catch (error) {
         console.error(`Error al precargar modelo ${url}:`, error);
         setError(error instanceof Error ? error.message : 'Error desconocido');
