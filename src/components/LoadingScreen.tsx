@@ -8,6 +8,9 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ progress, modelName, isDownloading }) => {
+  // Ensure progress is a valid number between 0 and 100
+  const validProgress = isNaN(progress) ? 0 : Math.min(Math.max(progress, 0), 100);
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -56,7 +59,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ progress, modelName, isDo
       >
         <motion.div
           initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
+          animate={{ width: `${validProgress}%` }}
           transition={{ duration: 0.3 }}
           style={{
             height: '100%',
@@ -71,7 +74,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ progress, modelName, isDo
         animate={{ y: 0 }}
         style={{ marginTop: '10px' }}
       >
-        {progress.toFixed(1)}%
+        {validProgress.toFixed(1)}%
       </motion.p>
     </motion.div>
   );
