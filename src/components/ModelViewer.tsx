@@ -2043,6 +2043,22 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
     }, 100);
   };
 
+  // Add effect to track model loading progress
+  useEffect((): (() => void) => {
+    const checkProgress = () => {
+      if (modelRef.current && 'loadingProgress' in modelRef.current) {
+        const progress = (modelRef.current as any).loadingProgress;
+        if (!isNaN(progress)) {
+          setPreloadProgress(progress);
+        }
+      }
+    };
+
+    // Check progress every 100ms
+    const interval = setInterval(checkProgress, 100);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000000', position: 'relative' }}>
       {error && (
