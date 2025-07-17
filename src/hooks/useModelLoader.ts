@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { modelStorage } from '../services/modelStorage';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 // Configurar los loaders
 const createConfiguredLoader = () => {
@@ -34,87 +35,124 @@ const createConfiguredLoader = () => {
   return gltfLoader;
 };
 
-// Configure useGLTF to use our configured loader and cached data
-useGLTF.preload = (path: string) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Usar modelStorage para obtener o descargar el modelo
-      const modelData = await modelStorage.downloadModel(path, (progress) => {
-        // Emitir evento de progreso global
-        window.dispatchEvent(new CustomEvent('model-load-progress', { 
-          detail: { url: path, progress } 
-        }));
-      });
-      const loader = createConfiguredLoader();
-      loader.parse(modelData, '', resolve, reject);
-    } catch (error) {
-      console.error('Error loading model:', error);
-      reject(error);
-    }
-  });
-};
+// Mantener un registro de las descargas en curso
+const activeDownloads = new Map<string, Promise<ArrayBuffer>>();
 
 export const useModelLoader = (url: string) => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [processedGltf, setProcessedGltf] = useState<any>(null);
+  const [processedGltf, setProcessedGltf] = useState<GLTF | null>(null);
+  const downloadPromiseRef = useRef<Promise<ArrayBuffer> | null>(null);
 
-  // Cargar el modelo usando useGLTF
-  const gltf = useGLTF(url);
+  // Función para obtener o iniciar una descarga
+  const getOrStartDownload = async (url: string): Promise<ArrayBuffer> => {
+    // Verificar si ya hay una descarga en curso
+    let downloadPromise = activeDownloads.get(url);
+    
+    if (!downloadPromise) {
+      // Si no hay descarga en curso, iniciar una nueva
+      downloadPromise = modelStorage.downloadModel(url, (progress) => {
+        setLoadingProgress(progress);
+      });
+      activeDownloads.set(url, downloadPromise);
+      
+      // Limpiar la referencia cuando se complete
+      downloadPromise.finally(() => {
+        activeDownloads.delete(url);
+      });
+    }
+    
+    return downloadPromise;
+  };
 
-  // Escuchar eventos de progreso de carga
+  // Efecto para cargar el modelo
   useEffect(() => {
-    const handleProgress = (event: CustomEvent) => {
-      if (event.detail.url === url) {
-        setLoadingProgress(event.detail.progress);
+    let isMounted = true;
+    
+    const loadModel = async () => {
+      try {
+        // Obtener o iniciar la descarga
+        const modelData = await getOrStartDownload(url);
+        
+        if (!isMounted) return;
+
+        // Parsear el modelo con GLTFLoader
+        const loader = createConfiguredLoader();
+        
+        // Usar una promesa para manejar el parse de manera más limpia
+        await new Promise<void>((resolve, reject) => {
+          loader.parse(modelData, '', 
+            // onLoad callback
+            (gltf: GLTF) => {
+              if (!isMounted) {
+                resolve();
+                return;
+              }
+
+              try {
+                console.log(`Procesando modelo en Three.js: ${url}`);
+                
+                // Clonar la escena para evitar problemas de referencia
+                const clonedScene = gltf.scene.clone();
+                
+                // Procesar materiales
+                clonedScene.traverse((child) => {
+                  if (child instanceof THREE.Mesh) {
+                    if (child.material) {
+                      // Asegurarse de que los materiales estén actualizados
+                      if (Array.isArray(child.material)) {
+                        child.material.forEach(mat => {
+                          if (mat instanceof THREE.MeshStandardMaterial) {
+                            mat.needsUpdate = true;
+                          }
+                        });
+                      } else if (child.material instanceof THREE.MeshStandardMaterial) {
+                        child.material.needsUpdate = true;
+                      }
+                    }
+                  }
+                });
+
+                setProcessedGltf({ ...gltf, scene: clonedScene });
+                console.log(`Modelo procesado exitosamente en Three.js: ${url}`);
+                setIsLoaded(true);
+                resolve();
+              } catch (error) {
+                console.error(`Error al procesar modelo ${url}:`, error);
+                setError(error instanceof Error ? error.message : 'Error al procesar modelo');
+                reject(error);
+              }
+            },
+            // onError callback
+            (event: ErrorEvent) => {
+              if (!isMounted) {
+                resolve();
+                return;
+              }
+              console.error(`Error al parsear modelo ${url}:`, event);
+              setError(event.message || 'Error desconocido al parsear el modelo');
+              reject(new Error(event.message));
+            }
+          );
+        });
+
+      } catch (error) {
+        if (!isMounted) return;
+        console.error(`Error al cargar modelo ${url}:`, error);
+        setError(error instanceof Error ? error.message : 'Error desconocido');
       }
     };
 
-    window.addEventListener('model-load-progress', handleProgress as EventListener);
+    loadModel();
+    
     return () => {
-      window.removeEventListener('model-load-progress', handleProgress as EventListener);
+      isMounted = false;
     };
   }, [url]);
 
-  useEffect(() => {
-    if (gltf) {
-      try {
-        console.log(`Procesando modelo en Three.js: ${url}`);
-        
-        // Clonar la escena para evitar problemas de referencia
-        const clonedScene = gltf.scene.clone();
-        
-        // Procesar materiales
-        clonedScene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            if (child.material) {
-              // Asegurarse de que los materiales estén actualizados
-              if (Array.isArray(child.material)) {
-                child.material.forEach(mat => {
-                  if (mat instanceof THREE.MeshStandardMaterial) {
-                    mat.needsUpdate = true;
-                  }
-                });
-              } else if (child.material instanceof THREE.MeshStandardMaterial) {
-                child.material.needsUpdate = true;
-              }
-            }
-          }
-        });
-
-        setProcessedGltf({ ...gltf, scene: clonedScene });
-        console.log(`Modelo procesado exitosamente en Three.js: ${url}`);
-        setIsLoaded(true);
-      } catch (error) {
-        console.error(`Error al procesar modelo ${url}:`, error);
-        setError(error instanceof Error ? error.message : 'Error al procesar modelo');
-      }
-    }
-  }, [gltf, url]);
-
   return {
-    gltf: processedGltf || gltf,
+    gltf: processedGltf,
     loadingProgress,
     error,
     isLoaded
