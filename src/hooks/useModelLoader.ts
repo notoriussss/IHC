@@ -67,7 +67,10 @@ export const useModelLoader = (url: string) => {
   useEffect(() => {
     const handleProgress = (event: CustomEvent) => {
       if (event.detail.url === url) {
-        setLoadingProgress(event.detail.progress);
+        // Ensure progress is a valid number between 0 and 100
+        const progress = event.detail.progress;
+        const validProgress = isNaN(progress) ? 0 : Math.min(Math.max(progress, 0), 100);
+        setLoadingProgress(validProgress);
       }
     };
 
@@ -106,6 +109,7 @@ export const useModelLoader = (url: string) => {
         setProcessedGltf({ ...gltf, scene: clonedScene });
         console.log(`Modelo procesado exitosamente en Three.js: ${url}`);
         setIsLoaded(true);
+        setLoadingProgress(100); // Set to 100% when fully loaded
       } catch (error) {
         console.error(`Error al procesar modelo ${url}:`, error);
         setError(error instanceof Error ? error.message : 'Error al procesar modelo');
