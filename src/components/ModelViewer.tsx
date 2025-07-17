@@ -128,16 +128,17 @@ function NavigationArrow({ position, direction, onClick }: { position: string, d
     }
   };
 
+  const transition = {
+    duration: 0.5,
+    ease: [0.25, 0.8, 0.25, 1]
+  } as const;
+
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 100, opacity: 0 }}
-      transition={{ 
-        duration: 0.5, 
-        ease: [0.25, 0.8, 0.25, 1],
-        exit: { duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }
-      }}
+      transition={transition}
       onClick={onClick}
       style={{
         position: 'fixed',
@@ -602,6 +603,10 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
     }
   }, [isPreloading, preloadProgress]);
 
+  // Ensure we have valid progress numbers
+  const validDownloadProgress = isNaN(downloadProgress) ? 0 : Math.min(Math.max(downloadProgress, 0), 100);
+  const validTotalProgress = isNaN(totalProgress) ? 0 : Math.min(Math.max(totalProgress, 0), 100);
+
   return totalProgress < 100 ? (
     <div style={{
       position: 'fixed',
@@ -653,8 +658,8 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
           marginBottom: '10px'
         }}>
           {isDownloading 
-            ? `${downloadProgress.toFixed(0)}%`
-            : `${totalProgress.toFixed(0)}%`}
+            ? `${validDownloadProgress.toFixed(0)}%`
+            : `${validTotalProgress.toFixed(0)}%`}
         </div>
 
         <div style={{
@@ -677,8 +682,8 @@ function LoadingOverlay({ isPreloading, preloadProgress }: { isPreloading: boole
             initial={{ scaleX: 0 }}
             animate={{ 
               scaleX: isDownloading 
-                ? downloadProgress / 100
-                : totalProgress / 100
+                ? validDownloadProgress / 100
+                : validTotalProgress / 100
             }}
             transition={{ duration: 0.3 }}
           />
@@ -2673,4 +2678,3 @@ function ModelViewer({ onViewChange = () => {} }: ModelViewerProps) {
   );
 }
 export default ModelViewer; 
-
