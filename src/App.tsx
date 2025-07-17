@@ -3,13 +3,10 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { PostItem, Categories, NewDiscussionForm, PostDetailPage } from './components';
 import { useAuth } from './context';
-import { getAllPosts, createPost, initializeForumData } from './services/forumService';
+import { getAllPosts, createPost } from './services/forumService';
 import AuthTabs from './components/auth/AuthTabs/AuthTabs';
 import { SuccessMessageProvider, useSuccessMessage } from './context/SuccessMessageContext';
 import { Post } from './types/forum';
-
-// Inicializar los datos del foro
-initializeForumData();
 
 const categoryLabels: { [key: string]: string } = {
   'general': 'General',
