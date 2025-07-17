@@ -19,7 +19,6 @@ const categoryLabels: { [key: string]: string } = {
 
 const MainForumContent: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
-  const { showSuccessMessage } = useSuccessMessage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
@@ -100,7 +99,7 @@ const MainForumContent: React.FC = () => {
     if (!user) return;
 
     try {
-      const newPost = await createPost({
+      await createPost({
         title,
         content,
         category,
