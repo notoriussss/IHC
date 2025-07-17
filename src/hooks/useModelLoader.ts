@@ -2,31 +2,35 @@ import { useState, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { modelStorage } from '../services/modelStorage';
 import * as THREE from 'three';
+import { createConfiguredLoader } from '../utils/loaderConfig';
+
+// Configure useGLTF to use our configured loader and cached data
+useGLTF.preload = (path: string) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Intentar obtener el modelo de la caché
+      const cachedModel = await modelStorage.getModel(path);
+      if (cachedModel) {
+        // Si está en caché, usar el loader configurado para cargarlo desde el ArrayBuffer
+        const loader = createConfiguredLoader();
+        loader.parse(cachedModel, '', resolve, reject);
+      } else {
+        // Si no está en caché, usar el loader configurado para descargarlo
+        const loader = createConfiguredLoader();
+        loader.load(path, resolve, undefined, reject);
+      }
+    } catch (error) {
+      console.error('Error loading model:', error);
+      reject(error);
+    }
+  });
+};
 
 export const useModelLoader = (url: string) => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [processedGltf, setProcessedGltf] = useState<any>(null);
-
-  // Precargar el modelo usando modelStorage
-  useEffect(() => {
-    const preloadModel = async () => {
-      try {
-        console.log(`Iniciando precarga del modelo: ${url}`);
-        await modelStorage.downloadModel(url, (progress) => {
-          setLoadingProgress(progress);
-          console.log(`Progreso de descarga de ${url}: ${progress.toFixed(2)}%`);
-        });
-        console.log(`Modelo precargado exitosamente: ${url}`);
-      } catch (error) {
-        console.error(`Error al precargar modelo ${url}:`, error);
-        setError(error instanceof Error ? error.message : 'Error desconocido');
-      }
-    };
-
-    preloadModel();
-  }, [url]);
 
   // Cargar el modelo usando useGLTF
   const gltf = useGLTF(url);
@@ -66,6 +70,31 @@ export const useModelLoader = (url: string) => {
       }
     }
   }, [gltf, url]);
+
+  // Precargar el modelo usando modelStorage si no está en caché
+  useEffect(() => {
+    const preloadModel = async () => {
+      try {
+        // Verificar si el modelo ya está en caché
+        const cachedModel = await modelStorage.getModel(url);
+        if (!cachedModel) {
+          console.log(`Iniciando descarga del modelo: ${url}`);
+          const response = await fetch(url);
+          const arrayBuffer = await response.arrayBuffer();
+          await modelStorage.saveModel(url, arrayBuffer);
+          console.log(`Modelo ${url} guardado en caché`);
+        } else {
+          console.log(`Modelo ${url} encontrado en caché`);
+        }
+        setLoadingProgress(100);
+      } catch (error) {
+        console.error(`Error al precargar modelo ${url}:`, error);
+        setError(error instanceof Error ? error.message : 'Error desconocido');
+      }
+    };
+
+    preloadModel();
+  }, [url]);
 
   return {
     gltf: processedGltf || gltf,
