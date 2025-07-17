@@ -368,11 +368,17 @@ class ModelStorage {
         const exists = await this.hasModel(modelUrl);
         if (!exists) {
           console.log('Precargando modelo:', modelUrl);
-          const modelData = await this.downloadModel(modelUrl);
-          await this.saveModel(modelUrl, modelData);
+          // downloadModel ya guarda el modelo en caché, no necesitamos llamar a saveModel
+          await this.downloadModel(modelUrl, (progress) => {
+            if (onProgress) {
+              // Ajustar el progreso para tener en cuenta todos los modelos
+              const overallProgress = ((loadedModels + (progress / 100)) / totalModels) * 100;
+              onProgress(overallProgress);
+            }
+          });
         }
         loadedModels++;
-        if (onProgress) {
+        if (onProgress && exists) {
           onProgress((loadedModels / totalModels) * 100);
         }
       } catch (error) {
