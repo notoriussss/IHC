@@ -7,6 +7,14 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
+// Definir un tipo que incluya tanto Scene como Group
+type SceneOrGroup = THREE.Scene | THREE.Group;
+
+// Definir la interfaz para nuestro GLTF procesado
+interface ProcessedGLTF extends Omit<GLTF, 'scene'> {
+  scene: SceneOrGroup;
+}
+
 // Configurar los loaders
 const createConfiguredLoader = () => {
   // Create a renderer for KTX2 support detection
@@ -42,7 +50,7 @@ export const useModelLoader = (url: string) => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [processedGltf, setProcessedGltf] = useState<GLTF | null>(null);
+  const [processedGltf, setProcessedGltf] = useState<ProcessedGLTF | null>(null);
   const downloadPromiseRef = useRef<Promise<ArrayBuffer> | null>(null);
 
   // Función para obtener o iniciar una descarga
@@ -66,6 +74,26 @@ export const useModelLoader = (url: string) => {
     return downloadPromise;
   };
 
+  // Función para procesar materiales de una escena o grupo
+  const processMaterials = (object: SceneOrGroup): void => {
+    object.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        if (child.material) {
+          // Asegurarse de que los materiales estén actualizados
+          if (Array.isArray(child.material)) {
+            child.material.forEach(mat => {
+              if (mat instanceof THREE.MeshStandardMaterial) {
+                mat.needsUpdate = true;
+              }
+            });
+          } else if (child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.needsUpdate = true;
+          }
+        }
+      }
+    });
+  };
+
   // Efecto para cargar el modelo
   useEffect(() => {
     let isMounted = true;
@@ -85,7 +113,7 @@ export const useModelLoader = (url: string) => {
           loader.parse(modelData, '', 
             // onLoad callback
             (gltf: GLTF) => {
-              if (!isMounted) {
+              if (!isMounted || !gltf || !gltf.scene) {
                 resolve();
                 return;
               }
@@ -97,24 +125,20 @@ export const useModelLoader = (url: string) => {
                 const clonedScene = gltf.scene.clone();
                 
                 // Procesar materiales
-                clonedScene.traverse((child) => {
-                  if (child instanceof THREE.Mesh) {
-                    if (child.material) {
-                      // Asegurarse de que los materiales estén actualizados
-                      if (Array.isArray(child.material)) {
-                        child.material.forEach(mat => {
-                          if (mat instanceof THREE.MeshStandardMaterial) {
-                            mat.needsUpdate = true;
-                          }
-                        });
-                      } else if (child.material instanceof THREE.MeshStandardMaterial) {
-                        child.material.needsUpdate = true;
-                      }
-                    }
-                  }
-                });
+                processMaterials(clonedScene);
 
-                setProcessedGltf({ ...gltf, scene: clonedScene });
+                // Asegurarnos de que el objeto cumpla con la interfaz ProcessedGLTF
+                const processedGltf: ProcessedGLTF = {
+                  ...gltf,
+                  scene: clonedScene,
+                  animations: gltf.animations || [],
+                  cameras: gltf.cameras || [],
+                  asset: gltf.asset || {},
+                  parser: gltf.parser,
+                  userData: gltf.userData || {}
+                };
+
+                setProcessedGltf(processedGltf);
                 console.log(`Modelo procesado exitosamente en Three.js: ${url}`);
                 setIsLoaded(true);
                 resolve();
