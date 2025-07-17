@@ -202,13 +202,9 @@ class ModelStorage {
 
       console.log(`Iniciando descarga de ${url} con velocidad de conexión: ${this.connectionSpeed}`);
       
-      // Ajustar la estrategia de descarga según la velocidad
+      // Usar el caché del navegador para evitar descargas duplicadas
       const response = await fetch(url, {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
+        cache: 'force-cache'
       });
 
       if (!response.ok) {
